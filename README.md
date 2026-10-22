@@ -103,7 +103,7 @@ The backend also provides `npm test`, `npm run seed`, and `npm start`. The front
 - `database/schema.sql` and `database/migrations/` — PostgreSQL schema and incremental database changes.
 - `backend/src/` — Express API, authentication, role checks, AI endpoints, and seed data.
 - `backend/data/g12.json` — Grade 12 university and major data.
-- `backend/data/schools.csv` — fallback GED/IGCSE school data. Set `SCHOOLS_SHEET_CSV_URL` to use a published Google Sheets CSV instead. Admins can add university records directly in Admin → Universities; those records are stored in PostgreSQL and appear alongside imported entries.
+- `backend/data/schools.csv` — fallback GED/IGCSE school data. Set `SCHOOLS_SHEET_CSV_URL` to use a published Google Sheets CSV instead. Admins can add universities directly in Admin → Universities or fill the Excel template and import it as CSV; records are stored in PostgreSQL and appear alongside imported entries.
 - `frontend/src/` — React app, role portals, translations, journey state, and client-side PDF generation.
 - `frontend/public/universities/` — university photos.
 - `deploy/README.md` — hosting, production environment, and AI failover details.

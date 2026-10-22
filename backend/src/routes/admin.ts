@@ -17,6 +17,18 @@ import { badRequest, body, conflict, notFound, requireAdmin, requireRole, route,
 export const adminRouter = Router();
 adminRouter.use("/admin", requireRole("admin"));
 const ops = requireAdmin("ops"), content = requireAdmin("content"), superOnly = requireAdmin();
+const adminUniversitySchema = z.object({
+  code: z.string().trim().min(2).max(20).regex(/^[A-Za-z0-9-]+$/, "Use letters, numbers, or hyphens for the code."),
+  name: z.string().trim().min(2).max(180), country: z.string().trim().min(2).max(100), city: z.string().trim().max(120).default(""),
+  type: z.string().trim().max(120).default("University"), mode: z.string().trim().max(80).default("On campus"), established: z.string().trim().max(20).default(""),
+  fields: z.array(z.number().int().positive().max(999)).max(30).default([]), description: z.string().trim().max(2000).default(""),
+  partner: z.string().trim().max(300).default(""), programs: z.array(z.string().trim().min(1).max(200)).max(100).default([]),
+  ged: z.object({ ok: z.enum(["yes", "no", "confirm"]), note: z.string().trim().max(2000).default(""), tests: z.string().trim().max(1000).default("") }),
+  igcse: z.object({ ok: z.enum(["yes", "no", "confirm"]), note: z.string().trim().max(2000).default("") }),
+  english: z.string().trim().max(500).default(""), admission: z.string().trim().max(2000).default(""), pathway: z.string().trim().max(1000).default(""),
+  duration: z.string().trim().max(100).default(""), intakes: z.string().trim().max(500).default(""), hasScholarship: z.boolean().default(false),
+  scholarship: z.string().trim().max(1000).default(""), website: z.string().trim().max(500).default(""), source: z.string().trim().max(500).default(""), photo: z.string().trim().max(500).default(""),
+});
 
 adminRouter.get("/admin/stats", route(async () => ({
   ...(await one(`SELECT
@@ -133,18 +145,7 @@ adminRouter.get("/admin/universities", content, route(async () => {
   };
 }));
 adminRouter.post("/admin/universities", content, route(async req => {
-  const b = body(req, z.object({
-    code: z.string().trim().min(2).max(20).regex(/^[A-Za-z0-9-]+$/, "Use letters, numbers, or hyphens for the code."),
-    name: z.string().trim().min(2).max(180), country: z.string().trim().min(2).max(100), city: z.string().trim().max(120).default(""),
-    type: z.string().trim().max(120).default("University"), mode: z.string().trim().max(80).default("On campus"), established: z.string().trim().max(20).default(""),
-    fields: z.array(z.number().int().positive().max(999)).max(30).default([]), description: z.string().trim().max(2000).default(""),
-    partner: z.string().trim().max(300).default(""), programs: z.array(z.string().trim().min(1).max(200)).max(100).default([]),
-    ged: z.object({ ok: z.enum(["yes", "no", "confirm"]), note: z.string().trim().max(2000).default(""), tests: z.string().trim().max(1000).default("") }),
-    igcse: z.object({ ok: z.enum(["yes", "no", "confirm"]), note: z.string().trim().max(2000).default("") }),
-    english: z.string().trim().max(500).default(""), admission: z.string().trim().max(2000).default(""), pathway: z.string().trim().max(1000).default(""),
-    duration: z.string().trim().max(100).default(""), intakes: z.string().trim().max(500).default(""), hasScholarship: z.boolean().default(false),
-    scholarship: z.string().trim().max(1000).default(""), website: z.string().trim().max(500).default(""), source: z.string().trim().max(500).default(""), photo: z.string().trim().max(500).default(""),
-  }));
+  const b = body(req, adminUniversitySchema);
   const id = b.code.toLowerCase();
   const schools = await getSchools();
   if (schools.some(s => s.id.toLowerCase() === id || s.code.toLowerCase() === b.code.toLowerCase())) throw conflict("A university with this code already exists.");
@@ -153,6 +154,26 @@ adminRouter.post("/admin/universities", content, route(async req => {
   await audit(sessionOf(req).uid, "university.create", `university:${id}`, { code: school.code, name: school.name });
   addSchoolToCache(school);
   return { ok: true, id: row!.id };
+}));
+adminRouter.post("/admin/universities/import", content, route(async req => {
+  const { universities } = body(req, z.object({ universities: z.array(adminUniversitySchema).min(1).max(100) }));
+  const checkedAt = new Date().toISOString().slice(0, 10);
+  const normalized: School[] = universities.map(value => ({ ...value, id: value.code.toLowerCase(), lastChecked: checkedAt, source: value.source || value.website }));
+  const ids = normalized.map(s => s.id);
+  if (new Set(ids).size !== ids.length) throw conflict("The import contains duplicate university codes.");
+  const existing = await getSchools();
+  if (normalized.some(next => existing.some(s => s.id.toLowerCase() === next.id || s.code.toLowerCase() === next.code.toLowerCase()))) {
+    throw conflict("The import includes a university code already in CareerNet. Remove it from the sheet and retry.");
+  }
+  const actorId = sessionOf(req).uid;
+  await tx(async client => {
+    for (const school of normalized) {
+      await client.query("INSERT INTO admin_universities (id, data, created_by) VALUES ($1, $2, $3)", [school.id, JSON.stringify(school), actorId]);
+      await client.query("INSERT INTO audit_log (actor_id, action, target, details) VALUES ($1, 'university.create', $2, $3)", [actorId, `university:${school.id}`, { code: school.code, name: school.name, import: true }]);
+    }
+  });
+  for (const school of normalized) addSchoolToCache(school);
+  return { ok: true, imported: normalized.length };
 }));
 adminRouter.get("/admin/content", content, route(() => ({
   careers: CAREERS.map(c => ({ id: c.id, title: c.t, majors: c.majors.map(m => m.n), videoLength: c.video.len, hasVideo: !!c.video.url })),

@@ -13,6 +13,11 @@ type Form = {
   hasScholarship: boolean; scholarship: string; website: string; source: string; description: string; partner: string;
   programs: string; english: string; admission: string; pathway: string; duration: string; intakes: string;
 };
+type ImportUniversity = Omit<Form, "ged" | "gedNote" | "gedTests" | "igcse" | "igcseNote" | "hasScholarship" | "scholarship" | "programs" | "code" | "name" | "country"> & {
+  code: string; name: string; country: string; fields: number[]; programs: string[];
+  ged: { ok: Accepts; note: string; tests: string }; igcse: { ok: Accepts; note: string };
+  hasScholarship: boolean; scholarship: string;
+};
 const blank: Form = {
   code: "", name: "", country: "", city: "", type: "University", mode: "On campus", established: "",
   ged: "confirm", gedNote: "", gedTests: "", igcse: "confirm", igcseNote: "",
@@ -21,12 +26,69 @@ const blank: Form = {
 };
 const ok = (v: Accepts) => <Pill tone={v === "yes" ? "ok" : v === "no" ? "bad" : "warn"}>{v === "yes" ? "Accepted" : v === "no" ? "Not direct" : "Confirm"}</Pill>;
 
+function parseCsv(text: string): string[][] {
+  const rows: string[][] = [];
+  let row: string[] = [], cell = "", quoted = false;
+  const csv = text.replace(/^\uFEFF/, "");
+  for (let i = 0; i < csv.length; i++) {
+    const ch = csv[i];
+    if (ch === '"') {
+      if (quoted && csv[i + 1] === '"') { cell += '"'; i++; }
+      else quoted = !quoted;
+    } else if (!quoted && ch === ",") { row.push(cell); cell = ""; }
+    else if (!quoted && (ch === "\n" || ch === "\r")) {
+      if (ch === "\r" && csv[i + 1] === "\n") i++;
+      row.push(cell); rows.push(row); row = []; cell = "";
+    } else cell += ch;
+  }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  return rows.filter(values => values.some(value => value.trim()));
+}
+
+function parseAccepts(value: string): Accepts {
+  const normalized = value.trim().toLowerCase();
+  if (["yes", "accepted", "accept", "direct", "true", "1"].includes(normalized)) return "yes";
+  if (["no", "not direct", "not accepted", "false", "0"].includes(normalized)) return "no";
+  return "confirm";
+}
+
+function importFromCsv(text: string): ImportUniversity[] {
+  const [headerRow, ...dataRows] = parseCsv(text);
+  if (!headerRow) throw new Error("The CSV file is empty.");
+  const headers = headerRow.map(value => value.trim().toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, ""));
+  const get = (row: string[], ...names: string[]) => {
+    const index = names.map(name => headers.indexOf(name)).find(i => i >= 0);
+    return index == null ? "" : (row[index] ?? "").trim();
+  };
+  if (!headers.includes("country") || !headers.some(h => ["name", "university", "university_name"].includes(h)) || !headers.some(h => ["code", "id"].includes(h))) {
+    throw new Error("Use the template headers. Required columns are code, name, and country.");
+  }
+  return dataRows.map(row => {
+    const hasScholarship = ["yes", "y", "true", "1"].includes(get(row, "has_scholarship", "scholarship_available").toLowerCase());
+    const list = (value: string) => value.split(";").map(item => item.trim()).filter(Boolean);
+    return {
+      code: get(row, "code", "id"), name: get(row, "name", "university_name", "university"), country: get(row, "country"),
+      city: get(row, "city"), type: get(row, "type") || "University", mode: get(row, "mode") || "On campus", established: get(row, "established"),
+      fields: get(row, "fields").split(/[;,]/).map(value => Number(value.trim())).filter(value => Number.isInteger(value) && value > 0),
+      description: get(row, "description"), partner: get(row, "partner"), programs: list(get(row, "programs")),
+      ged: { ok: parseAccepts(get(row, "ged_ok", "ged_acceptance")), note: get(row, "ged_note"), tests: get(row, "ged_tests") },
+      igcse: { ok: parseAccepts(get(row, "igcse_ok", "igcse_acceptance")), note: get(row, "igcse_note") },
+      english: get(row, "english"), admission: get(row, "admission"), pathway: get(row, "pathway"), duration: get(row, "duration"), intakes: get(row, "intakes"),
+      hasScholarship, scholarship: get(row, "scholarship"), website: get(row, "website"), source: get(row, "source"), photo: get(row, "photo"),
+    };
+  });
+}
+
 export default function Universities() {
   const { t } = usePrefs();
   const { data, loading, error, refresh } = useApiData(() => api.get<D>("/admin/universities"));
   const [form, setForm] = useState(blank);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [importRows, setImportRows] = useState<ImportUniversity[]>([]);
+  const [importErrors, setImportErrors] = useState<string[]>([]);
+  const [importFile, setImportFile] = useState("");
+  const [importing, setImporting] = useState(false);
   const set = (key: keyof Form, value: string | boolean) => setForm(previous => ({ ...previous, [key]: value }));
 
   async function add(e: React.FormEvent) {
@@ -47,6 +109,43 @@ export default function Universities() {
     } catch (err) { setFormError((err as Error).message); }
     finally { setSaving(false); }
   }
+
+  async function readImportFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = "";
+    setImportFile(file.name); setImportRows([]); setImportErrors([]);
+    try {
+      if (file.size > 1024 * 1024) throw new Error("Choose a CSV file smaller than 1 MB.");
+      const rows = importFromCsv(await file.text());
+      if (!rows.length) throw new Error("The CSV has no university rows.");
+      if (rows.length > 100) throw new Error("Import up to 100 universities at a time.");
+      const existingCodes = new Set(data?.schools.flatMap(s => [s.id.toLowerCase(), s.code.toLowerCase()]) ?? []);
+      const seen = new Set<string>();
+      const issues: string[] = [];
+      rows.forEach((school, index) => {
+        const line = index + 2;
+        if (!/^[A-Za-z0-9-]{2,20}$/.test(school.code)) issues.push(`Row ${line}: code must use 2–20 letters, numbers, or hyphens.`);
+        if (school.name.length < 2 || !school.country) issues.push(`Row ${line}: university name and country are required.`);
+        const code = school.code.toLowerCase();
+        if (code && (seen.has(code) || existingCodes.has(code))) issues.push(`Row ${line}: code “${school.code}” is already in this file or CareerNet.`);
+        seen.add(code);
+      });
+      setImportRows(issues.length ? [] : rows); setImportErrors(issues);
+    } catch (error) { setImportErrors([(error as Error).message]); }
+  }
+
+  async function importUniversities() {
+    setImporting(true); setImportErrors([]);
+    try {
+      const result = await api.post<{ imported: number }>("/admin/universities/import", { universities: importRows });
+      toast(`${result.imported} ${t("universities imported")}`); setImportRows([]); setImportFile("");
+      await refresh();
+    } catch (error) { setImportErrors([(error as Error).message]); }
+    finally { setImporting(false); }
+  }
+
+  function clearImport() { setImportRows([]); setImportErrors([]); setImportFile(""); }
 
   if (loading) return <Spinner />;
   if (error || !data) return <ErrorNote message={error ?? "No university data"} onRetry={refresh} />;
@@ -97,6 +196,25 @@ export default function Universities() {
           {formError && <p className="text-sm font-semibold text-bad">{formError}</p>}
           <div><button className="btn-primary" disabled={saving}>{saving ? t("Saving…") : t("Add university")}</button></div>
         </form>
+      </section>
+
+      <section className="card flex flex-col gap-4">
+        <div><h2 className="text-lg">{t("Import from Excel")}</h2><p className="text-sm text-muted">{t("Fill the template in Excel, save it as CSV UTF-8, then upload it here. Imports are checked before they are saved.")}</p><p className="mt-1 text-xs text-muted">{t("Use semicolons between multiple fields or programmes. GED and IGCSE values: yes, no, or confirm.")}</p></div>
+        <div className="flex flex-wrap items-center gap-3">
+          <a className="btn-outline btn-sm" href="/universities-template.csv" download>{t("Download Excel template")}</a>
+          <label className="btn-outline btn-sm cursor-pointer">{t("Choose CSV file")}<input className="sr-only" type="file" accept=".csv,text/csv" onChange={readImportFile} /></label>
+          {importFile && <span className="text-sm text-muted">{importFile}</span>}
+          {(importRows.length > 0 || importErrors.length > 0) && <button className="btn-ghost btn-sm" type="button" onClick={clearImport}>{t("Clear import")}</button>}
+        </div>
+        {importErrors.length > 0 && <div className="rounded-xl border border-bad/30 bg-bad/5 p-3 text-sm text-bad" role="alert"><b>{t("Fix these rows before importing")}</b><ul className="mt-1 list-disc pl-5">{importErrors.slice(0, 12).map((issue, i) => <li key={i}>{issue}</li>)}</ul>{importErrors.length > 12 && <p className="mt-1">{t("More row errors are in the file.")}</p>}</div>}
+        {importRows.length > 0 && <>
+          <p className="text-sm font-semibold">{importRows.length} {t("universities ready to import")}</p>
+          <div className="table-wrap"><table><thead><tr><th>{t("Code")}</th><th>{t("University")}</th><th>{t("Country")}</th><th>GED</th><th>IGCSE</th></tr></thead><tbody>
+            {importRows.slice(0, 6).map((school, i) => <tr key={`${school.code}-${i}`}><td className="font-mono text-xs">{school.code}</td><td>{school.name}</td><td>{school.country}</td><td>{ok(school.ged.ok)}</td><td>{ok(school.igcse.ok)}</td></tr>)}
+          </tbody></table></div>
+          {importRows.length > 6 && <p className="text-sm text-muted">{t("Preview shows the first six rows.")}</p>}
+          <div><button className="btn-primary" type="button" disabled={importing} onClick={importUniversities}>{importing ? t("Importing…") : t("Import universities")}</button></div>
+        </>}
       </section>
 
       <div className="table-wrap"><table>
