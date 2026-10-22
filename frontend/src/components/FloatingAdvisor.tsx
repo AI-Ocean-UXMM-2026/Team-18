@@ -43,15 +43,13 @@ export function FloatingAdvisor() {
         type="button"
         aria-expanded={open}
         aria-controls="kip-advisor-panel"
+        aria-label={t("Chat with Kip")}
         onClick={() => setOpen(value => !value)}
-        className="group flex h-11 items-center gap-2 rounded-full border-2 border-white bg-gradient-to-r from-[#142b63] to-[#1e5fbf] px-3 text-white shadow-xl transition hover:scale-[1.03] hover:shadow-2xl active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/40 sm:h-12 sm:px-4"
+        className="group relative grid h-14 w-14 shrink-0 place-items-center rounded-full border-2 border-white bg-gradient-to-br from-[#142b63] to-[#1e5fbf] p-0 text-white shadow-xl transition hover:scale-[1.05] hover:shadow-2xl active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/40"
         title={t("Chat with Kip AI Advisor")}
       >
-        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#e65100] text-xs font-extrabold text-[#142b63] shadow-sm">K</span>
-        <span className="hidden text-left sm:block">
-          <span className="block text-xs font-bold leading-none">{t("Chat with Kip")}</span>
-        </span>
-        <span aria-hidden="true" className="ml-0.5 text-sm text-[#ffd166] transition group-hover:rotate-12">✦</span>
+        <span className="grid h-9 w-9 place-items-center rounded-full bg-[#e65100] text-sm font-extrabold text-[#142b63] shadow-sm">K</span>
+        <span aria-hidden="true" className="absolute right-1.5 top-1.5 text-xs text-[#ffd166] transition group-hover:rotate-12">✦</span>
       </button>
     </div>
   );
