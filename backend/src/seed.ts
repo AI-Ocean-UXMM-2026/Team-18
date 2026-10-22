@@ -16,13 +16,14 @@ const ADMINS = [
 ];
 const MENTORS = [
   { email: "hnin@mentor.careernet.local", name: "Daw Hnin Ei Phyu", title: "Senior Software Engineer, fintech", years: 9, fields: [1] },
-  { email: "kyawzin@mentor.careernet.local", name: "U Kyaw Zin Htet", title: "Data Analytics Lead, telecom", years: 7, fields: [1, 6, 4] },
-  { email: "aungmin@mentor.careernet.local", name: "U Aung Min Thant", title: "Structural Engineer", years: 12, fields: [2] },
-  { email: "thiri@mentor.careernet.local", name: "Dr. Thiri Aung", title: "Physician, internal medicine", years: 10, fields: [3, 5] },
-  { email: "maythu@mentor.careernet.local", name: "Daw May Thu Kyaw", title: "Chartered Accountant (ACCA)", years: 8, fields: [4] },
-  { email: "zawlin@mentor.careernet.local", name: "U Zaw Lin Oo", title: "Chief Engineer, merchant navy", years: 15, fields: [11, 2] },
-  { email: "eimon@mentor.careernet.local", name: "Daw Ei Mon Kyaw", title: "Teacher trainer & linguist", years: 11, fields: [7, 10, 8] },
-  { email: "htetnaing@mentor.careernet.local", name: "U Htet Naing", title: "Product (UX) Designer", years: 6, fields: [8, 1, 9] },
+];
+// Earlier demo seeds created these extra mentors. Keep their records/history,
+// but turn off their test accounts and listings when the demo seed runs.
+const RETIRED_DEMO_MENTORS = [
+  "kyawzin@mentor.careernet.local", "aungmin@mentor.careernet.local",
+  "thiri@mentor.careernet.local", "maythu@mentor.careernet.local",
+  "zawlin@mentor.careernet.local", "eimon@mentor.careernet.local",
+  "htetnaing@mentor.careernet.local",
 ];
 export const DEMO_STUDENT = { email: "student@careernet.local", name: "Demo Student (Normal)", isPro: false };
 export const DEMO_PRO_STUDENT = { email: "pro@careernet.local", name: "Demo Student (Pro)", isPro: true };
@@ -76,6 +77,9 @@ export async function seedDatabase() {
       }
     }
   }
+  await query("UPDATE users SET active = FALSE WHERE role = 'mentor' AND email = ANY($1::text[])", [RETIRED_DEMO_MENTORS]);
+  await query(`UPDATE mentors SET status = 'suspended' FROM users
+    WHERE mentors.user_id = users.id AND users.email = ANY($1::text[])`, [RETIRED_DEMO_MENTORS]);
   console.log(`[seed] demo accounts ready (password: SEED_PASSWORD). Admins: ${ADMINS.map(a => a.email).join(", ")} · Mentor: ${MENTORS[0].email} · Students: ${DEMO_STUDENT.email} (normal), ${DEMO_PRO_STUDENT.email} (Pro)`);
 }
 
