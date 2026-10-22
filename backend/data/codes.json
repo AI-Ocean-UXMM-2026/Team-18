@@ -1,0 +1,41 @@
+{
+ "codes": {
+  "R": {
+   "n": "Realistic",
+   "d": "hands-on builder"
+  },
+  "I": {
+   "n": "Investigative",
+   "d": "problem solver"
+  },
+  "A": {
+   "n": "Artistic",
+   "d": "creator"
+  },
+  "S": {
+   "n": "Social",
+   "d": "helper"
+  },
+  "E": {
+   "n": "Enterprising",
+   "d": "leader"
+  },
+  "C": {
+   "n": "Conventional",
+   "d": "organizer"
+  }
+ },
+ "fields": {
+  "1": "IT & Computer Science",
+  "2": "Engineering",
+  "3": "Medicine & Health",
+  "4": "Business & Economics",
+  "5": "Science",
+  "6": "Mathematics",
+  "7": "Education",
+  "8": "Arts, Law & Humanities",
+  "9": "Environment & Geography",
+  "10": "Languages",
+  "11": "Marine"
+ }
+}

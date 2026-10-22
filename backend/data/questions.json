@@ -1,0 +1,142 @@
+[
+ {
+  "id": 0,
+  "area": "Interests",
+  "code": "I",
+  "en": "I enjoy figuring out how things work, like apps, machines or the human body.",
+  "my": "စက်ပစ္စည်း၊ app များ သို့မဟုတ် လူ့ခန္ဓာကိုယ် ဘယ်လိုအလုပ်လုပ်သလဲ ရှာဖွေရတာ နှစ်သက်တယ်။"
+ },
+ {
+  "id": 1,
+  "area": "Interests",
+  "code": "A",
+  "en": "I like drawing, writing, music or designing things.",
+  "my": "ပုံဆွဲခြင်း၊ စာရေးခြင်း၊ ဂီတ သို့မဟုတ် ဒီဇိုင်းလုပ်ခြင်းကို နှစ်သက်တယ်။"
+ },
+ {
+  "id": 2,
+  "area": "Interests",
+  "code": "S",
+  "en": "I enjoy helping friends understand a lesson or solve a problem.",
+  "my": "သူငယ်ချင်းတွေ သင်ခန်းစာနားလည်အောင် ဒါမှမဟုတ် ပြဿနာဖြေရှင်းအောင် ကူညီရတာ နှစ်သက်တယ်။"
+ },
+ {
+  "id": 3,
+  "area": "Interests",
+  "code": "E",
+  "en": "I like leading a group project or pitching an idea.",
+  "my": "အဖွဲ့လိုက်ပရောဂျက်ကို ဦးဆောင်ရတာ ဒါမှမဟုတ် အကြံဉာဏ်တင်ပြရတာ နှစ်သက်တယ်။"
+ },
+ {
+  "id": 4,
+  "area": "Interests",
+  "code": "R",
+  "en": "I would rather build or fix something with my hands than read about it.",
+  "my": "စာဖတ်တာထက် လက်နဲ့ တည်ဆောက်တာ ဒါမှမဟုတ် ပြုပြင်တာကို ပိုနှစ်သက်တယ်။"
+ },
+ {
+  "id": 5,
+  "area": "Strengths",
+  "code": "C",
+  "en": "I keep my notes, files and schedule well organized.",
+  "my": "မှတ်စု၊ ဖိုင်နဲ့ အချိန်ဇယားကို စနစ်တကျ ထားတတ်တယ်။"
+ },
+ {
+  "id": 6,
+  "area": "Strengths",
+  "code": "I",
+  "en": "Maths and science problems feel like puzzles I want to crack.",
+  "my": "သင်္ချာနဲ့ သိပ္ပံပုစ္ဆာတွေက ဖြေရှင်းချင်တဲ့ ပဟေဠိတွေလို ခံစားရတယ်။"
+ },
+ {
+  "id": 7,
+  "area": "Strengths",
+  "code": "S",
+  "en": "People come to me when they need someone to listen.",
+  "my": "တစ်ယောက်ယောက် နားထောင်ပေးမယ့်သူ လိုတဲ့အခါ ကျွန်ုပ်ဆီ လာကြတယ်။"
+ },
+ {
+  "id": 8,
+  "area": "Strengths",
+  "code": "A",
+  "en": "I often come up with original ideas that others did not think of.",
+  "my": "တခြားသူတွေ မတွေးမိတဲ့ အကြံသစ်တွေ မကြာခဏ ထွက်လာတယ်။"
+ },
+ {
+  "id": 9,
+  "area": "Strengths",
+  "code": "E",
+  "en": "I can convince people to try my plan.",
+  "my": "ကျွန်ုပ်ရဲ့ အစီအစဉ်ကို လက်ခံအောင် တခြားသူတွေကို ဆွဲဆောင်နိုင်တယ်။"
+ },
+ {
+  "id": 10,
+  "area": "Skills",
+  "code": "I",
+  "en": "I can stay focused on a hard problem for a long time.",
+  "my": "ခက်ခဲတဲ့ ပြဿနာတစ်ခုပေါ် အချိန်ကြာကြာ အာရုံစိုက်နိုင်တယ်။"
+ },
+ {
+  "id": 11,
+  "area": "Skills",
+  "code": "C",
+  "en": "I am careful with numbers and details, and I spot mistakes.",
+  "my": "ကိန်းဂဏန်းနဲ့ အသေးစိတ်တွေကို ဂရုစိုက်ပြီး အမှားတွေကို တွေ့တတ်တယ်။"
+ },
+ {
+  "id": 12,
+  "area": "Skills",
+  "code": "R",
+  "en": "I am good with tools, devices or lab equipment.",
+  "my": "ကိရိယာ၊ စက်ပစ္စည်း ဒါမှမဟုတ် ဓာတ်ခွဲခန်းပစ္စည်းတွေ ကောင်းကောင်း သုံးတတ်တယ်။"
+ },
+ {
+  "id": 13,
+  "area": "Skills",
+  "code": "A",
+  "en": "I can explain ideas visually with sketches, slides or layouts.",
+  "my": "ပုံကြမ်း၊ slide ဒါမှမဟုတ် layout တွေနဲ့ အကြံဉာဏ်ကို မြင်သာအောင် ရှင်းပြနိုင်တယ်။"
+ },
+ {
+  "id": 14,
+  "area": "Skills",
+  "code": "S",
+  "en": "I am good at explaining things clearly in English or another language.",
+  "my": "အင်္ဂလိပ် ဒါမှမဟုတ် တခြားဘာသာစကားနဲ့ ရှင်းရှင်းလင်းလင်း ရှင်းပြတတ်တယ်။"
+ },
+ {
+  "id": 15,
+  "area": "Work preferences",
+  "code": "R",
+  "en": "I would like a job on site, outdoors or at sea, not at a desk all day.",
+  "my": "တစ်နေကုန် စားပွဲမှာ မထိုင်ဘဲ လုပ်ငန်းခွင်၊ ပြင်ပ ဒါမှမဟုတ် ပင်လယ်ပြင်မှာ အလုပ်လုပ်ချင်တယ်။"
+ },
+ {
+  "id": 16,
+  "area": "Work preferences",
+  "code": "E",
+  "en": "I want a career where I manage people and make business decisions.",
+  "my": "လူတွေကို စီမံခန့်ခွဲပြီး စီးပွားရေး ဆုံးဖြတ်ချက်ချရတဲ့ အလုပ်ကို လိုချင်တယ်။"
+ },
+ {
+  "id": 17,
+  "area": "Work preferences",
+  "code": "C",
+  "en": "I prefer clear rules and step-by-step procedures.",
+  "my": "ရှင်းလင်းတဲ့ စည်းမျဉ်းနဲ့ အဆင့်လိုက် လုပ်ထုံးလုပ်နည်းတွေကို ပိုနှစ်သက်တယ်။"
+ },
+ {
+  "id": 18,
+  "area": "Work preferences",
+  "code": "S",
+  "en": "I want my work to directly improve people's health or lives.",
+  "my": "ကျွန်ုပ်ရဲ့ အလုပ်က လူတွေရဲ့ ကျန်းမာရေး ဒါမှမဟုတ် ဘဝကို တိုက်ရိုက် တိုးတက်စေချင်တယ်။"
+ },
+ {
+  "id": 19,
+  "area": "Work preferences",
+  "code": "I",
+  "en": "I would enjoy a job built around research, data or experiments.",
+  "my": "သုတေသန၊ ဒေတာ ဒါမှမဟုတ် စမ်းသပ်မှုတွေ ပါဝင်တဲ့ အလုပ်ကို နှစ်သက်မယ်။"
+ }
+]

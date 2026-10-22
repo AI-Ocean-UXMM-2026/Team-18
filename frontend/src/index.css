@@ -1,0 +1,56 @@
+/* ==========================================================================
+   PathFinder design tokens (Tailwind v4 theme) + a few component classes.
+   Indigo = primary actions. Emerald / amber / rose / sky = admission status.
+   ========================================================================== */
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #f3f5fb;
+  --color-card: #ffffff;
+  --color-soft: #eef1fa;
+  --color-ink: #121836;
+  --color-muted: #596182;
+  --color-line: #dde2f0;
+  --color-brand: #3445c4;
+  --color-brand-soft: #e7eaff;
+  --color-ok: #17805f;     --color-ok-soft: #dff4ea;
+  --color-warn: #9a6212;   --color-warn-soft: #fbefd9;
+  --color-bad: #b4345c;    --color-bad-soft: #fbe4ea;
+  --color-info: #2f6a9e;   --color-info-soft: #e1eef9;
+  --font-sans: "Inter", "Segoe UI", "Myanmar Text", "Noto Sans Myanmar", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", Consolas, ui-monospace, monospace;
+}
+
+html { background: var(--color-bg); color: var(--color-ink); }
+body { font-family: var(--font-sans); line-height: 1.6; }
+html[lang="my"] body { line-height: 1.85; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.2; font-weight: 700; }
+html[lang="my"] h1, html[lang="my"] h2, html[lang="my"] h3 { line-height: 1.5; }
+
+@layer components {
+  .card { @apply rounded-2xl border border-line bg-card p-5 shadow-sm; }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-primary { @apply btn bg-brand text-white hover:brightness-110; }
+  .btn-outline { @apply btn border-2 border-brand text-brand; }
+  .btn-ghost { @apply btn border border-line bg-card text-ink hover:border-brand; }
+  .btn-sm { @apply px-3 py-1.5 text-xs; }
+  .input { @apply w-full rounded-lg border border-line bg-card px-3 py-2 text-sm text-ink outline-none focus:border-brand focus:ring-2 focus:ring-brand-soft; }
+  .label { @apply flex flex-col gap-1 text-xs font-semibold text-muted; }
+  .eyebrow { @apply text-xs font-bold uppercase tracking-widest text-brand; }
+  .choice { @apply flex flex-col gap-1 rounded-2xl border-2 border-line bg-card p-4 text-left hover:border-brand; }
+  .choice-on { @apply border-brand bg-brand-soft; }
+}
+html[lang="my"] .eyebrow { letter-spacing: 0; }
+
+@layer components {
+  .tile { @apply flex flex-col gap-0.5 rounded-2xl border border-line bg-card p-4; }
+  .tile b { @apply font-mono text-2xl; }
+  .tile span { @apply text-xs text-muted; }
+  .tabs { @apply flex gap-1 overflow-x-auto border-b border-line; }
+  .tab { @apply whitespace-nowrap border-b-2 border-transparent px-3 py-2 text-sm font-semibold text-muted; }
+  .tab-on { @apply border-brand text-brand; }
+  .table-wrap { @apply overflow-x-auto rounded-2xl border border-line bg-card; }
+  .table-wrap table { @apply w-full min-w-[640px] text-sm; }
+  .table-wrap th { @apply p-3 text-left align-top text-xs font-semibold text-muted; }
+  .table-wrap td { @apply border-t border-line p-3 align-top; }
+}

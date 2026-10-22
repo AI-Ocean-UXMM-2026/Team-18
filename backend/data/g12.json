@@ -1,0 +1,1180 @@
+{
+ "universities": [
+  {
+   "id": 1,
+   "code": "UIT",
+   "name": "University of Information Technology (UIT)",
+   "location": "Hlaing, Yangon",
+   "type": "Center of Excellence (COE)",
+   "fields": [
+    1
+   ],
+   "established": 2012,
+   "description": "Myanmar's premier specialized university in Information Technology, Software Engineering, AI, and Cybersecurity.",
+   "admission": "Admission is highly competitive based strictly on total matriculation examination marks.",
+   "website": "https://www.uit.edu.mm",
+   "photo": "/universities/uit.jpg"
+  },
+  {
+   "id": 2,
+   "code": "YTU",
+   "name": "Yangon Technological University (YTU)",
+   "location": "Insein, Yangon",
+   "type": "Center of Excellence (COE)",
+   "fields": [
+    2
+   ],
+   "established": 1924,
+   "description": "The flagship engineering institution in Myanmar with state-of-the-art engineering laboratories and prestigious COE programs.",
+   "admission": "COE admission requires top-tier matriculation total marks and prerequisite scores in English, Mathematics, Physics, and Chemistry.",
+   "website": "https://www.ytu.edu.mm",
+   "photo": "/universities/ytu.jpg"
+  },
+  {
+   "id": 3,
+   "code": "WYTU",
+   "name": "West Yangon Technological University (WYTU)",
+   "location": "Htantabin, Yangon",
+   "type": "Public Technological University",
+   "fields": [
+    2
+   ],
+   "established": 2005,
+   "description": "Major engineering university serving western Yangon, offering comprehensive Bachelor of Engineering programs.",
+   "admission": "Selection is based on matriculation examination scores in the 4-subject combination (English, Maths, Chemistry, Physics).",
+   "website": "https://www.wytu.edu.mm",
+   "photo": "/universities/westuni.jpg"
+  },
+  {
+   "id": 4,
+   "code": "TTU",
+   "name": "Technological University, Thanlyin (TTU)",
+   "location": "Thanlyin, Yangon",
+   "type": "Public Technological University",
+   "fields": [
+    2
+   ],
+   "established": 1999,
+   "description": "Prominent technological university in the Thanlyin industrial corridor specializing in engineering degrees.",
+   "admission": "Admission based on matriculation marks, prioritizing applicants who meet the departmental cutoff in technical combinations.",
+   "website": "https://www.ttu.edu.mm",
+   "photo": "/universities/eastuni.jpg"
+  },
+  {
+   "id": 5,
+   "code": "HBTU",
+   "name": "Technological University, Hmawbi (HBTU)",
+   "location": "Hmawbi, Yangon",
+   "type": "Public Technological University",
+   "fields": [
+    2
+   ],
+   "established": 1999,
+   "description": "Leading engineering university located in northern Yangon region.",
+   "admission": "Admission determined through matriculation marks with 4-subject requirement benchmarks.",
+   "website": "https://www.hbtu.edu.mm",
+   "photo": "/universities/hbtu.jpg"
+  },
+  {
+   "id": 6,
+   "code": "UCSY",
+   "name": "University of Computer Studies (UCSY)",
+   "location": "Shwe Pyi Thar / Hlawga, Yangon",
+   "type": "Center of Excellence (COE)",
+   "fields": [
+    1
+   ],
+   "established": 1971,
+   "description": "Pioneering computer science and technology university offering B.C.Sc and B.C.Tech degrees.",
+   "admission": "Merit-based admission from the matriculation examination. Requires high aptitude and score in Mathematics and English.",
+   "website": "https://www.ucsy.edu.mm",
+   "photo": "/universities/ucsy.jpg"
+  },
+  {
+   "id": 7,
+   "code": "UM1",
+   "name": "University of Medicine 1 (UM1)",
+   "location": "Lanmadaw, Yangon",
+   "type": "Medical University",
+   "fields": [
+    3
+   ],
+   "established": 1907,
+   "description": "The most prestigious and oldest medical school in Myanmar, training leading physicians and surgeons.",
+   "admission": "Admission requires the highest matriculation cutoff scores in Myanmar, with special minimum thresholds in English, Chemistry, and Biology.",
+   "website": "https://www.um1ygn.edu.mm",
+   "photo": "/universities/um1.jpg"
+  },
+  {
+   "id": 8,
+   "code": "UM2",
+   "name": "University of Medicine 2 (UM2)",
+   "location": "North Okkalapa, Yangon",
+   "type": "Medical University",
+   "fields": [
+    3
+   ],
+   "established": 1963,
+   "description": "Premier medical university in eastern Yangon with extensive clinical facilities and research departments.",
+   "admission": "Direct selection of top-scoring science matriculation graduates based on English, Chemistry, and Biology combined scores.",
+   "website": "https://www.um2ygn.edu.mm",
+   "photo": "/universities/um2.jpg"
+  },
+  {
+   "id": 9,
+   "code": "UOPY",
+   "name": "University of Pharmacy (UOPY)",
+   "location": "Yangon",
+   "type": "Specialized Medical University",
+   "fields": [
+    3
+   ],
+   "established": 1992,
+   "description": "Dedicated pharmaceutical university producing pharmacists and pharmaceutical research specialists.",
+   "admission": "Admission based on high matriculation scores with strong marks in Chemistry, Biology, and English.",
+   "website": "https://www.uopy.edu.mm",
+   "photo": "/universities/uopy.jpg"
+  },
+  {
+   "id": 10,
+   "code": "UMT",
+   "name": "University of Medical Technology",
+   "location": "Yangon",
+   "type": "Specialized Health University",
+   "fields": [
+    3
+   ],
+   "established": 1992,
+   "description": "Trains specialized medical laboratory technologists, radiographers, and physiotherapists.",
+   "admission": "Competitive selection based on science stream matriculation scores in Chemistry, Biology, and Physics.",
+   "website": "https://www.umtygn.edu.mm",
+   "photo": "/universities/umt.jpg"
+  },
+  {
+   "id": 11,
+   "code": "UDM",
+   "name": "University of Dental Medicine",
+   "location": "Thingangyun, Yangon",
+   "type": "Specialized Medical University",
+   "fields": [
+    3
+   ],
+   "established": 1964,
+   "description": "Leading institution for dental surgery, oral health sciences, and orthodontics.",
+   "admission": "Admission requires top matriculation scores with specific cutoff criteria in English, Chemistry, and Biology.",
+   "website": "https://www.udmygn.edu.mm",
+   "photo": "/universities/udm.jpg"
+  },
+  {
+   "id": 12,
+   "code": "UNursing",
+   "name": "University of Nursing",
+   "location": "Lanmadaw, Yangon",
+   "type": "Specialized Health University",
+   "fields": [
+    3
+   ],
+   "established": 1991,
+   "description": "Dedicated to advancing nursing sciences and healthcare delivery in Myanmar.",
+   "admission": "Admissions selected by matriculation score benchmarks with preference for applicants committed to nursing sciences.",
+   "website": "https://www.unygn.edu.mm",
+   "photo": "/universities/unursing.jpg"
+  },
+  {
+   "id": 13,
+   "code": "UPH",
+   "name": "University of Public Health",
+   "location": "Yangon",
+   "type": "Public Health University",
+   "fields": [
+    3
+   ],
+   "established": 2007,
+   "description": "Center for epidemiology, community health, and public health policy.",
+   "admission": "Selection based on matriculation examination scores in science and arts combinations.",
+   "website": "https://www.uphygn.edu.mm",
+   "photo": "/universities/uph.jpg"
+  },
+  {
+   "id": 14,
+   "code": "YUFL",
+   "name": "Yangon University of Foreign Languages (YUFL)",
+   "location": "Kamayut, Yangon",
+   "type": "Specialized Languages University",
+   "fields": [
+    10
+   ],
+   "established": 1964,
+   "description": "Myanmar's premier foreign language academy offering degree programs in 8 major international languages.",
+   "admission": "Direct admission based on matriculation overall marks with high weighting on English language scores.",
+   "website": "https://www.yufl.edu.mm",
+   "photo": "/universities/yufl.jpg"
+  },
+  {
+   "id": 15,
+   "code": "YUE-Hlaing",
+   "name": "Yangon University of Economics (Hlaing)",
+   "location": "Hlaing, Yangon",
+   "type": "Specialized Business & Economics",
+   "fields": [
+    4
+   ],
+   "established": 1964,
+   "description": "Top university in Myanmar for commerce, accounting, business administration, and economic statistics.",
+   "admission": "High cutoff requirement on matriculation scores with strong scores in Mathematics and English.",
+   "website": "https://www.yueco.edu.mm",
+   "photo": "/universities/yueco.jpg"
+  },
+  {
+   "id": 16,
+   "code": "YUE-YTG",
+   "name": "Yangon University of Economics (Ywar Thar Gyi)",
+   "location": "Ywar Thar Gyi, Yangon",
+   "type": "Specialized Business & Economics",
+   "fields": [
+    4
+   ],
+   "established": 2000,
+   "description": "Expansive economics campus delivering high-quality business, finance, and public administration degrees.",
+   "admission": "Admission determined through matriculation aggregate marks across commerce and economics specializations.",
+   "website": "https://www.yueco.edu.mm",
+   "photo": "/universities/yueco_ytg.jpg"
+  },
+  {
+   "id": 17,
+   "code": "Co-op",
+   "name": "Co-operative University, Thanlyin",
+   "location": "Thanlyin, Yangon",
+   "type": "Business & Co-operative University",
+   "fields": [
+    4
+   ],
+   "established": 1994,
+   "description": "Specialized university focusing on regional economics, microfinance, marketing, and business management.",
+   "admission": "Standard matriculation score cutoff across arts, science, and commerce streams.",
+   "website": "https://www.tcu.edu.mm",
+   "photo": "/universities/coop.jpg"
+  },
+  {
+   "id": 18,
+   "code": "YUOE",
+   "name": "Yangon University of Education (YUOE)",
+   "location": "Kamayut, Yangon",
+   "type": "Teacher Training & Education University",
+   "fields": [
+    7
+   ],
+   "established": 1931,
+   "description": "Historic university dedicated to pedagogical training, educational science, and teacher development.",
+   "admission": "Admission based on matriculation marks with specific gender quotas and academic interview requirements.",
+   "website": "https://www.yuoe.edu.mm",
+   "photo": "/universities/yuoe.jpg"
+  },
+  {
+   "id": 19,
+   "code": "MMU",
+   "name": "Myanmar Maritime University (MMU)",
+   "location": "Thanlyin, Yangon",
+   "type": "Maritime & Naval Engineering",
+   "fields": [
+    11,
+    2
+   ],
+   "established": 2002,
+   "description": "Myanmar's specialized maritime university offering international standard maritime and naval engineering degrees.",
+   "admission": "Competitive selection requiring high matriculation marks in English, Mathematics, Chemistry, and Physics, followed by physical fitness evaluation.",
+   "website": "https://www.mmu.edu.mm",
+   "photo": "/universities/mmu.jpg"
+  },
+  {
+   "id": 20,
+   "code": "MMMC",
+   "name": "Myanmar Mercantile Marine College (MMMC)",
+   "location": "Yangon",
+   "type": "Maritime College",
+   "fields": [
+    11
+   ],
+   "established": 1963,
+   "description": "Renowned college training maritime officers, deck officers, and marine engineers.",
+   "admission": "Admission based on matriculation marks, medical clearance, and seamanship entrance aptitude testing.",
+   "website": "https://www.mmmc.edu.mm",
+   "photo": "/universities/mmmc.jpg"
+  },
+  {
+   "id": 21,
+   "code": "NMDC",
+   "name": "National Management Degree College (NMDC)",
+   "location": "Botahtaung, Yangon",
+   "type": "Autonomous Degree College",
+   "fields": [
+    4
+   ],
+   "established": 2004,
+   "description": "Modern college specializing in Business Management, Tourism & Hospitality, Journalism, and Professional English.",
+   "admission": "Selection based on matriculation aggregate marks with high scoring in English and general subjects.",
+   "website": "https://www.nmdc.edu.mm",
+   "photo": "/universities/nmdc.jpg"
+  },
+  {
+   "id": 22,
+   "code": "NUAC",
+   "name": "National University of Arts and Culture (NUAC)",
+   "location": "Dagon Myothit (South), Yangon",
+   "type": "Arts & Culture University",
+   "fields": [
+    8
+   ],
+   "established": 1993,
+   "description": "Preserves and promotes Myanmar traditional performing arts, music, dramatic arts, painting, and sculpture.",
+   "admission": "Admission based on matriculation pass certificates and artistic aptitude testing (auditions/portfolio reviews).",
+   "website": "https://www.nuac.edu.mm",
+   "photo": "/universities/nuac_orch.jpg"
+  },
+  {
+   "id": 23,
+   "code": "YU",
+   "name": "University of Yangon",
+   "location": "Kamayut, Yangon",
+   "type": "Center of Excellence (COE)",
+   "fields": [
+    1,
+    2,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+   ],
+   "established": 1920,
+   "description": "The crown jewel of higher education in Myanmar, renowned for arts, pure sciences, law, and international relations.",
+   "admission": "Selection is highly competitive based on matriculation examination scores into specific honors and degree departments.",
+   "website": "https://www.uy.edu.mm",
+   "photo": "/universities/yangonuniversity.jpg"
+  },
+  {
+   "id": 24,
+   "code": "Dagon",
+   "name": "Dagon University",
+   "location": "Dagon Myothit (East), Yangon",
+   "type": "Comprehensive State University",
+   "fields": [
+    1,
+    4,
+    5,
+    6,
+    8,
+    9,
+    10
+   ],
+   "established": 1993,
+   "description": "One of the largest universities in Myanmar by student population, offering 20+ disciplines across science and arts.",
+   "admission": "Direct selection based on matriculation marks according to departmental quotas across arts and science.",
+   "website": "https://www.dagonuniversity.edu.mm",
+   "photo": "/universities/dagonuni.jpg"
+  },
+  {
+   "id": 25,
+   "code": "UVS",
+   "name": "University of Veterinary Science",
+   "location": "Yangon Campus / Yezin",
+   "type": "Specialized Veterinary University",
+   "fields": [
+    3
+   ],
+   "established": 1957,
+   "description": "The sole veterinary medicine institution in Myanmar granting the Doctor of Veterinary Medicine (B.V.Sc.) degree.",
+   "admission": "Admission based on high matriculation scores in Biology, Chemistry, and English.",
+   "website": "https://www.uvs.edu.mm",
+   "photo": "/universities/veterinary.jpg"
+  },
+  {
+   "id": 26,
+   "code": "UTM",
+   "name": "University of Traditional Medicine",
+   "location": "Yangon Teaching Center",
+   "type": "Specialized Traditional Medicine",
+   "fields": [
+    3
+   ],
+   "established": 2001,
+   "description": "Myanmar's university dedicated to Indigenous Traditional Medicine, herbal pharmacology, and holistic healthcare.",
+   "admission": "Selection based on matriculation marks in science and arts combinations.",
+   "website": "https://www.utm.edu.mm",
+   "photo": "/universities/utm.jpg"
+  }
+ ],
+ "programs": [
+  {
+   "university": 7,
+   "field": 3,
+   "name": "M.B.,B.S. (UM1)"
+  },
+  {
+   "university": 8,
+   "field": 3,
+   "name": "M.B.,B.S. (UM2)"
+  },
+  {
+   "university": 11,
+   "field": 3,
+   "name": "B.D.S. (Dental Surgery)"
+  },
+  {
+   "university": 10,
+   "field": 3,
+   "name": "B.Med.Tech (Medical Technology)"
+  },
+  {
+   "university": 9,
+   "field": 3,
+   "name": "B.Pharm. (Pharmacy)"
+  },
+  {
+   "university": 12,
+   "field": 3,
+   "name": "B.N.Sc. (Nursing)"
+  },
+  {
+   "university": 13,
+   "field": 3,
+   "name": "B.P.H. (Public Health)"
+  },
+  {
+   "university": 25,
+   "field": 3,
+   "name": "B.V.Sc. (Veterinary Science)"
+  },
+  {
+   "university": 26,
+   "field": 3,
+   "name": "B.T.M. (Traditional Medicine)"
+  },
+  {
+   "university": 1,
+   "field": 1,
+   "name": "B.C.Sc / B.C.Tech (UIT)"
+  },
+  {
+   "university": 6,
+   "field": 1,
+   "name": "B.C.Sc / B.C.Tech (UCSY)"
+  },
+  {
+   "university": 2,
+   "field": 2,
+   "name": "Civil Engineering"
+  },
+  {
+   "university": 2,
+   "field": 2,
+   "name": "Mechanical Engineering"
+  },
+  {
+   "university": 2,
+   "field": 2,
+   "name": "Electrical Power Engineering"
+  },
+  {
+   "university": 2,
+   "field": 2,
+   "name": "Electronic Engineering"
+  },
+  {
+   "university": 2,
+   "field": 2,
+   "name": "Computer Engineering & Information Technology"
+  },
+  {
+   "university": 2,
+   "field": 2,
+   "name": "Mechatronic Engineering"
+  },
+  {
+   "university": 2,
+   "field": 2,
+   "name": "Chemical Engineering"
+  },
+  {
+   "university": 2,
+   "field": 2,
+   "name": "Textile Engineering"
+  },
+  {
+   "university": 2,
+   "field": 2,
+   "name": "Mining Engineering"
+  },
+  {
+   "university": 2,
+   "field": 2,
+   "name": "Petroleum Engineering"
+  },
+  {
+   "university": 2,
+   "field": 2,
+   "name": "Metallurgical Engineering"
+  },
+  {
+   "university": 2,
+   "field": 2,
+   "name": "Architecture"
+  },
+  {
+   "university": 2,
+   "field": 2,
+   "name": "Telecommunication Engineering"
+  },
+  {
+   "university": 2,
+   "field": 2,
+   "name": "Food Engineering"
+  },
+  {
+   "university": 3,
+   "field": 2,
+   "name": "Civil Engineering"
+  },
+  {
+   "university": 3,
+   "field": 2,
+   "name": "Architecture"
+  },
+  {
+   "university": 3,
+   "field": 2,
+   "name": "Computer Engineering & Information Technology (CEIT)"
+  },
+  {
+   "university": 3,
+   "field": 2,
+   "name": "Electronic Engineering"
+  },
+  {
+   "university": 3,
+   "field": 2,
+   "name": "Mechanical Engineering"
+  },
+  {
+   "university": 3,
+   "field": 2,
+   "name": "Electrical Power Engineering"
+  },
+  {
+   "university": 3,
+   "field": 2,
+   "name": "Mechatronic Engineering"
+  },
+  {
+   "university": 3,
+   "field": 2,
+   "name": "Chemical Engineering"
+  },
+  {
+   "university": 3,
+   "field": 2,
+   "name": "Metallurgical Engineering"
+  },
+  {
+   "university": 3,
+   "field": 2,
+   "name": "Textile Engineering"
+  },
+  {
+   "university": 3,
+   "field": 2,
+   "name": "Agricultural Engineering"
+  },
+  {
+   "university": 4,
+   "field": 2,
+   "name": "Civil Engineering"
+  },
+  {
+   "university": 4,
+   "field": 2,
+   "name": "Architecture"
+  },
+  {
+   "university": 4,
+   "field": 2,
+   "name": "Computer Engineering & Information Technology (CEIT)"
+  },
+  {
+   "university": 4,
+   "field": 2,
+   "name": "Mechanical Engineering (ME)"
+  },
+  {
+   "university": 4,
+   "field": 2,
+   "name": "Electronic Engineering (EC)"
+  },
+  {
+   "university": 4,
+   "field": 2,
+   "name": "Mechatronic Engineering (MC)"
+  },
+  {
+   "university": 4,
+   "field": 2,
+   "name": "Electrical Power Engineering (EP)"
+  },
+  {
+   "university": 4,
+   "field": 2,
+   "name": "Chemical Engineering (CHE)"
+  },
+  {
+   "university": 4,
+   "field": 2,
+   "name": "Petroleum Engineering (PE)"
+  },
+  {
+   "university": 5,
+   "field": 2,
+   "name": "Civil Engineering"
+  },
+  {
+   "university": 5,
+   "field": 2,
+   "name": "Architecture"
+  },
+  {
+   "university": 5,
+   "field": 2,
+   "name": "Computer Engineering & Information Technology (CEIT)"
+  },
+  {
+   "university": 5,
+   "field": 2,
+   "name": "Electronic Engineering (EC)"
+  },
+  {
+   "university": 5,
+   "field": 2,
+   "name": "Electrical Power Engineering (EP)"
+  },
+  {
+   "university": 5,
+   "field": 2,
+   "name": "Mechanical Engineering (ME)"
+  },
+  {
+   "university": 5,
+   "field": 2,
+   "name": "Mechatronic Engineering (MC)"
+  },
+  {
+   "university": 15,
+   "field": 4,
+   "name": "Bachelor of Commerce (BCom)"
+  },
+  {
+   "university": 15,
+   "field": 4,
+   "name": "Bachelor of Business Administration (BBA)"
+  },
+  {
+   "university": 15,
+   "field": 4,
+   "name": "Bachelor of Accounting (BAct)"
+  },
+  {
+   "university": 15,
+   "field": 4,
+   "name": "Bachelor of Economics (Statistics)"
+  },
+  {
+   "university": 15,
+   "field": 4,
+   "name": "Bachelor of Economics (Economics)"
+  },
+  {
+   "university": 15,
+   "field": 4,
+   "name": "Bachelor of Public Administration (BPA)"
+  },
+  {
+   "university": 15,
+   "field": 4,
+   "name": "Bachelor of Economics (Development Studies)"
+  },
+  {
+   "university": 15,
+   "field": 4,
+   "name": "Bachelor of Applied Science (BAS)"
+  },
+  {
+   "university": 15,
+   "field": 4,
+   "name": "Bachelor of Political Science (BPS)"
+  },
+  {
+   "university": 16,
+   "field": 4,
+   "name": "Bachelor of Commerce (BCom)"
+  },
+  {
+   "university": 16,
+   "field": 4,
+   "name": "Bachelor of Business Administration (BBA)"
+  },
+  {
+   "university": 16,
+   "field": 4,
+   "name": "Bachelor of Accounting (BAct)"
+  },
+  {
+   "university": 16,
+   "field": 4,
+   "name": "Bachelor of Economics (Statistics)"
+  },
+  {
+   "university": 16,
+   "field": 4,
+   "name": "Bachelor of Economics (Economics)"
+  },
+  {
+   "university": 16,
+   "field": 4,
+   "name": "Bachelor of Public Administration (BPA)"
+  },
+  {
+   "university": 16,
+   "field": 4,
+   "name": "Bachelor of Economics (Development Studies)"
+  },
+  {
+   "university": 16,
+   "field": 4,
+   "name": "Bachelor of Applied Science (BAS)"
+  },
+  {
+   "university": 16,
+   "field": 4,
+   "name": "Bachelor of Political Science (BPS)"
+  },
+  {
+   "university": 17,
+   "field": 4,
+   "name": "Co-operative & Business Degree"
+  },
+  {
+   "university": 21,
+   "field": 4,
+   "name": "Business Management (BM)"
+  },
+  {
+   "university": 21,
+   "field": 4,
+   "name": "English for Professional Purpose (EPP)"
+  },
+  {
+   "university": 21,
+   "field": 4,
+   "name": "Tourism and Hospitality Management (THM)"
+  },
+  {
+   "university": 21,
+   "field": 4,
+   "name": "Economic and Finance (EF)"
+  },
+  {
+   "university": 21,
+   "field": 4,
+   "name": "Journalism (JNL)"
+  },
+  {
+   "university": 23,
+   "field": 10,
+   "name": "Myanmar"
+  },
+  {
+   "university": 23,
+   "field": 10,
+   "name": "English"
+  },
+  {
+   "university": 23,
+   "field": 9,
+   "name": "Geography"
+  },
+  {
+   "university": 23,
+   "field": 9,
+   "name": "Environmental Studies"
+  },
+  {
+   "university": 23,
+   "field": 9,
+   "name": "Fisheries and Agriculture"
+  },
+  {
+   "university": 23,
+   "field": 9,
+   "name": "Environmental and Water Studies"
+  },
+  {
+   "university": 23,
+   "field": 9,
+   "name": "Environmental Science"
+  },
+  {
+   "university": 23,
+   "field": 8,
+   "name": "History"
+  },
+  {
+   "university": 23,
+   "field": 8,
+   "name": "Philosophy"
+  },
+  {
+   "university": 23,
+   "field": 8,
+   "name": "Psychology"
+  },
+  {
+   "university": 23,
+   "field": 8,
+   "name": "Law"
+  },
+  {
+   "university": 23,
+   "field": 8,
+   "name": "Oriental Studies"
+  },
+  {
+   "university": 23,
+   "field": 8,
+   "name": "International Relations"
+  },
+  {
+   "university": 23,
+   "field": 8,
+   "name": "Political Science"
+  },
+  {
+   "university": 23,
+   "field": 8,
+   "name": "Anthropology"
+  },
+  {
+   "university": 23,
+   "field": 8,
+   "name": "Archaeology"
+  },
+  {
+   "university": 23,
+   "field": 7,
+   "name": "Library and Information studies"
+  },
+  {
+   "university": 23,
+   "field": 5,
+   "name": "Chemistry"
+  },
+  {
+   "university": 23,
+   "field": 5,
+   "name": "Biochemistry"
+  },
+  {
+   "university": 23,
+   "field": 5,
+   "name": "Physics"
+  },
+  {
+   "university": 23,
+   "field": 5,
+   "name": "Zoology"
+  },
+  {
+   "university": 23,
+   "field": 5,
+   "name": "Botany"
+  },
+  {
+   "university": 23,
+   "field": 5,
+   "name": "Marine Science"
+  },
+  {
+   "university": 23,
+   "field": 5,
+   "name": "Geology"
+  },
+  {
+   "university": 23,
+   "field": 5,
+   "name": "Industrial Chemistry"
+  },
+  {
+   "university": 23,
+   "field": 5,
+   "name": "Food Science"
+  },
+  {
+   "university": 23,
+   "field": 6,
+   "name": "Mathematics"
+  },
+  {
+   "university": 23,
+   "field": 1,
+   "name": "Computer Science"
+  },
+  {
+   "university": 23,
+   "field": 2,
+   "name": "Engineering Physics"
+  },
+  {
+   "university": 24,
+   "field": 1,
+   "name": "Computer Science"
+  },
+  {
+   "university": 24,
+   "field": 5,
+   "name": "Industrial Chemistry"
+  },
+  {
+   "university": 24,
+   "field": 5,
+   "name": "Physics"
+  },
+  {
+   "university": 24,
+   "field": 5,
+   "name": "Nuclear Physics"
+  },
+  {
+   "university": 24,
+   "field": 5,
+   "name": "Chemistry"
+  },
+  {
+   "university": 24,
+   "field": 5,
+   "name": "Zoology"
+  },
+  {
+   "university": 24,
+   "field": 5,
+   "name": "Botany"
+  },
+  {
+   "university": 24,
+   "field": 5,
+   "name": "Geology"
+  },
+  {
+   "university": 24,
+   "field": 5,
+   "name": "Biochemistry"
+  },
+  {
+   "university": 24,
+   "field": 5,
+   "name": "Biotechnology"
+  },
+  {
+   "university": 24,
+   "field": 5,
+   "name": "Microbiology"
+  },
+  {
+   "university": 24,
+   "field": 8,
+   "name": "International Relations"
+  },
+  {
+   "university": 24,
+   "field": 8,
+   "name": "Law (LLB)"
+  },
+  {
+   "university": 24,
+   "field": 8,
+   "name": "Law (BA)"
+  },
+  {
+   "university": 24,
+   "field": 8,
+   "name": "Literature"
+  },
+  {
+   "university": 24,
+   "field": 8,
+   "name": "Psychology"
+  },
+  {
+   "university": 24,
+   "field": 8,
+   "name": "History"
+  },
+  {
+   "university": 24,
+   "field": 8,
+   "name": "Philosophy"
+  },
+  {
+   "university": 24,
+   "field": 8,
+   "name": "Oriental Studies"
+  },
+  {
+   "university": 24,
+   "field": 8,
+   "name": "Anthropology"
+  },
+  {
+   "university": 24,
+   "field": 8,
+   "name": "Archaeology"
+  },
+  {
+   "university": 24,
+   "field": 4,
+   "name": "Business Information Technology"
+  },
+  {
+   "university": 24,
+   "field": 4,
+   "name": "Economics"
+  },
+  {
+   "university": 24,
+   "field": 10,
+   "name": "English"
+  },
+  {
+   "university": 24,
+   "field": 10,
+   "name": "Myanmar Language"
+  },
+  {
+   "university": 24,
+   "field": 10,
+   "name": "Myanmar Studies"
+  },
+  {
+   "university": 24,
+   "field": 6,
+   "name": "Mathematics"
+  },
+  {
+   "university": 24,
+   "field": 9,
+   "name": "Geography"
+  },
+  {
+   "university": 14,
+   "field": 10,
+   "name": "English"
+  },
+  {
+   "university": 14,
+   "field": 10,
+   "name": "Japanese (Japan)"
+  },
+  {
+   "university": 14,
+   "field": 10,
+   "name": "Chinese (China)"
+  },
+  {
+   "university": 14,
+   "field": 10,
+   "name": "Korean"
+  },
+  {
+   "university": 14,
+   "field": 10,
+   "name": "English for business purposes"
+  },
+  {
+   "university": 14,
+   "field": 10,
+   "name": "French (France)"
+  },
+  {
+   "university": 14,
+   "field": 10,
+   "name": "German"
+  },
+  {
+   "university": 14,
+   "field": 10,
+   "name": "Russian"
+  },
+  {
+   "university": 14,
+   "field": 10,
+   "name": "Thai (Thailand)"
+  },
+  {
+   "university": 18,
+   "field": 7,
+   "name": "Science (BSc)"
+  },
+  {
+   "university": 18,
+   "field": 7,
+   "name": "Art (BA)"
+  },
+  {
+   "university": 18,
+   "field": 7,
+   "name": "Arts and Science (BASc)"
+  },
+  {
+   "university": 22,
+   "field": 8,
+   "name": "National University of Arts and Culture Programs"
+  },
+  {
+   "university": 19,
+   "field": 11,
+   "name": "Port and Harbour Engineering (PH)"
+  },
+  {
+   "university": 19,
+   "field": 11,
+   "name": "Nautical Science (NS)"
+  },
+  {
+   "university": 19,
+   "field": 11,
+   "name": "Marine Engineering (ME)"
+  },
+  {
+   "university": 19,
+   "field": 11,
+   "name": "Marine Electrical System and Electronics Engineering (MESE)"
+  },
+  {
+   "university": 19,
+   "field": 11,
+   "name": "Naval Architecture (NA)"
+  },
+  {
+   "university": 19,
+   "field": 11,
+   "name": "Marine Mechanical (MM)"
+  },
+  {
+   "university": 19,
+   "field": 11,
+   "name": "River and Coastal Engineering (RC)"
+  },
+  {
+   "university": 20,
+   "field": 11,
+   "name": "Mercantile Marine Diploma Programs"
+  }
+ ]
+}

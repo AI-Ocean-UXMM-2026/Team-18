@@ -1,0 +1,820 @@
+[
+ {
+  "id": "swe",
+  "t": "Software Engineer",
+  "codes": "ICR",
+  "f": [
+   1
+  ],
+  "demand": "High",
+  "study": "4–5 years",
+  "blurb": "Designs, builds and maintains the apps and systems people use every day.",
+  "positions": [
+   "Junior / Full-stack Developer",
+   "Mobile App Developer",
+   "QA & Test Engineer",
+   "DevOps / Cloud Engineer"
+  ],
+  "skills": [
+   "Programming (Python, JavaScript, Java)",
+   "Logical problem solving",
+   "Data structures & algorithms",
+   "Teamwork with Git",
+   "Technical English"
+  ],
+  "quals": [
+   "Bachelor in Computer Science, Software Engineering or CEIT",
+   "Portfolio of projects (GitHub)",
+   "Optional: cloud or vendor certificates"
+  ],
+  "outlook": "Demand is strong in banking, telecom, e-commerce and remote work for regional and overseas companies. Many graduates start in local tech firms and move to regional roles after 2–3 years.",
+  "subjects": [
+   "Mathematics",
+   "Physics",
+   "English"
+  ],
+  "majors": [
+   {
+    "n": "Computer Science",
+    "f": 1
+   },
+   {
+    "n": "Software Engineering",
+    "f": 1
+   },
+   {
+    "n": "Computer Engineering & IT (CEIT)",
+    "f": 2
+   }
+  ],
+  "video": {
+   "len": "3:05",
+   "ch": [
+    "A day on a product team",
+    "Real projects: banking and delivery apps",
+    "Skills you need in year one",
+    "Where the career goes"
+   ],
+   "url": ""
+  }
+ },
+ {
+  "id": "data",
+  "t": "Data Scientist",
+  "codes": "ICE",
+  "f": [
+   1,
+   6
+  ],
+  "demand": "Growing",
+  "study": "4–5 years",
+  "blurb": "Turns raw data into answers and predictions that guide business and public decisions.",
+  "positions": [
+   "Data Analyst",
+   "Business Intelligence Analyst",
+   "Machine Learning Engineer",
+   "Research Statistician"
+  ],
+  "skills": [
+   "Statistics & probability",
+   "Python / SQL",
+   "Data visualisation",
+   "Asking good questions",
+   "Presenting findings"
+  ],
+  "quals": [
+   "Bachelor in Statistics, Mathematics or Computer Science",
+   "Projects with real datasets",
+   "Optional: online ML certificates"
+  ],
+  "outlook": "Telecoms, banks, NGOs and research groups hire analysts. The role is newer in Myanmar, so analysts who also communicate well move up quickly.",
+  "subjects": [
+   "Mathematics",
+   "English",
+   "Economics or Physics"
+  ],
+  "majors": [
+   {
+    "n": "Statistics",
+    "f": 4
+   },
+   {
+    "n": "Mathematics",
+    "f": 6
+   },
+   {
+    "n": "Computer Science",
+    "f": 1
+   }
+  ],
+  "video": {
+   "len": "2:58",
+   "ch": [
+    "What a data team does",
+    "From spreadsheet to model",
+    "Tools used every day",
+    "Career ladder"
+   ],
+   "url": ""
+  }
+ },
+ {
+  "id": "civil",
+  "t": "Civil Engineer",
+  "codes": "RIC",
+  "f": [
+   2
+  ],
+  "demand": "Steady",
+  "study": "6 years (B.E.)",
+  "blurb": "Plans and supervises roads, bridges, buildings and water systems.",
+  "positions": [
+   "Site Engineer",
+   "Structural Design Engineer",
+   "Quantity Surveyor",
+   "Project Manager"
+  ],
+  "skills": [
+   "Mathematics & mechanics",
+   "AutoCAD / structural software",
+   "Site safety & supervision",
+   "Reading drawings",
+   "Reporting to clients"
+  ],
+  "quals": [
+   "Bachelor of Engineering (Civil)",
+   "Registration with the Myanmar Engineering Council",
+   "Site experience"
+  ],
+  "outlook": "Infrastructure, housing and regional construction projects keep demand steady. Engineers with design software skills and English often work in Singapore, Thailand or the Gulf.",
+  "subjects": [
+   "Mathematics",
+   "Physics",
+   "Chemistry"
+  ],
+  "majors": [
+   {
+    "n": "Civil Engineering",
+    "f": 2
+   },
+   {
+    "n": "Architecture",
+    "f": 2
+   },
+   {
+    "n": "Port & Harbour Engineering",
+    "f": 11
+   }
+  ],
+  "video": {
+   "len": "3:10",
+   "ch": [
+    "On a construction site",
+    "Design office vs. site work",
+    "Safety and responsibility",
+    "Licences and growth"
+   ],
+   "url": ""
+  }
+ },
+ {
+  "id": "arch",
+  "t": "Architect",
+  "codes": "ARI",
+  "f": [
+   2
+  ],
+  "demand": "Steady",
+  "study": "6 years (B.Arch)",
+  "blurb": "Designs buildings and spaces that are beautiful, safe and useful.",
+  "positions": [
+   "Junior Architect",
+   "Interior Designer",
+   "Urban Planner",
+   "3D Visualiser"
+  ],
+  "skills": [
+   "Drawing & 3D modelling",
+   "Spatial thinking",
+   "Building codes",
+   "Client communication",
+   "Patience with revisions"
+  ],
+  "quals": [
+   "Bachelor of Architecture",
+   "Portfolio",
+   "Registration as an architect"
+  ],
+  "outlook": "Work comes from housing, hotels and commercial projects. A strong portfolio matters more than grades once you graduate.",
+  "subjects": [
+   "Mathematics",
+   "Physics",
+   "Art / Design"
+  ],
+  "majors": [
+   {
+    "n": "Architecture",
+    "f": 2
+   },
+   {
+    "n": "Civil Engineering",
+    "f": 2
+   }
+  ],
+  "video": {
+   "len": "2:52",
+   "ch": [
+    "From sketch to building",
+    "Studio culture",
+    "Software you will learn",
+    "Running your own practice"
+   ],
+   "url": ""
+  }
+ },
+ {
+  "id": "doctor",
+  "t": "Medical Doctor",
+  "codes": "ISR",
+  "f": [
+   3
+  ],
+  "demand": "High",
+  "study": "7 years incl. house surgeon",
+  "blurb": "Diagnoses and treats patients in hospitals, clinics and communities.",
+  "positions": [
+   "House Surgeon",
+   "General Practitioner",
+   "Specialist (after postgraduate)",
+   "Public Health Officer"
+  ],
+  "skills": [
+   "Biology & chemistry",
+   "Memory and steady study habits",
+   "Empathy with patients",
+   "Calm under pressure",
+   "Clinical English"
+  ],
+  "quals": [
+   "M.B.,B.S. degree",
+   "Housemanship",
+   "Myanmar Medical Council registration"
+  ],
+  "outlook": "Doctors are needed everywhere, especially outside big cities. Admission is the most competitive of all fields.",
+  "subjects": [
+   "Biology",
+   "Chemistry",
+   "English"
+  ],
+  "majors": [
+   {
+    "n": "Medicine (M.B.,B.S.)",
+    "f": 3
+   },
+   {
+    "n": "Dental Surgery (B.D.S.)",
+    "f": 3
+   },
+   {
+    "n": "Public Health",
+    "f": 3
+   }
+  ],
+  "video": {
+   "len": "3:02",
+   "ch": [
+    "Ward rounds",
+    "Medical school years",
+    "Choosing a specialty",
+    "Working in rural clinics"
+   ],
+   "url": ""
+  }
+ },
+ {
+  "id": "pharm",
+  "t": "Pharmacist",
+  "codes": "ICS",
+  "f": [
+   3
+  ],
+  "demand": "Growing",
+  "study": "4–5 years",
+  "blurb": "Makes sure medicines are safe, correct and used well.",
+  "positions": [
+   "Hospital Pharmacist",
+   "Community Pharmacist",
+   "Pharmaceutical Sales Specialist",
+   "Quality Control Analyst"
+  ],
+  "skills": [
+   "Chemistry",
+   "Accuracy with doses",
+   "Explaining to patients",
+   "Regulations",
+   "Lab technique"
+  ],
+  "quals": [
+   "B.Pharm degree",
+   "Pharmacist registration"
+  ],
+  "outlook": "Hospitals, pharmacy chains and manufacturers hire pharmacists. Quality control and regulatory roles are growing.",
+  "subjects": [
+   "Chemistry",
+   "Biology",
+   "Mathematics"
+  ],
+  "majors": [
+   {
+    "n": "Pharmacy (B.Pharm)",
+    "f": 3
+   },
+   {
+    "n": "Medical Technology",
+    "f": 3
+   },
+   {
+    "n": "Biochemistry",
+    "f": 5
+   }
+  ],
+  "video": {
+   "len": "2:47",
+   "ch": [
+    "Behind the pharmacy counter",
+    "Hospital dispensing",
+    "Industry and labs",
+    "Further study"
+   ],
+   "url": ""
+  }
+ },
+ {
+  "id": "acct",
+  "t": "Accountant / Financial Analyst",
+  "codes": "CEI",
+  "f": [
+   4
+  ],
+  "demand": "High",
+  "study": "4 years + professional exams",
+  "blurb": "Keeps an organisation's money accurate and helps leaders plan.",
+  "positions": [
+   "Audit Associate",
+   "Accountant",
+   "Financial Analyst",
+   "Tax Consultant"
+  ],
+  "skills": [
+   "Numbers and accuracy",
+   "Excel",
+   "Accounting standards",
+   "Business English",
+   "Integrity"
+  ],
+  "quals": [
+   "Bachelor in Accounting, Commerce or Economics",
+   "Professional body (ACCA / CPA)"
+  ],
+  "outlook": "Every company needs accountants, and ACCA holders can work across the region. Audit firms recruit fresh graduates every year.",
+  "subjects": [
+   "Mathematics",
+   "Economics",
+   "English"
+  ],
+  "majors": [
+   {
+    "n": "Accounting",
+    "f": 4
+   },
+   {
+    "n": "Commerce",
+    "f": 4
+   },
+   {
+    "n": "Economics",
+    "f": 4
+   }
+  ],
+  "video": {
+   "len": "3:08",
+   "ch": [
+    "Audit season",
+    "Inside a finance team",
+    "ACCA explained",
+    "Paths to CFO"
+   ],
+   "url": ""
+  }
+ },
+ {
+  "id": "biz",
+  "t": "Business & Marketing Manager",
+  "codes": "ESA",
+  "f": [
+   4
+  ],
+  "demand": "Growing",
+  "study": "3–4 years",
+  "blurb": "Grows brands and teams, and decides how a company competes.",
+  "positions": [
+   "Marketing Executive",
+   "Brand Manager",
+   "Business Development Officer",
+   "Entrepreneur"
+  ],
+  "skills": [
+   "Communication",
+   "Market research",
+   "Digital marketing",
+   "Leading teams",
+   "Negotiation"
+  ],
+  "quals": [
+   "Bachelor in Business Administration, Marketing or Management",
+   "Internships",
+   "Optional: CIM marketing certificates"
+  ],
+  "outlook": "Consumer goods, banks and online businesses hire for marketing and sales. Digital skills are what employers ask about most.",
+  "subjects": [
+   "English",
+   "Economics",
+   "Mathematics"
+  ],
+  "majors": [
+   {
+    "n": "Business Administration",
+    "f": 4
+   },
+   {
+    "n": "Business Management",
+    "f": 4
+   },
+   {
+    "n": "Tourism & Hospitality Management",
+    "f": 4
+   }
+  ],
+  "video": {
+   "len": "2:55",
+   "ch": [
+    "Launching a product",
+    "Working with agencies",
+    "Numbers marketers use",
+    "Starting your own business"
+   ],
+   "url": ""
+  }
+ },
+ {
+  "id": "teach",
+  "t": "Teacher / Education Specialist",
+  "codes": "SAC",
+  "f": [
+   7
+  ],
+  "demand": "Steady",
+  "study": "4–5 years",
+  "blurb": "Helps students learn, and designs better ways to teach.",
+  "positions": [
+   "Subject Teacher",
+   "Curriculum Developer",
+   "Education Officer",
+   "Learning Designer (online)"
+  ],
+  "skills": [
+   "Explaining clearly",
+   "Patience",
+   "Lesson planning",
+   "Classroom leadership",
+   "Subject mastery"
+  ],
+  "quals": [
+   "Bachelor of Education (BEd / BSc / BA)",
+   "Teaching practice"
+  ],
+  "outlook": "Private and international schools and online learning platforms are hiring alongside government schools.",
+  "subjects": [
+   "English",
+   "Your chosen teaching subject",
+   "Myanmar"
+  ],
+  "majors": [
+   {
+    "n": "Education (Science)",
+    "f": 7
+   },
+   {
+    "n": "Education (Arts)",
+    "f": 7
+   },
+   {
+    "n": "English",
+    "f": 10
+   }
+  ],
+  "video": {
+   "len": "3:00",
+   "ch": [
+    "A school day",
+    "Planning lessons",
+    "Teaching online",
+    "Growing into leadership"
+   ],
+   "url": ""
+  }
+ },
+ {
+  "id": "law",
+  "t": "Lawyer / Diplomat",
+  "codes": "ESA",
+  "f": [
+   8
+  ],
+  "demand": "Steady",
+  "study": "4–5 years",
+  "blurb": "Represents people and the country, in court or between nations.",
+  "positions": [
+   "Legal Associate",
+   "Advocate",
+   "Compliance Officer",
+   "Foreign Affairs Officer"
+  ],
+  "skills": [
+   "Reading & writing",
+   "Argument and debate",
+   "Research",
+   "Ethics",
+   "Languages"
+  ],
+  "quals": [
+   "LLB or BA in International Relations / Political Science",
+   "Bar requirements (law)",
+   "Civil service exam (diplomacy)"
+  ],
+  "outlook": "Law firms, banks (compliance) and international organisations hire graduates with strong English.",
+  "subjects": [
+   "English",
+   "History",
+   "Myanmar"
+  ],
+  "majors": [
+   {
+    "n": "Law",
+    "f": 8
+   },
+   {
+    "n": "International Relations",
+    "f": 8
+   },
+   {
+    "n": "Political Science",
+    "f": 8
+   }
+  ],
+  "video": {
+   "len": "3:12",
+   "ch": [
+    "Inside a law firm",
+    "Courtroom basics",
+    "Diplomacy as a career",
+    "Specialising"
+   ],
+   "url": ""
+  }
+ },
+ {
+  "id": "lang",
+  "t": "Translator / Interpreter",
+  "codes": "ASE",
+  "f": [
+   10
+  ],
+  "demand": "Steady",
+  "study": "4 years",
+  "blurb": "Carries meaning between languages for business, media and diplomacy.",
+  "positions": [
+   "Translator",
+   "Conference Interpreter",
+   "Localisation Specialist",
+   "Language Teacher"
+  ],
+  "skills": [
+   "Two or more languages",
+   "Cultural knowledge",
+   "Fast, accurate writing",
+   "Listening",
+   "Professional ethics"
+  ],
+  "quals": [
+   "Bachelor in a foreign language",
+   "JLPT / HSK / TOPIK / IELTS levels"
+  ],
+  "outlook": "Japanese, Chinese, Korean and English are in demand with investors, NGOs and travel companies.",
+  "subjects": [
+   "English",
+   "Myanmar",
+   "Any foreign language"
+  ],
+  "majors": [
+   {
+    "n": "English",
+    "f": 10
+   },
+   {
+    "n": "Japanese",
+    "f": 10
+   },
+   {
+    "n": "Chinese",
+    "f": 10
+   }
+  ],
+  "video": {
+   "len": "2:50",
+   "ch": [
+    "A translator's week",
+    "Interpreting live",
+    "Choosing your language",
+    "Freelance vs. in-house"
+   ],
+   "url": ""
+  }
+ },
+ {
+  "id": "marine",
+  "t": "Marine Engineer / Ship Officer",
+  "codes": "RIC",
+  "f": [
+   11
+  ],
+  "demand": "High",
+  "study": "4–5 years + sea time",
+  "blurb": "Runs and maintains ships, engines and ports around the world.",
+  "positions": [
+   "Cadet / Junior Engineer",
+   "Deck Officer",
+   "Port Engineer",
+   "Naval Architect"
+  ],
+  "skills": [
+   "Mechanics",
+   "Physical fitness",
+   "Teamwork at sea",
+   "Safety discipline",
+   "Maritime English"
+  ],
+  "quals": [
+   "Degree in Marine Engineering or Nautical Science",
+   "STCW certificates",
+   "Sea service"
+  ],
+  "outlook": "International shipping companies recruit Myanmar seafarers. Pay rises quickly with certificates and sea time.",
+  "subjects": [
+   "Mathematics",
+   "Physics",
+   "English"
+  ],
+  "majors": [
+   {
+    "n": "Marine Engineering",
+    "f": 11
+   },
+   {
+    "n": "Nautical Science",
+    "f": 11
+   },
+   {
+    "n": "Naval Architecture",
+    "f": 11
+   }
+  ],
+  "video": {
+   "len": "3:06",
+   "ch": [
+    "Life on board",
+    "Engine room work",
+    "Certificates and ranks",
+    "Coming ashore later"
+   ],
+   "url": ""
+  }
+ },
+ {
+  "id": "env",
+  "t": "Environmental Scientist",
+  "codes": "IRS",
+  "f": [
+   9,
+   5
+  ],
+  "demand": "Growing",
+  "study": "4 years",
+  "blurb": "Studies water, land and climate, and helps protect them.",
+  "positions": [
+   "Environmental Officer",
+   "Field Researcher",
+   "Impact Assessment Consultant",
+   "NGO Programme Officer"
+  ],
+  "skills": [
+   "Biology & chemistry",
+   "Field work",
+   "GIS mapping",
+   "Report writing",
+   "Community work"
+  ],
+  "quals": [
+   "Bachelor in Environmental Science, Geography or Marine Science"
+  ],
+  "outlook": "Project developers, NGOs and climate programmes need environmental assessments.",
+  "subjects": [
+   "Biology",
+   "Chemistry",
+   "Geography"
+  ],
+  "majors": [
+   {
+    "n": "Environmental Science",
+    "f": 9
+   },
+   {
+    "n": "Geography",
+    "f": 9
+   },
+   {
+    "n": "Marine Science",
+    "f": 5
+   }
+  ],
+  "video": {
+   "len": "2:59",
+   "ch": [
+    "In the field",
+    "Lab and mapping",
+    "Writing assessments",
+    "Working with communities"
+   ],
+   "url": ""
+  }
+ },
+ {
+  "id": "ux",
+  "t": "UX / Graphic Designer",
+  "codes": "AIE",
+  "f": [
+   1,
+   8
+  ],
+  "demand": "Growing",
+  "study": "3–4 years",
+  "blurb": "Designs how apps, brands and products look and feel.",
+  "positions": [
+   "Graphic Designer",
+   "UI / UX Designer",
+   "Brand Designer",
+   "Motion Designer"
+  ],
+  "skills": [
+   "Visual design",
+   "Figma",
+   "User research",
+   "Typography",
+   "Taking feedback"
+  ],
+  "quals": [
+   "Degree or diploma in Design, Computing or Media",
+   "Strong portfolio"
+  ],
+  "outlook": "Agencies, start-ups and remote clients hire designers. A portfolio matters more than the degree title.",
+  "subjects": [
+   "Art",
+   "English",
+   "Computer Science"
+  ],
+  "majors": [
+   {
+    "n": "Computing / Multimedia",
+    "f": 1
+   },
+   {
+    "n": "Communication Design",
+    "f": 8
+   },
+   {
+    "n": "Business Information Technology",
+    "f": 4
+   }
+  ],
+  "video": {
+   "len": "3:04",
+   "ch": [
+    "A design sprint",
+    "Research with users",
+    "Building a portfolio",
+    "Freelancing"
+   ],
+   "url": ""
+  }
+ }
+]
