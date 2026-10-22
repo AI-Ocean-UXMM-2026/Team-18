@@ -29,6 +29,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 py-3">
           <Link href={user ? (user.role === "student" ? "/student" : `/${user.role}`) : isGuest ? "/student" : "/"} className="flex items-center gap-2 font-bold"><img src="/favicon.svg" alt="" className="h-7 w-7" />CareerNet</Link>
           {user && user.role !== "student" && <span className="rounded-full bg-soft px-2.5 py-0.5 text-xs font-semibold text-muted">{t(user.role === "mentor" ? "Mentor portal" : "Admin portal")}</span>}
+          {!user && !isGuest && <nav aria-label={t("Portals")} className="hidden items-center gap-1 sm:flex">
+            {[ ["/login", "Student"], ["/mentor/login", "Mentor"], ["/admin/login", "Admin"] ].map(([href, label]) => <Link key={href} href={href} className={`rounded-lg px-3 py-2 text-sm font-semibold transition hover:bg-brand-soft hover:text-brand ${location === href ? "bg-brand-soft text-brand" : "text-muted"}`}>{t(label)}</Link>)}
+          </nav>}
           {step > 0 && (
             <ol className="order-3 flex w-full flex-wrap gap-1 md:order-none md:w-auto md:flex-1 md:justify-center">
               {STEPS.map((s, i) => <li key={s} className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-xs ${step === i + 1 ? "bg-brand-soft font-semibold" : "text-muted"}`}><span className={`grid h-5 w-5 place-items-center rounded-full text-[11px] font-bold ${step > i + 1 ? "bg-ok text-white" : step === i + 1 ? "bg-brand text-white" : "border border-line"}`}>{i + 1}</span>{t(s)}</li>)}
