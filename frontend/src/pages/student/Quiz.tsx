@@ -39,7 +39,7 @@ export default function Quiz() {
       <div className="flex justify-between text-sm"><span className="eyebrow">{t(q.area)}</span><span className="font-mono">{index + 1} / {qs.length}</span></div>
       <div className="h-2 overflow-hidden rounded-full bg-soft"><div className="h-full bg-brand transition-all" style={{ width: `${((index + 1) / qs.length) * 100}%` }} /></div>
       <div className="card flex flex-col gap-4">
-        <h1 className="text-xl sm:text-2xl">{lang === "my" ? q.my : q.en}</h1>
+        <h1 className="min-h-[3.75em] text-xl leading-tight sm:text-2xl">{lang === "my" ? q.my : q.en}</h1>
         <div className="grid gap-2 sm:grid-cols-5" role="radiogroup">
           {LIKERT.map((label, k) => { const on = j.answers[q.id] === k + 1; return (
             <button key={label} role="radio" aria-checked={on} onClick={() => answer(k + 1)} className={`flex items-center gap-2 rounded-xl border-2 p-3 text-sm font-semibold sm:flex-col ${on ? "border-brand bg-brand-soft" : "border-transparent bg-soft hover:border-brand"}`}>
