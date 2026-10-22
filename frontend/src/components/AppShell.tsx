@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth";
 import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
 import { JOURNEY_PATHS, studentProgress, studentRouteRedirect } from "@/lib/studentFlow";
+import { FloatingAdvisor } from "@/components/FloatingAdvisor";
 
 const STUDENT_NAV = [
   ["/student", "Home / Dashboard", "⌂"],
@@ -143,6 +144,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           {children}
         </main>
       </div> : <main className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 pb-16 pt-8 sm:px-6 lg:px-8">{children}</main>}
+      {studentWorkspace && <FloatingAdvisor />}
     </div>
   );
 }

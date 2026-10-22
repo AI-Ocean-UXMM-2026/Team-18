@@ -4,7 +4,6 @@ import { Link } from "wouter";
 import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
 import { useScore } from "@/lib/top3";
-import { AdvisorChat } from "@/components/AdvisorChat";
 import { Actions, ErrorNote, PageHead, Spinner } from "@/components/ui";
 
 export default function Results() {
@@ -38,7 +37,6 @@ export default function Results() {
           {Object.entries(data.scores).map(([code, v]) => <div key={code} className="grid grid-cols-[1.5rem_1fr_2rem] items-center gap-2 text-sm"><b className="font-mono">{code}</b><div className="h-2 overflow-hidden rounded-full bg-soft"><div className="h-full bg-brand" style={{ width: `${v}%` }} /></div><span className="text-right font-mono">{v}</span></div>)}
         </aside>
       </div>
-      <AdvisorChat title="AI career coach" subtitle="Ask why a career fits you, or what the jobs are really like." endpoint="/ai/career" payload={{ answers: j.answers, level: j.level ?? "g12" }} suggestions={["Explain my results in simple words", "Which of my 3 matches suits me best, and why?"]} />
       <Actions><Link href="/student/movies" className="btn-primary" onClick={() => set({ resultsReviewed: true })}>{t("Next: short movies (optional)")}</Link></Actions>
     </>
   );
