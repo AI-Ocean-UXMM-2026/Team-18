@@ -1,4 +1,5 @@
 // Your plan: career, major, shortlist, mentor session, next steps, PDF report (Pro).
+import { useState } from "react";
 import { Link } from "wouter";
 import { api } from "@/lib/api";
 import { useApiData } from "@/hooks/useApiData";
@@ -18,6 +19,7 @@ const NEXT = {
 };
 export default function Plan() {
   const { j, content } = useJourney(); const { user, isGuest } = useAuth(); const { t } = usePrefs();
+  const [pdfStatus, setPdfStatus] = useState("");
   const score = useScore(j); const unis = useUniversities(false, true);
   const bookings = useApiData(() => user?.isPro ? api.get<{ bookings: { status: string; startsAt: string; mentorName: string }[] }>("/me/bookings") : Promise.resolve({ bookings: [] }), [user?.id, user?.isPro]);
   if (score.loading || unis.loading || !content) return <Spinner />;
@@ -27,10 +29,27 @@ export default function Plan() {
   const session = bookings.data?.bookings.find(b => ["confirmed", "completed"].includes(b.status));
   const next = NEXT[j.level ?? "g12"];
   function download() {
+    setPdfStatus("");
+    let objectUrl: string | null = null;
     try {
       const doc = buildReport({ name: user?.name ?? "", level: j.level ?? "g12", score: score.data!, career: c!, majors: j.majors, shortlist, nextSteps: next, session: session ? `${session.mentorName}, ${fmtWhen(session.startsAt)}` : null });
-      doc.save("CareerNet-report.pdf");
-    } catch { toast(t("Could not create the PDF")); }
+      const pdf = doc.output("blob");
+      if (!pdf.size) throw new Error("The generated PDF is empty.");
+      objectUrl = URL.createObjectURL(pdf);
+      const link = document.createElement("a");
+      link.href = objectUrl;
+      link.download = "CareerNet-report.pdf";
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setPdfStatus(t("Your PDF report is downloading. Check your Downloads folder."));
+    } catch (error) {
+      console.error("CareerNet PDF generation failed", error);
+      setPdfStatus(t("Could not create the PDF"));
+      toast(t("Could not create the PDF"));
+    }
+    if (objectUrl) window.setTimeout(() => URL.revokeObjectURL(objectUrl!), 60_000);
   }
   return (
     <>
@@ -51,7 +70,7 @@ export default function Plan() {
       </div>
       <div className={`card flex flex-col gap-2 ${user?.isPro ? "border-ok" : ""}`}>
         <div className="flex justify-between"><h2 className="text-lg">{t("Full report (PDF)")}</h2><span className="rounded-md bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand">Pro</span></div>
-        {user?.isPro ? <><p className="text-sm text-muted">{t("Your personal report with results, career plan, universities, scholarships and next steps.")}</p><button className="btn-primary self-start" onClick={download}>{t("Download PDF report")}</button></>
+        {user?.isPro ? <><p className="text-sm text-muted">{t("Your personal report with results, career plan, universities, scholarships and next steps.")}</p><button className="btn-primary self-start" onClick={download}>{t("Download PDF report")}</button>{pdfStatus && <p className="text-sm text-muted" role="status" aria-live="polite">{pdfStatus}</p>}</>
           : isGuest ? <><p className="text-sm text-muted">{t("Create an account to save your plan and see CareerNet Pro.")}</p><Link href="/register" className="btn-primary self-start">{t("Create an account")}</Link></>
           : <><p className="text-sm text-muted">{t("The full PDF report is part of CareerNet Pro.")}</p><Link href="/student/pro" className="btn-primary self-start">{t("Go Pro")}</Link></>}
       </div>

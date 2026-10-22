@@ -148,6 +148,7 @@ export const MYANMAR: Record<string, string> = {
   "Copy summary": "အနှစ်ချုပ် ကူးယူရန်",
   "Could not copy. Please copy the number manually.": "ကူးယူ၍ မရပါ။ နံပါတ်ကို ကိုယ်တိုင်ကူးယူပါ။",
   "Could not create the PDF": "PDF ပြုလုပ်၍ မရပါ",
+  "Your PDF report is downloading. Check your Downloads folder.": "သင့် PDF အစီရင်ခံစာ ဒေါင်းလုဒ်လုပ်နေပါသည်။ Downloads ဖိုင်တွဲကို စစ်ဆေးပါ။",
   "Country": "နိုင်ငံ",
   "Create account": "အကောင့်ဖွင့်မည်",
   "Create an account": "အကောင့်ဖွင့်ရန်",
