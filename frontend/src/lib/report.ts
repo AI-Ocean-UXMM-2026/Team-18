@@ -3,7 +3,7 @@ import { jsPDF } from "jspdf";
 import type { Career, ScoreResult, UniItem } from "@/lib/api";
 import { LEVELS } from "@/lib/format";
 
-type Input = { name: string; level: string; score: ScoreResult; career: Career; majors: string[]; shortlist: UniItem[]; nextSteps: string[]; session?: string | null };
+type Input = { name: string; level: string; score: ScoreResult; career: Career; majors: string[]; shortlist: UniItem[]; comparing: UniItem[]; videoChoice: "watch" | "skip" | null; watched: Record<string, boolean>; nextSteps: string[]; session?: string | null };
 type Color = [number, number, number];
 const INK: Color = [43, 33, 58], MUTED: Color = [104, 91, 120], VIOLET: Color = [112, 61, 224];
 const CREAM: Color = [250, 247, 239], LIME: Color = [225, 250, 119], PINK: Color = [250, 182, 214], LILAC: Color = [237, 228, 255], BLUE: Color = [204, 228, 255];
@@ -58,7 +58,7 @@ export function buildReport(o: Input) {
     } while (remaining.length);
   };
 
-  title("01", "Find your next move.", "Your personal career & university playbook", LIME);
+  title("01", "Career quiz results", "Your interests, strengths and career matches", LIME);
   card(clean(o.name).trim() || "Your personal playbook", [
     `${LEVELS[o.level] ?? o.level} | ${new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}`,
     `Holland code: ${o.score.holland} | Your interests, based on your quiz answers.`,
@@ -76,28 +76,43 @@ export function buildReport(o: Input) {
   y += 3;
   o.score.top.forEach(x => card(`${x.priority.toString().padStart(2, "0")} / ${x.career.t} - ${x.pct}% match`, [x.career.blurb], x.priority === 1 ? PINK : [255, 255, 255]));
 
+  title("02", "Career videos", "An optional look at real work and day-to-day roles.", BLUE);
+  const watchedCareers = o.score.top.filter(x => o.watched[x.career.id]).map(x => x.career.t);
+  card("Your video step", [
+    o.videoChoice === "watch" ? "You chose to watch career videos." : o.videoChoice === "skip" ? "You skipped this optional step." : "This optional step was not selected yet.",
+    watchedCareers.length ? `Watched: ${watchedCareers.join(", ")}` : o.videoChoice === "watch" ? "No career video is marked as watched yet." : "You can watch short career videos whenever you are ready.",
+  ], LILAC);
+
   const c = o.career;
-  title("02", "Build your direction.", "A career to explore. Skills you can start building now.", PINK);
+  title("03", "Choose your career", "The career you selected and what to explore next.", PINK);
   card(c.t, [c.blurb, `Job market: ${c.outlook}`, `Demand: ${c.demand} | Study length: ${c.study}`], LILAC);
   card("Roles you could grow into", c.positions.map(s => `- ${s}`));
   card("Your skill starter pack", c.skills.map(s => `- ${s}`), BLUE);
   card("Qualifications to aim for", c.quals.map(s => `- ${s}`));
-  card("Your major & school subjects", [o.majors.join(", ") || "No major selected yet.", `Key subjects: ${c.subjects.join(", ")}`], LIME);
 
-  title("03", "Explore your options.", "Your university shortlist, all in one place.", BLUE);
+  title("04", "Choose your major", "Your selected study direction and useful school subjects.", LIME);
+  card("Your selected majors", [o.majors.join(", ") || "No major selected yet.", `Key school subjects: ${c.subjects.join(", ")}`], LILAC);
+
+  title("05", "Explore & compare universities", "Your shortlist and the options you compared side by side.", BLUE);
   if (!o.shortlist.length) card("Your shortlist is still open", ["Explore universities and save the ones that fit your goals."]);
-  o.shortlist.forEach((item, index) => {
+  const comparisonKeys = new Set(o.comparing.map(item => item.key));
+  const orderedUniversities = [
+    ...o.comparing,
+    ...o.shortlist.filter(item => !comparisonKeys.has(item.key)),
+  ];
+  if (o.comparing.length) card("Compared side by side", [o.comparing.map(item => item.kind === "g12" ? item.university.name : item.school.name).join(" | ")], LILAC);
+  orderedUniversities.forEach((item, index) => {
     if (item.kind === "g12") {
-      const u = item.university;
-      card(`${index + 1} / ${u.name}`, [`${u.location} | ${u.type}`, `Programmes: ${item.programs.join(", ")}`, `Admission: ${u.admission}`, `Website: ${u.website}`], index % 2 ? LILAC : [255, 255, 255]);
+      const u = item.university, isCompared = comparisonKeys.has(item.key);
+      card(`${isCompared ? "Compared" : "Shortlisted"} / ${u.name}`, [`${u.location} | ${u.type}`, `Programmes: ${item.programs.join(", ")}`, `Admission: ${u.admission}`, `Website: ${u.website}`], index % 2 ? LILAC : [255, 255, 255]);
     } else {
-      const s = item.school, level = o.level === "igcse" ? "igcse" : "ged";
-      card(`${index + 1} / ${s.name}`, [`${s.city}, ${s.country} | ${s.type}`, `Scholarship: ${s.scholarship}`, `Entry with ${level.toUpperCase()}: ${s[level].note}`, `English: ${s.english}`, `Pathway: ${s.pathway} | Intakes: ${s.intakes}`, `Website: ${s.website}`], index % 2 ? LILAC : [255, 255, 255]);
+      const s = item.school, level = o.level === "igcse" ? "igcse" : "ged", isCompared = comparisonKeys.has(item.key);
+      card(`${isCompared ? "Compared" : "Shortlisted"} / ${s.name}`, [`${s.city}, ${s.country} | ${s.type}`, `Scholarship: ${s.scholarship}`, `Entry with ${level.toUpperCase()}: ${s[level].note}`, `English: ${s.english}`, `Programmes: ${s.programs.join(", ")}`, `Degree / partner: ${s.partner}`, `Admission: ${s.admission}`, `Pathway: ${s.pathway} | Duration: ${s.duration} | Intakes: ${s.intakes}`, `Website: ${s.website}`, `Source checked: ${s.lastChecked}`], index % 2 ? LILAC : [255, 255, 255]);
     }
   });
   card("Before you apply", ["Confirm entry rules, deadlines and scholarships directly with each university."], LIME);
 
-  title("04", "Make your next move.", "Small steps today. More possibilities tomorrow.", LILAC);
+  title("06", "Your next steps", "A practical plan to keep moving toward your goal.", LILAC);
   if (o.session) card("Your mentor session", [o.session], PINK);
   o.nextSteps.forEach((step, index) => card(`${String(index + 1).padStart(2, "0")} / Your next step`, [step], index % 2 ? [255, 255, 255] : BLUE));
   card("Keep exploring. Keep growing.", ["Your quiz results are a starting point. Explore, ask questions and update your plan as you learn more about yourself."], LIME);

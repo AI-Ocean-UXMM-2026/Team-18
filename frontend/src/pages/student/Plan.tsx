@@ -32,7 +32,8 @@ export default function Plan() {
     setPdfStatus("");
     let objectUrl: string | null = null;
     try {
-      const doc = buildReport({ name: user?.name ?? "", level: j.level ?? "g12", score: score.data!, career: c!, majors: j.majors, shortlist, nextSteps: next, session: session ? `${session.mentorName}, ${fmtWhen(session.startsAt)}` : null });
+      const comparing = j.compare.map(key => unis.data?.items.find(item => item.key === key)).filter(Boolean) as typeof shortlist;
+      const doc = buildReport({ name: user?.name ?? "", level: j.level ?? "g12", score: score.data!, career: c!, majors: j.majors, shortlist, comparing, videoChoice: j.videoChoice, watched: j.watched, nextSteps: next, session: session ? `${session.mentorName}, ${fmtWhen(session.startsAt)}` : null });
       const pdf = doc.output("blob");
       if (!pdf.size) throw new Error("The generated PDF is empty.");
       objectUrl = URL.createObjectURL(pdf);
