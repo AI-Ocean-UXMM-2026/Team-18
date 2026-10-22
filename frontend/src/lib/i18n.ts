@@ -10,6 +10,8 @@ export type Language = "en" | "my";
 
 export const MYANMAR: Record<string, string> = {
   "CareerNet · guided student pathway": "CareerNet · ကျောင်းသားများအတွက် လမ်းညွှန်ခရီးစဉ်",
+  "Loading results": "ရလဒ်များကို ဖွင့်နေပါသည်",
+  "Loading career examples": "အသက်မွေးဝမ်းကျောင်း ဥပမာများကို ဖွင့်နေပါသည်",
   "Take the career quiz, discover your top matches, then explore majors and universities that fit your education level.": "အသက်မွေးဝမ်းကျောင်း မေးခွန်းလွှာဖြေပြီး သင့်အတွက် ကိုက်ညီသည့် လမ်းကြောင်းများကို ရှာဖွေပါ။ ထို့နောက် သင့်ပညာရေးအဆင့်နှင့် ကိုက်ညီသော အဓိကဘာသာရပ်များနှင့် တက္ကသိုလ်များကို လေ့လာပါ။",
   "Start the career quiz": "အသက်မွေးဝမ်းကျောင်း မေးခွန်းလွှာ စတင်ရန်",
   "Create a free account": "အခမဲ့အကောင့် ဖွင့်ရန်",

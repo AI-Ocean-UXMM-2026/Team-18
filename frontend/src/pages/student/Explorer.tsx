@@ -7,7 +7,7 @@ import { usePrefs } from "@/lib/prefs";
 import { useUniversities } from "@/lib/unis";
 import { AdvisorChat } from "@/components/AdvisorChat";
 import { UniCard } from "@/components/UniCard";
-import { ErrorNote, Note, PageHead, Spinner, toast } from "@/components/ui";
+import { CardGridSkeleton, ErrorNote, Note, PageHead, Spinner, toast } from "@/components/ui";
 
 export default function Explorer() {
   const { j, set, ready } = useJourney(); const { t } = usePrefs();
@@ -34,7 +34,7 @@ export default function Explorer() {
         {!g12 && <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={scholarship} onChange={e => setScholarship(e.target.checked)} />{t("Only universities with scholarships for international students")}</label>}
       </div>
       {error && <ErrorNote message={error} onRetry={refresh} />}
-      {loading && <Spinner />}
+      {loading && <CardGridSkeleton count={4} />}
       {!loading && <p className="text-sm text-muted">{items.length} {t("results")}</p>}
       <div className="grid gap-4 md:grid-cols-2">{items.map(i => <UniCard key={i.key} item={i} level={j.level!} inShortlist={j.shortlist.includes(i.key)} inCompare={j.compare.includes(i.key)} onToggle={toggle} />)}</div>
       {!loading && !items.length && <div className="card text-center text-muted">{t("No universities found. Try “Show all fields”.")}</div>}

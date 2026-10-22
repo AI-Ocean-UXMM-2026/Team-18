@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth";
 import { LEVELS } from "@/lib/format";
 import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
-import { PageHead, Pill, Spinner, toast } from "@/components/ui";
+import { PageHead, Pill, TableSkeleton, toast } from "@/components/ui";
 
 type St = { id: number; name: string; email: string; isPro: boolean; active: boolean; level: string | null; careerId: string | null; bookings: number };
 export default function Students() {
@@ -19,7 +19,7 @@ export default function Students() {
     <>
       <PageHead eyebrow="Admin portal" title="Students" />
       <form className="flex gap-2" onSubmit={e => { e.preventDefault(); setSearch(q); }}><input className="input" value={q} onChange={e => setQ(e.target.value)} placeholder={t("Search by name or email")} /><button className="btn-primary">{t("Search")}</button></form>
-      {loading ? <Spinner /> : <div className="table-wrap"><table>
+      {loading ? <TableSkeleton columns={6} /> : <div className="table-wrap"><table>
         <thead><tr><th>{t("Student")}</th><th>{t("Level")}</th><th>{t("Career")}</th><th>Pro</th><th>{t("Bookings")}</th><th /></tr></thead>
         <tbody>{data!.students.map(s => <tr key={s.id}><td><b>{s.name}</b><br /><span className="text-xs text-muted">{s.email}</span></td><td>{LEVELS[s.level ?? ""] ?? "–"}</td><td>{content?.careers.find(c => c.id === s.careerId)?.t ?? "–"}</td>
           <td>{s.isPro ? <Pill tone="ok">Pro</Pill> : "–"}</td><td className="font-mono">{s.bookings}</td>

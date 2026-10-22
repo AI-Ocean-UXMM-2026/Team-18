@@ -4,7 +4,7 @@ import { api, type Slot } from "@/lib/api";
 import { useApiData } from "@/hooks/useApiData";
 import { fmtWhen } from "@/lib/format";
 import { usePrefs } from "@/lib/prefs";
-import { ErrorNote, PageHead, Pill, Spinner, toast } from "@/components/ui";
+import { CardGridSkeleton, ErrorNote, PageHead, Pill, toast } from "@/components/ui";
 
 export default function Availability() {
   const { t } = usePrefs();
@@ -23,7 +23,7 @@ export default function Availability() {
         <label className="label">{t("Start time")}<input className="input" type="time" step={1800} value={time} onChange={e => setTime(e.target.value)} /></label>
         <button className="btn-primary" onClick={add}>{t("Add free time")}</button>
       </section>
-      {loading ? <Spinner /> : error ? <ErrorNote message={error} onRetry={refresh} /> : (
+      {loading ? <CardGridSkeleton count={3} /> : error ? <ErrorNote message={error} onRetry={refresh} /> : (
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {data!.slots.map(s => <div key={s.id} className="card flex items-center justify-between gap-2 py-3"><span className="font-mono text-sm">{fmtWhen(s.startsAt)}</span>
             {s.bookingStatus ? <Pill tone={s.bookingStatus === "confirmed" ? "ok" : "info"}>{t(s.bookingStatus === "confirmed" ? "Booked" : "Requested")}</Pill> : <button className="text-xs font-semibold text-bad" onClick={() => remove(s.id)}>{t("Remove")}</button>}</div>)}

@@ -7,7 +7,7 @@ import { fmtDay, fmtTime, fmtWhen } from "@/lib/format";
 import { useAuth } from "@/lib/auth";
 import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
-import { Actions, ErrorNote, PageHead, Pill, Spinner, toast } from "@/components/ui";
+import { Actions, CardGridSkeleton, ErrorNote, PageHead, Pill, toast } from "@/components/ui";
 
 type Mentor = { id: number; name: string; title: string; years: number; fields: number[]; languages: string; bio: string | null; slots: Slot[]; recommended: boolean };
 type Booking = { id: number; status: string; question: string | null; meetingLink: string | null; startsAt: string; minutes: number; mentorName: string; mentorTitle: string };
@@ -65,7 +65,7 @@ function MentorMarketplace() {
         </section>
       )}
       {mentors.error && <ErrorNote message={mentors.error} onRetry={mentors.refresh} />}
-      {mentors.loading ? <Spinner /> : (
+      {mentors.loading ? <CardGridSkeleton count={2} /> : (
         <div className="grid gap-4 md:grid-cols-2">
           {mentors.data?.mentors.map(m => (
             <article key={m.id} className={`card flex flex-col gap-2 ${m.recommended ? "border-brand" : ""}`}>

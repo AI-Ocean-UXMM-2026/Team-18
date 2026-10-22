@@ -27,6 +27,11 @@ html[lang="my"] body { line-height: 1.85; }
 h1, h2, h3 { text-wrap: balance; line-height: 1.2; font-weight: 700; }
 html[lang="my"] h1, html[lang="my"] h2, html[lang="my"] h3 { line-height: 1.5; }
 
+@keyframes skeleton-shimmer { to { transform: translateX(110%); } }
+.skeleton-block { position: relative; overflow: hidden; border-radius: 0.5rem; background: #e9edf7; }
+.skeleton-block::after { position: absolute; inset: 0; content: ""; transform: translateX(-110%); background: linear-gradient(90deg, transparent, rgb(255 255 255 / 65%), transparent); animation: skeleton-shimmer 1.5s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .skeleton-block::after { animation: none; } }
+
 @layer components {
   .card { @apply rounded-2xl border border-line bg-card p-5 shadow-sm; }
   .btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50; }

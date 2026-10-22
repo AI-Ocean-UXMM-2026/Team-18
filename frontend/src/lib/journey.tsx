@@ -12,7 +12,7 @@ export type Journey = {
 };
 export const EMPTY: Journey = { level: null, answers: {}, careerId: null, majors: [], shortlist: [], compare: [], videoChoice: null, watched: {} };
 
-type Ctx = { j: Journey; ready: boolean; content: Content | null; set: (patch: Partial<Journey> | ((j: Journey) => Partial<Journey>)) => void };
+type Ctx = { j: Journey; ready: boolean; content: Content | null; contentLoading: boolean; set: (patch: Partial<Journey> | ((j: Journey) => Partial<Journey>)) => void };
 const JourneyCtx = createContext<Ctx | null>(null);
 
 export function JourneyProvider({ children }: { children: ReactNode }) {
@@ -20,11 +20,12 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
   const [j, setJ] = useState<Journey>(EMPTY);
   const [ready, setReady] = useState(false);
   const [content, setContent] = useState<Content | null>(null);
+  const [contentLoading, setContentLoading] = useState(true);
   const pending = useRef<Partial<Journey>>({});
   const guestDraft = useRef<Journey | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => { api.get<Content>("/content").then(setContent).catch(() => setContent(null)); }, []);
+  useEffect(() => { api.get<Content>("/content").then(setContent).catch(() => setContent(null)).finally(() => setContentLoading(false)); }, []);
   useEffect(() => {
     setReady(false);
     if (timer.current) clearTimeout(timer.current);
@@ -51,7 +52,7 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
     }
     return next;
   });
-  return <JourneyCtx.Provider value={{ j, ready, content, set }}>{children}</JourneyCtx.Provider>;
+  return <JourneyCtx.Provider value={{ j, ready, content, contentLoading, set }}>{children}</JourneyCtx.Provider>;
 }
 export function useJourney() { const v = useContext(JourneyCtx); if (!v) throw new Error("JourneyProvider missing"); return v; }
 

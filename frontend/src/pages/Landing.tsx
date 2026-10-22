@@ -3,6 +3,7 @@ import { Link, Redirect, useLocation } from "wouter";
 import { homeFor, useAuth } from "@/lib/auth";
 import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
+import { Skeleton } from "@/components/ui";
 
 const pathway = [
   { number: "01", title: "Career quiz", detail: "Answer 20 questions about your strengths and interests.", icon: "✦" },
@@ -14,7 +15,7 @@ const pathway = [
 export default function Landing() {
   const { t } = usePrefs();
   const { user, isGuest, startGuest } = useAuth();
-  const { content } = useJourney();
+  const { content, contentLoading } = useJourney();
   const [, go] = useLocation();
   const careers = (content?.careers ?? []).slice(0, 3);
   const [selectedCareer, setSelectedCareer] = useState("");
@@ -67,7 +68,14 @@ export default function Landing() {
           <h2 className="mt-2 text-3xl sm:text-4xl">{t("Careers begin with understanding your strengths")}</h2>
           <p className="mt-3 text-muted">{t("Preview a few career paths. Your quiz results are matched to your answers.")}</p>
         </div>
-        {careers.length > 0 ? <div className="mx-auto max-w-5xl">
+        {contentLoading ? <div className="mx-auto max-w-5xl" role="status" aria-label={t("Loading career examples")}>
+          <div className="flex justify-center gap-2"><Skeleton className="h-9 w-28 rounded-full" /><Skeleton className="h-9 w-32 rounded-full" /><Skeleton className="h-9 w-24 rounded-full" /></div>
+          <div className="mt-4 grid overflow-hidden rounded-3xl border border-line bg-card shadow-sm md:grid-cols-[0.8fr_1.2fr]">
+            <div className="bg-gradient-to-br from-brand to-[#18215a] p-6 sm:p-8"><Skeleton className="h-3 w-28 bg-white/20" /><Skeleton className="mt-4 h-8 w-3/4 bg-white/20" /><Skeleton className="mt-4 h-3 w-full bg-white/20" /><Skeleton className="mt-2 h-3 w-4/5 bg-white/20" /><Skeleton className="mt-8 h-3 w-1/2 bg-white/20" /></div>
+            <div className="p-6 sm:p-8"><Skeleton className="h-3 w-32" /><Skeleton className="mt-3 h-5 w-4/5" /><Skeleton className="mt-7 h-3 w-36" /><Skeleton className="mt-3 h-5 w-2/3" /><Skeleton className="mt-7 h-11 w-44 rounded-xl" /></div>
+          </div>
+          <span className="sr-only">{t("Loading career examples")}</span>
+        </div> : careers.length > 0 ? <div className="mx-auto max-w-5xl">
           <div className="flex flex-wrap justify-center gap-2" role="tablist" aria-label={t("Career examples")}>
             {careers.map(career => <button key={career.id} role="tab" aria-selected={activeCareer?.id === career.id} onClick={() => setSelectedCareer(career.id)} className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${activeCareer?.id === career.id ? "border-brand bg-brand text-white" : "border-line bg-card text-muted hover:border-brand hover:text-brand"}`}>{t(career.t)}</button>)}
           </div>

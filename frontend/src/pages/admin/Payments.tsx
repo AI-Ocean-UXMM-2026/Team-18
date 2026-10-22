@@ -4,7 +4,7 @@ import { api } from "@/lib/api";
 import { useApiData } from "@/hooks/useApiData";
 import { fmtKs, fmtWhen } from "@/lib/format";
 import { usePrefs } from "@/lib/prefs";
-import { ErrorNote, Note, PageHead, Pill, Spinner, Tabs, toast } from "@/components/ui";
+import { CardListSkeleton, ErrorNote, Note, PageHead, Pill, Tabs, toast } from "@/components/ui";
 
 type Pay = { id: number; status: string; providerLabel: string; accountName: string; accountNumber: string; amount: number; transactionId: string; proof: string | null; reason: string | null; disputeUsed: boolean; createdAt: string; decidedAt: string | null; studentName: string; studentEmail: string };
 export default function Payments() {
@@ -25,7 +25,7 @@ export default function Payments() {
       <PageHead eyebrow="Admin portal" title="Payments" />
       <Note>{t("Check the money arrived in the CareerNet account in the payment app (amount + transaction ID) before approving. A screenshot alone is not proof.")}</Note>
       <Tabs tabs={[["open", "To check"], ["decided", "Decided"]]} value={tab} onChange={setTab} />
-      {loading ? <Spinner /> : error ? <ErrorNote message={error} onRetry={refresh} /> : (
+      {loading ? <CardListSkeleton count={2} /> : error ? <ErrorNote message={error} onRetry={refresh} /> : (
         <>
           {!data!.payments.length && <div className="card text-muted">{t("Nothing here.")}</div>}
           {data!.payments.map(p => (

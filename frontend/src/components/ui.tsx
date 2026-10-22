@@ -9,7 +9,52 @@ export function Pill({ tone, children }: { tone: keyof typeof TONES; children: R
 }
 export function Spinner({ label = "Loading…" }: { label?: string }) {
   const { t } = usePrefs();
-  return <div className="flex items-center gap-3 py-8 text-muted" role="status"><span className="h-5 w-5 animate-spin rounded-full border-2 border-brand-soft border-t-brand" />{t(label)}</div>;
+  return <div className="flex flex-col gap-5 py-3" role="status" aria-label={t(label)}>
+    <span className="sr-only">{t(label)}</span>
+    <div className="space-y-3">
+      <Skeleton className="h-3 w-28" />
+      <Skeleton className="h-9 w-2/3 max-w-md" />
+      <Skeleton className="h-4 w-full max-w-2xl" />
+    </div>
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {[0, 1, 2].map(i => <div key={i} className="rounded-2xl border border-line bg-card p-4">
+        <Skeleton className="h-10 w-10 rounded-xl" />
+        <Skeleton className="mt-4 h-5 w-2/3" />
+        <Skeleton className="mt-3 h-3 w-full" />
+        <Skeleton className="mt-2 h-3 w-4/5" />
+      </div>)}
+    </div>
+    <div className="rounded-2xl border border-line bg-card p-5">
+      <Skeleton className="h-5 w-1/3" />
+      <Skeleton className="mt-4 h-3 w-full" />
+      <Skeleton className="mt-2 h-3 w-5/6" />
+    </div>
+  </div>;
+}
+export function Skeleton({ className = "" }: { className?: string }) {
+  return <div className={`skeleton-block ${className}`} aria-hidden="true" />;
+}
+export function CardGridSkeleton({ count = 3 }: { count?: number }) {
+  const { t } = usePrefs();
+  return <div className="grid gap-4 md:grid-cols-2" role="status" aria-label={t("Loading results")}>{Array.from({ length: count }, (_, i) => <article key={i} className="rounded-2xl border border-line bg-card p-5">
+    <div className="flex items-start gap-3"><Skeleton className="h-11 w-11 shrink-0 rounded-xl" /><div className="min-w-0 flex-1"><Skeleton className="h-5 w-3/4" /><Skeleton className="mt-2 h-3 w-1/2" /></div></div>
+    <Skeleton className="mt-5 h-3 w-full" /><Skeleton className="mt-2 h-3 w-11/12" /><Skeleton className="mt-2 h-3 w-2/3" />
+    <div className="mt-5 flex gap-2"><Skeleton className="h-8 w-24 rounded-lg" /><Skeleton className="h-8 w-20 rounded-lg" /></div>
+  </article>)}</div>;
+}
+export function CardListSkeleton({ count = 2 }: { count?: number }) {
+  const { t } = usePrefs();
+  return <div className="flex flex-col gap-3" role="status" aria-label={t("Loading results")}>{Array.from({ length: count }, (_, i) => <article key={i} className="flex gap-4 rounded-2xl border border-line bg-card p-4 sm:p-5">
+    <Skeleton className="h-28 w-20 shrink-0 rounded-xl sm:w-28" />
+    <div className="flex-1"><Skeleton className="h-5 w-2/5" /><Skeleton className="mt-3 h-3 w-4/5" /><Skeleton className="mt-2 h-3 w-full" /><Skeleton className="mt-2 h-3 w-3/5" /><Skeleton className="mt-4 h-8 w-28 rounded-lg" /></div>
+  </article>)}</div>;
+}
+export function TableSkeleton({ rows = 4, columns = 4 }: { rows?: number; columns?: number }) {
+  const { t } = usePrefs();
+  return <div className="overflow-hidden rounded-2xl border border-line bg-card" role="status" aria-label={t("Loading results")}>
+    <div className="grid gap-4 border-b border-line bg-soft/60 px-4 py-3" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>{Array.from({ length: columns }, (_, i) => <Skeleton key={i} className="h-3 w-3/4" />)}</div>
+    {Array.from({ length: rows }, (_, row) => <div key={row} className="grid gap-4 border-b border-line px-4 py-4 last:border-0" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>{Array.from({ length: columns }, (_, col) => <Skeleton key={col} className="h-4 w-full max-w-40" />)}</div>)}
+  </div>;
 }
 export function ErrorNote({ message, onRetry }: { message: string; onRetry?: () => void }) {
   const { t } = usePrefs();
