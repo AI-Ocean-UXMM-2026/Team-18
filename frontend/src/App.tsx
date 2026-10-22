@@ -14,6 +14,7 @@ import { usePrefs } from "@/lib/prefs";
 import type { Role } from "@/lib/api";
 
 import Landing from "@/pages/Landing";
+import Guide from "@/pages/Guide";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import MentorApply from "@/pages/MentorApply";
@@ -103,6 +104,7 @@ export default function App() {
     <AppShell>
       <Switch>
         <Route path="/" component={Landing} />
+        <Route path="/guide" component={Guide} />
         <Route path="/login">{() => <Login portal="student" />}</Route>
         <Route path="/register" component={Register} />
         <Route path="/mentor/login">{() => <Login portal="mentor" />}</Route>

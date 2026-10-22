@@ -105,6 +105,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           {!user && !isGuest && <nav aria-label={t("Portals")} className="hidden items-center gap-1 sm:flex">
             {[ ["/login", "Student"], ["/mentor/login", "Mentor"], ["/admin/login", "Admin"] ].map(([href, label]) => <Link key={href} href={href} className={`rounded-lg px-3 py-2 text-sm font-semibold transition hover:bg-brand-soft hover:text-brand ${location === href ? "bg-brand-soft text-brand" : "text-muted"}`}>{t(label)}</Link>)}
           </nav>}
+          <Link href="/guide" aria-current={location === "/guide" ? "page" : undefined} className="btn-ghost btn-sm">{t("Guide")}</Link>
           {controls}
           {step > 0 && (
             <ol className="order-3 flex w-full flex-wrap gap-1 border-t border-line pt-2 lg:hidden">

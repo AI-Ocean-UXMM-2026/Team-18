@@ -9,6 +9,8 @@
 export type Language = "en" | "my";
 
 export const MYANMAR: Record<string, string> = {
+  "Guide": "အသုံးပြုလမ်းညွှန်",
+  "How to use CareerNet": "CareerNet အသုံးပြုပုံ",
   "Find your": "သင့်အတွက်",
   "next move.": "နောက်တစ်ဆင့်ကို ရှာပါ။",
   "Your future.": "သင့်အနာဂတ်။",
