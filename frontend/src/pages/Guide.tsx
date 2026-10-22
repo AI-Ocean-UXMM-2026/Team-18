@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useLocation } from "wouter";
+import { Redirect, useLocation } from "wouter";
 import { homeFor, useAuth } from "@/lib/auth";
 import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
-import { PageHead, Skeleton } from "@/components/ui";
+import { PageHead, Skeleton, Spinner } from "@/components/ui";
 
 const pathway = [
   { number: "01", title: "Career quiz", detail: "Answer 20 questions about your strengths and interests.", icon: "✦" },
@@ -14,11 +14,13 @@ const pathway = [
 
 export default function Guide() {
   const { t } = usePrefs();
-  const { user, isGuest, startGuest } = useAuth();
+  const { user, loading, isGuest, startGuest } = useAuth();
   const { content, contentLoading } = useJourney();
   const [, go] = useLocation();
   const careers = (content?.careers ?? []).slice(0, 3);
   const [selectedCareer, setSelectedCareer] = useState("");
+  if (loading) return <Spinner />;
+  if (user && user.role !== "student") return <Redirect to={homeFor(user.role)} />;
   const activeCareer = careers.find(career => career.id === selectedCareer) ?? careers[0];
   const home = user ? homeFor(user.role) : isGuest ? "/student" : "/";
   const startGuestJourney = () => {

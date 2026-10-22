@@ -38,6 +38,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [navOpen, setNavOpen] = useState(false);
   const nav = user && user.role !== "student" ? NAV[user.role].filter(([p]) => user.role !== "admin" || adminCan(user.adminRole, p)) : [];
   const studentWorkspace = location.startsWith("/student/") || location === "/student";
+  const showGuide = (!user || user.role === "student") && !/^\/(admin|mentor)(\/|$)/.test(location);
   const flow = studentProgress(j, content);
   const { answered, quizDone } = flow;
   const progress = flow.total ? Math.round((answered / flow.total) * 100) : 0;
@@ -111,7 +112,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           {!user && !isGuest && <nav aria-label={t("Portals")} className="hidden items-center gap-1 sm:flex">
             {[ ["/login", "Student"], ["/mentor/login", "Mentor"], ["/admin/login", "Admin"] ].map(([href, label]) => <Link key={href} href={href} className={`rounded-lg px-3 py-2 text-sm font-semibold transition hover:bg-brand-soft hover:text-brand ${location === href ? "bg-brand-soft text-brand" : "text-muted"}`}>{t(label)}</Link>)}
           </nav>}
-          <Link href="/guide" aria-current={location === "/guide" ? "page" : undefined} className="btn-ghost btn-sm">{t("Guide")}</Link>
+          {showGuide && <Link href="/guide" aria-current={location === "/guide" ? "page" : undefined} className="btn-ghost btn-sm">{t("Guide")}</Link>}
           {controls}
         </div>
         {nav.length > 0 && <nav aria-label={t("Portal navigation")} className="mx-auto flex max-w-[1440px] gap-1 overflow-x-auto px-4 sm:px-6">{nav.map(([p, l]) => <Link key={p} href={p} className={`tab ${location === p ? "tab-on" : ""}`}>{t(l)}</Link>)}</nav>}
