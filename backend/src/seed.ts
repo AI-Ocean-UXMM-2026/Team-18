@@ -8,6 +8,7 @@ import { pathToFileURL } from "node:url";
 import { ENV } from "./env.js";
 import { hashPassword } from "./auth.js";
 import { closeDatabase, one, query } from "./db.js";
+import { RETIRED_DEMO_MENTORS } from "./demoAccounts.js";
 
 const ADMINS = [
   { email: "super@careernet.local", name: "Super admin", adminRole: "super" },
@@ -19,12 +20,6 @@ const MENTORS = [
 ];
 // Earlier demo seeds created these extra mentors. Keep their records/history,
 // but turn off their test accounts and listings when the demo seed runs.
-const RETIRED_DEMO_MENTORS = [
-  "kyawzin@mentor.careernet.local", "aungmin@mentor.careernet.local",
-  "thiri@mentor.careernet.local", "maythu@mentor.careernet.local",
-  "zawlin@mentor.careernet.local", "eimon@mentor.careernet.local",
-  "htetnaing@mentor.careernet.local",
-];
 export const DEMO_STUDENT = { email: "student@careernet.local", name: "Demo Student (Normal)", isPro: false };
 export const DEMO_PRO_STUDENT = { email: "pro@careernet.local", name: "Demo Student (Pro)", isPro: true };
 

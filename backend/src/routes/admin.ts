@@ -10,6 +10,7 @@ import { ENV } from "../env.js";
 import { hashPassword } from "../auth.js";
 import { CAREERS, QUESTIONS, G12_UNIS, G12_PROGRAMS } from "../data.js";
 import { getSchools, schoolsSource } from "../schools.js";
+import { RETIRED_DEMO_MENTORS } from "../demoAccounts.js";
 import { audit, one, query, tx } from "../db.js";
 import { badRequest, body, conflict, notFound, requireAdmin, requireRole, route, sessionOf } from "../http.js";
 
@@ -86,7 +87,9 @@ adminRouter.get("/admin/mentors", ops, route(async () => ({
       (SELECT count(*) FROM bookings b WHERE b.mentor_id = m.user_id AND b.status IN ('confirmed', 'completed'))::int AS sessions,
       (SELECT count(*) FROM bookings b WHERE b.mentor_id = m.user_id AND b.status = 'no_show')::int AS "noShows",
       (SELECT count(*) FROM mentor_slots s WHERE s.mentor_id = m.user_id AND s.starts_at > now())::int AS "futureSlots"
-    FROM mentors m JOIN users u ON u.id = m.user_id ORDER BY (m.status = 'pending') DESC, u.name`),
+    FROM mentors m JOIN users u ON u.id = m.user_id
+    WHERE NOT (u.email = ANY($1::text[]))
+    ORDER BY (m.status = 'pending') DESC, u.name`, [RETIRED_DEMO_MENTORS]),
 })));
 adminRouter.post("/admin/mentors/:id/status", ops, route(async req => {
   const b = body(req, z.object({ status: z.enum(["active", "rejected", "suspended"]) }));
