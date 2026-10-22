@@ -27,7 +27,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-dvh">
       <header className="sticky top-0 z-20 border-b border-line bg-card/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 py-3">
-          <Link href={user ? (user.role === "student" ? "/student" : `/${user.role}`) : "/"} className="flex items-center gap-2 font-bold"><img src="/favicon.svg" alt="" className="h-7 w-7" />PathFinder</Link>
+          <Link href={user ? (user.role === "student" ? "/student" : `/${user.role}`) : "/"} className="flex items-center gap-2 font-bold"><img src="/favicon.svg" alt="" className="h-7 w-7" />CareerNet</Link>
           {user && user.role !== "student" && <span className="rounded-full bg-soft px-2.5 py-0.5 text-xs font-semibold text-muted">{t(user.role === "mentor" ? "Mentor portal" : "Admin portal")}</span>}
           {step > 0 && (
             <ol className="order-3 flex w-full flex-wrap gap-1 md:order-none md:w-auto md:flex-1 md:justify-center">

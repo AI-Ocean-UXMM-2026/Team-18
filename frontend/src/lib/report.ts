@@ -23,7 +23,7 @@ export function buildReport(o: Input) {
   const bullet = (s: string) => { (doc.splitTextToSize(clean(s), TW - 6) as string[]).forEach((l, i) => { need(5); doc.setFont("helvetica", "normal"); doc.setFontSize(10.5); doc.setTextColor(...ink); if (!i) doc.text("-", M + 1, y); doc.text(l, M + 6, y); y += 4.6; }); y += 0.8; };
 
   doc.setFillColor(...accent); doc.rect(0, 0, W, 42, "F");
-  doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(22); doc.text("PathFinder", M, 18);
+  doc.setTextColor(255, 255, 255); doc.setFont("helvetica", "bold"); doc.setFontSize(22); doc.text("CareerNet", M, 18);
   doc.setFont("helvetica", "normal"); doc.setFontSize(12); doc.text("Personal career & university report", M, 27);
   doc.setFontSize(9.5); doc.text(clean(`${o.name} · ${LEVELS[o.level] ?? ""} · ${new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}`), M, 35);
   y = 54;
@@ -55,6 +55,6 @@ export function buildReport(o: Input) {
   if (o.session) { h2(`${n++}. Your mentor session`); bullet(o.session); }
   h2(`${n}. Next steps`); o.nextSteps.forEach(bullet);
   const pages = doc.getNumberOfPages();
-  for (let p = 1; p <= pages; p++) { doc.setPage(p); doc.setFontSize(8.5); doc.setTextColor(...muted); doc.text(`PathFinder report · page ${p} of ${pages} · Confirm entry rules and scholarships with each university before applying.`, M, 290); }
+  for (let p = 1; p <= pages; p++) { doc.setPage(p); doc.setFontSize(8.5); doc.setTextColor(...muted); doc.text(`CareerNet report · page ${p} of ${pages} · Confirm entry rules and scholarships with each university before applying.`, M, 290); }
   return doc;
 }

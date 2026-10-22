@@ -10,21 +10,21 @@ import { hashPassword } from "./auth.js";
 import { closeDatabase, one, query } from "./db.js";
 
 const ADMINS = [
-  { email: "super@pathfinder.local", name: "Super admin", adminRole: "super" },
-  { email: "ops@pathfinder.local", name: "Operations admin", adminRole: "ops" },
-  { email: "content@pathfinder.local", name: "Content editor", adminRole: "content" },
+  { email: "super@careernet.local", name: "Super admin", adminRole: "super" },
+  { email: "ops@careernet.local", name: "Operations admin", adminRole: "ops" },
+  { email: "content@careernet.local", name: "Content editor", adminRole: "content" },
 ];
 const MENTORS = [
-  { email: "hnin@mentor.pathfinder.local", name: "Daw Hnin Ei Phyu", title: "Senior Software Engineer, fintech", years: 9, fields: [1] },
-  { email: "kyawzin@mentor.pathfinder.local", name: "U Kyaw Zin Htet", title: "Data Analytics Lead, telecom", years: 7, fields: [1, 6, 4] },
-  { email: "aungmin@mentor.pathfinder.local", name: "U Aung Min Thant", title: "Structural Engineer", years: 12, fields: [2] },
-  { email: "thiri@mentor.pathfinder.local", name: "Dr. Thiri Aung", title: "Physician, internal medicine", years: 10, fields: [3, 5] },
-  { email: "maythu@mentor.pathfinder.local", name: "Daw May Thu Kyaw", title: "Chartered Accountant (ACCA)", years: 8, fields: [4] },
-  { email: "zawlin@mentor.pathfinder.local", name: "U Zaw Lin Oo", title: "Chief Engineer, merchant navy", years: 15, fields: [11, 2] },
-  { email: "eimon@mentor.pathfinder.local", name: "Daw Ei Mon Kyaw", title: "Teacher trainer & linguist", years: 11, fields: [7, 10, 8] },
-  { email: "htetnaing@mentor.pathfinder.local", name: "U Htet Naing", title: "Product (UX) Designer", years: 6, fields: [8, 1, 9] },
+  { email: "hnin@mentor.careernet.local", name: "Daw Hnin Ei Phyu", title: "Senior Software Engineer, fintech", years: 9, fields: [1] },
+  { email: "kyawzin@mentor.careernet.local", name: "U Kyaw Zin Htet", title: "Data Analytics Lead, telecom", years: 7, fields: [1, 6, 4] },
+  { email: "aungmin@mentor.careernet.local", name: "U Aung Min Thant", title: "Structural Engineer", years: 12, fields: [2] },
+  { email: "thiri@mentor.careernet.local", name: "Dr. Thiri Aung", title: "Physician, internal medicine", years: 10, fields: [3, 5] },
+  { email: "maythu@mentor.careernet.local", name: "Daw May Thu Kyaw", title: "Chartered Accountant (ACCA)", years: 8, fields: [4] },
+  { email: "zawlin@mentor.careernet.local", name: "U Zaw Lin Oo", title: "Chief Engineer, merchant navy", years: 15, fields: [11, 2] },
+  { email: "eimon@mentor.careernet.local", name: "Daw Ei Mon Kyaw", title: "Teacher trainer & linguist", years: 11, fields: [7, 10, 8] },
+  { email: "htetnaing@mentor.careernet.local", name: "U Htet Naing", title: "Product (UX) Designer", years: 6, fields: [8, 1, 9] },
 ];
-export const DEMO_STUDENT = { email: "student@pathfinder.local", name: "Demo Student" };
+export const DEMO_STUDENT = { email: "student@careernet.local", name: "Demo Student" };
 
 async function upsertUser(email: string, name: string, role: string, adminRole: string | null) {
   const found = await one<{ id: number }>("SELECT id FROM users WHERE email = $1", [email]);

@@ -6,7 +6,7 @@
 //  Authorization: Bearer <token>.
 // ===========================================================================
 export const API_BASE = ((import.meta.env.VITE_API_URL as string | undefined)?.trim() || "/api").replace(/\/+$/, "");
-const TOKEN_KEY = "pathfinder_token";
+const TOKEN_KEY = "careernet_token";
 
 export const tokenStore = {
   get: () => { try { return localStorage.getItem(TOKEN_KEY); } catch { return null; } },
@@ -20,9 +20,9 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   let res: Response;
   try {
     res = await fetch(API_BASE + path, { ...init, headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(init.headers ?? {}) } });
-  } catch { throw new ApiError(0, "Cannot reach the PathFinder server. Is the backend running?"); }
+  } catch { throw new ApiError(0, "Cannot reach the CareerNet server. Is the backend running?"); }
   const data = await res.json().catch(() => ({}));
-  if (res.status === 401 && token) { tokenStore.set(null); window.dispatchEvent(new Event("pathfinder:signed-out")); }
+  if (res.status === 401 && token) { tokenStore.set(null); window.dispatchEvent(new Event("careernet:signed-out")); }
   if (!res.ok) throw new ApiError(res.status, (data as { error?: string }).error || `Request failed (${res.status})`);
   return data as T;
 }

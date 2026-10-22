@@ -25,7 +25,7 @@ Do NOT suggest which answer to choose. Under 90 words. ${langRule(lang)}`;
 export function careerPrompt(answers: Answers, level: string, lang: Lang) {
   const s = codeScores(answers);
   const top = rankCareers(answers).slice(0, 3);
-  return `You are the PathFinder career coach for a ${level.toUpperCase()} student in Myanmar.
+  return `You are the CareerNet career coach for a ${level.toUpperCase()} student in Myanmar.
 Holland (RIASEC) scores 0-100: ${(Object.keys(s) as Code[]).map(k => `${CODES[k].n} ${s[k]}`).join(", ")}.
 Statements rated 4-5: ${QUESTIONS.filter(q => answers[q.id] >= 4).map(q => `"${q.en}"`).join("; ") || "none"}.
 Top 3 careers (priority order): ${top.map(({ career: c, pct }) => `${c.t} (${pct}%): ${c.blurb} Roles: ${c.positions.join(", ")}. Skills: ${c.skills.join(", ")}. Outlook: ${c.outlook}`).join(" | ")}.
@@ -45,12 +45,12 @@ export function advisorPrompt(o: { schools: School[]; level: "ged" | "igcse"; ca
   Scholarship for international students: ${s.hasScholarship ? "yes" : "no"}. ${s.scholarship}
   Website: ${s.website} | Source: ${s.source} (checked ${s.lastChecked})`;
   }).join("\n");
-  return `You are the PathFinder university advisor for a ${L} student from Myanmar.
+  return `You are the CareerNet university advisor for a ${L} student from Myanmar.
 ${career ? `Chosen career: ${career.t}.` : ""} ${o.majors?.length ? `Chosen majors: ${o.majors.join(", ")}.` : ""}
 ${o.comparing?.length ? `The student is comparing: ${o.comparing.join(", ")}.` : ""}
 Myanmar public universities admit through the Matriculation exam, so this student is looking at universities abroad.
 
-PATHFINDER DATA (the ONLY facts you may use about these universities):
+CAREERNET DATA (the ONLY facts you may use about these universities):
 ${data}
 
 RULES

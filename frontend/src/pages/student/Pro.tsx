@@ -61,7 +61,7 @@ export default function Pro() {
   );
   return (
     <>
-      <PageHead back="/student/plan" eyebrow="PathFinder Pro" title="Upgrade to Pro" />
+      <PageHead back="/student/plan" eyebrow="CareerNet Pro" title="Upgrade to Pro" />
       <div className="grid gap-4 md:grid-cols-2">
         <div className="card"><b>{t("Free")}</b><ul className="mt-2 list-disc pl-5 text-sm"><li>{t("Career quiz & top 3 careers")}</li><li>{t("Majors, university explorer & compare")}</li><li>{t("AI questions")}: {data.freeAiLimit} ({t("used")} {data.aiUsed})</li></ul></div>
         <div className="card border-brand"><b>Pro · <span className="font-mono">{fmtKs(data.price)}</span> {t("one time")}</b><ul className="mt-2 list-disc pl-5 text-sm"><li>{t("Full PDF report")}</li><li>{t("Unlimited AI career coach and university advisor")}</li><li>{t("1-hour sessions with professional mentors")}</li><li>{t("Pro badge on your account")}</li></ul></div>

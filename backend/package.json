@@ -1,10 +1,10 @@
 {
-  "name": "pathfinder-backend",
+  "name": "careernet-backend",
   "version": "2.0.0",
   "private": true,
   "type": "module",
   "license": "MIT",
-  "description": "PathFinder REST API: Express + PostgreSQL + Google Sheets school data + AI (Gemini or Claude)",
+  "description": "CareerNet REST API: Express + PostgreSQL + Google Sheets school data + AI (Gemini or Claude)",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",

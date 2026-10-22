@@ -1,14 +1,14 @@
 -- ===========================================================================
---  PathFinder — PostgreSQL schema
+--  CareerNet — PostgreSQL schema
 --  Career guidance for Grade 12 / GED / IGCSE students
 --
 --  HOW TO RUN (pgAdmin4)
---   1. Create a database named  pathfinder_db
+--   1. Create a database named  careernet_db
 --   2. Open Tools -> Query Tool on it, open this file, press F5.
 --
 --  HOW TO RUN (command line)
---      createdb -U postgres pathfinder_db
---      psql -U postgres -d pathfinder_db -f database/schema.sql
+--      createdb -U postgres careernet_db
+--      psql -U postgres -d careernet_db -f database/schema.sql
 --
 --  Idempotent: running it twice is safe. To start over run reset.sql first.
 --  You do NOT insert accounts by hand: the backend seeds demo admin and

@@ -33,7 +33,7 @@ authRouter.post("/auth/mentor-apply", route(async req => {
     const u = (await c.query("INSERT INTO users (email, password_hash, name, role) VALUES ($1, $2, $3, 'mentor') RETURNING id", [b.email, hashPassword(b.password), b.name])).rows[0];
     await c.query("INSERT INTO mentors (user_id, title, years, fields, languages, bio, status) VALUES ($1, $2, $3, $4, $5, $6, 'pending')", [u.id, b.title, b.years, b.fields, b.languages ?? "Myanmar · English", b.bio ?? null]);
   });
-  return { ok: true, message: "Application sent. The PathFinder team will review it before you can sign in." };
+  return { ok: true, message: "Application sent. The CareerNet team will review it before you can sign in." };
 }));
 
 authRouter.post("/auth/login", route(async req => {
@@ -42,12 +42,12 @@ authRouter.post("/auth/login", route(async req => {
   const b = body(req, z.object({ email, password: z.string().min(1), portal: z.enum(["student", "mentor", "admin"]) }));
   const u = await one<{ id: number; password_hash: string; role: "student" | "mentor" | "admin"; admin_role: any; active: boolean }>("SELECT id, password_hash, role, admin_role, active FROM users WHERE email = $1", [b.email]);
   if (!u || !verifyPassword(b.password, u.password_hash)) throw unauthorized("Email or password is not correct.");
-  if (!u.active) throw unauthorized("This account is switched off. Contact PathFinder.");
+  if (!u.active) throw unauthorized("This account is switched off. Contact CareerNet.");
   if (u.role !== b.portal) throw unauthorized(`This is not a ${b.portal} account. Use the ${u.role} sign-in page.`);
   if (u.role === "mentor") {
     const m = await one<{ status: string }>("SELECT status FROM mentors WHERE user_id = $1", [u.id]);
     if (m?.status === "pending") throw unauthorized("Your mentor application is still being reviewed.");
-    if (m?.status !== "active") throw unauthorized("Your mentor account is not active. Contact PathFinder.");
+    if (m?.status !== "active") throw unauthorized("Your mentor account is not active. Contact CareerNet.");
   }
   await audit(u.id, "auth.login", b.portal);
   return { token: await createToken({ uid: u.id, role: u.role, adminRole: u.admin_role }), user: await profile(u.id) };

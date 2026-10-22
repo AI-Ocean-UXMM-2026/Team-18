@@ -23,7 +23,7 @@ export default function Payments() {
   return (
     <>
       <PageHead eyebrow="Admin portal" title="Payments" />
-      <Note>{t("Check the money arrived in the PathFinder account in the payment app (amount + transaction ID) before approving. A screenshot alone is not proof.")}</Note>
+      <Note>{t("Check the money arrived in the CareerNet account in the payment app (amount + transaction ID) before approving. A screenshot alone is not proof.")}</Note>
       <Tabs tabs={[["open", "To check"], ["decided", "Decided"]]} value={tab} onChange={setTab} />
       {loading ? <Spinner /> : error ? <ErrorNote message={error} onRetry={refresh} /> : (
         <>
@@ -34,7 +34,7 @@ export default function Payments() {
               <div className="flex min-w-[240px] flex-1 flex-col gap-1 text-sm">
                 <div className="flex flex-wrap justify-between gap-2"><b>{p.studentName}</b><Pill tone={p.status === "approved" ? "ok" : p.status === "rejected" ? "bad" : p.status === "disputed" ? "warn" : "info"}>{t(p.status === "disputed" ? "Re-review asked" : p.status)}</Pill></div>
                 <span className="text-xs text-muted">{p.studentEmail}</span>
-                <p>PathFinder Pro · <b className="font-mono">{fmtKs(p.amount)}</b> {p.amount !== data!.price && <Pill tone="warn">{t("Amount does not match")}</Pill>}</p>
+                <p>CareerNet Pro · <b className="font-mono">{fmtKs(p.amount)}</b> {p.amount !== data!.price && <Pill tone="warn">{t("Amount does not match")}</Pill>}</p>
                 <p>{p.providerLabel} → {p.accountName} <span className="font-mono">{p.accountNumber}</span></p>
                 <p>{t("Transaction ID")} <b className="font-mono">{p.transactionId}</b> · <span className="text-muted">{fmtWhen(p.createdAt)}</span></p>
                 {p.reason && <p><b>{t("Reason")}:</b> {p.reason}</p>}

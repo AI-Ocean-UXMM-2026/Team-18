@@ -76,5 +76,5 @@ mentorRouter.get("/mentor/profile", route(async req => ({
 mentorRouter.put("/mentor/profile", route(async req => {
   const b = body(req, z.object({ languages: z.string().trim().max(120), bio: z.string().trim().max(1000) }));
   await one("UPDATE mentors SET languages = $1, bio = $2 WHERE user_id = $3", [b.languages, b.bio, sessionOf(req).uid]);
-  return { ok: true, note: "Job title and fields are changed by the PathFinder team." };
+  return { ok: true, note: "Job title and fields are changed by the CareerNet team." };
 }));

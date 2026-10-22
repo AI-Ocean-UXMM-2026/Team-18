@@ -1,4 +1,4 @@
-# Deploying PathFinder
+# Deploying CareerNet
 - Frontend: `cd frontend && npm run build` → serve `frontend/dist` (Vercel/Netlify/nginx).
 - Backend: Node 20+ on Render/Railway/VPS: `cd backend && npm ci && npm start`.
 - Database: managed PostgreSQL 16, run `database/schema.sql` once.

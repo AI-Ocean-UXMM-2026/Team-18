@@ -2,7 +2,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { translate, type Language } from "@/lib/i18n";
 
-const KEY = "pathfinder_lang";
+const KEY = "careernet_lang";
 type Prefs = { lang: Language; setLang: (l: Language) => void; t: (s: string) => string };
 const Ctx = createContext<Prefs | null>(null);
 export function PrefsProvider({ children }: { children: ReactNode }) {

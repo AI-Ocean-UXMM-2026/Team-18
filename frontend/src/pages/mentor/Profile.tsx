@@ -21,7 +21,7 @@ export default function Profile() {
         <b className="text-muted">{t("Name")}</b><span>{p.name}</span><b className="text-muted">{t("Email")}</b><span>{p.email}</span>
         <b className="text-muted">{t("Job title")}</b><span>{p.title}</span><b className="text-muted">{t("Experience")}</b><span>{p.years} {t("years")}</span>
         <b className="text-muted">{t("Fields")}</b><span>{p.fields.map(x => content?.fields[x]).join(", ")}</span>
-        <p className="text-xs text-muted sm:col-span-2">{t("Job title and fields are changed by the PathFinder team.")}</p>
+        <p className="text-xs text-muted sm:col-span-2">{t("Job title and fields are changed by the CareerNet team.")}</p>
       </section>
       <section className="card flex flex-col gap-3">
         <label className="label">{t("Languages")}<input className="input" value={f.languages} onChange={e => setF({ ...f, languages: e.target.value })} /></label>

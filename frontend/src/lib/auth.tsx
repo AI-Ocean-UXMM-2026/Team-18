@@ -19,7 +19,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!tokenStore.get()) { setUser(null); setLoading(false); return; }
     try { setUser((await api.get<{ user: User }>("/auth/me")).user); } catch { setUser(null); } finally { setLoading(false); }
   }, []);
-  useEffect(() => { refresh(); const off = () => setUser(null); window.addEventListener("pathfinder:signed-out", off); return () => window.removeEventListener("pathfinder:signed-out", off); }, [refresh]);
+  useEffect(() => { refresh(); const off = () => setUser(null); window.addEventListener("careernet:signed-out", off); return () => window.removeEventListener("careernet:signed-out", off); }, [refresh]);
   const login = async (portal: Role, email: string, password: string) => {
     const r = await api.post<{ token: string; user: User }>("/auth/login", { portal, email, password });
     tokenStore.set(r.token); setUser(r.user); return r.user;

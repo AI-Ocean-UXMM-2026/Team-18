@@ -25,7 +25,7 @@ export const ENV = {
     text("CORS_ORIGIN_REGEX", "^https?://(localhost|127\\.0\\.0\\.1|10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}|192\\.168\\.\\d{1,3}\\.\\d{1,3}|172\\.(1[6-9]|2\\d|3[01])\\.\\d{1,3}\\.\\d{1,3})(:\\d+)?$") || "^$",
   ),
   seedOnStart: flag("SEED_ON_START", true),
-  seedPassword: text("SEED_PASSWORD", "pathfinder123"),
+  seedPassword: text("SEED_PASSWORD", "careernet123"),
 
   schoolsSheetUrl: text("SCHOOLS_SHEET_CSV_URL"),
   schoolsCacheSeconds: number("SCHOOLS_CACHE_SECONDS", 600),

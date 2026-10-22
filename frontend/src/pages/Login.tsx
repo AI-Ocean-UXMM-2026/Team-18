@@ -17,7 +17,7 @@ export default function Login({ portal }: { portal: Role }) {
   }
   return (
     <section className="card mx-auto flex w-full max-w-md flex-col gap-4">
-      <p className="eyebrow">PathFinder</p><h1 className="text-2xl">{t(TITLES[portal])}</h1>
+      <p className="eyebrow">CareerNet</p><h1 className="text-2xl">{t(TITLES[portal])}</h1>
       <form className="flex flex-col gap-3" onSubmit={submit} noValidate>
         <label className="label">{t("Email")}<input className="input" type="email" autoComplete="username" value={email} onChange={e => setEmail(e.target.value)} required /></label>
         <label className="label">{t("Password")}<input className="input" type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required /></label>

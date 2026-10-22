@@ -28,12 +28,12 @@ export type Session = { uid: number; role: Role; adminRole: AdminRole | null };
 
 export async function createToken(s: Session) {
   return new SignJWT({ uid: s.uid, role: s.role, adminRole: s.adminRole })
-    .setProtectedHeader({ alg: "HS256" }).setIssuedAt().setIssuer("pathfinder")
+    .setProtectedHeader({ alg: "HS256" }).setIssuedAt().setIssuer("careernet")
     .setExpirationTime(`${ENV.jwtExpireMinutes}m`).sign(secret);
 }
 export async function readToken(token: string): Promise<Session | null> {
   try {
-    const { payload } = await jwtVerify(token, secret, { issuer: "pathfinder" });
+    const { payload } = await jwtVerify(token, secret, { issuer: "careernet" });
     return { uid: Number(payload.uid), role: payload.role as Role, adminRole: (payload.adminRole as AdminRole) ?? null };
   } catch { return null; }
 }

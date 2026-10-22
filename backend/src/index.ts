@@ -1,5 +1,5 @@
 // ===========================================================================
-//  index.ts — the PathFinder API server.
+//  index.ts — the CareerNet API server.
 //
 //      cd backend
 //      npm install
@@ -37,7 +37,7 @@ app.use(attachSession);
 app.get("/health", route(async () => {
   const database = await pingDatabase();
   let schools = 0; try { schools = (await getSchools()).length; } catch { /* reported as 0 */ }
-  return { status: database.ok ? "ok" : "degraded", service: "pathfinder-api", database, ai: { provider: ENV.aiProvider, configured: aiConfigured() }, schools: { count: schools, source: schoolsSource() } };
+  return { status: database.ok ? "ok" : "degraded", service: "careernet-api", database, ai: { provider: ENV.aiProvider, configured: aiConfigured() }, schools: { count: schools, source: schoolsSource() } };
 }));
 
 app.use(authRouter);
@@ -52,7 +52,7 @@ async function main() {
   if (ENV.seedOnStart) await seedDatabase();
   startSweeper();
   const server = app.listen(ENV.port, ENV.host, async () => {
-    console.log(`PathFinder API  → http://localhost:${ENV.port}/health`);
+    console.log(`CareerNet API  → http://localhost:${ENV.port}/health`);
     console.log(`AI provider     → ${ENV.aiProvider}${aiConfigured() ? "" : "  (NOT configured: add the API key to backend/.env)"}`);
     try { const s = await getSchools(); console.log(`School data     → ${s.length} universities from ${schoolsSource()}`); }
     catch (e) { console.warn("School data     → could not load:", (e as Error).message); }
@@ -60,4 +60,4 @@ async function main() {
   const stop = () => server.close(() => closeDatabase().finally(() => process.exit(0)));
   process.on("SIGINT", stop); process.on("SIGTERM", stop);
 }
-main().catch(e => { console.error("\n✖ PathFinder API could not start:\n  " + (e instanceof Error ? e.message : e) + "\n"); process.exit(1); });
+main().catch(e => { console.error("\n✖ CareerNet API could not start:\n  " + (e instanceof Error ? e.message : e) + "\n"); process.exit(1); });

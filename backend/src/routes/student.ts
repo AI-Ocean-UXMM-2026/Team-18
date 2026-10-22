@@ -80,7 +80,7 @@ studentRouter.get("/mentors", student, route(async req => {
 studentRouter.post("/bookings", student, route(async req => {
   const uid = sessionOf(req).uid;
   const me = await one<{ is_pro: boolean }>(`SELECT is_pro FROM users WHERE id = $1`, [uid]);
-  if (!me?.is_pro) throw new HttpError(402, "Mentor sessions are part of PathFinder Pro.");
+  if (!me?.is_pro) throw new HttpError(402, "Mentor sessions are part of CareerNet Pro.");
   const b = body(req, z.object({ slotId: z.number().int().positive(), question: z.string().trim().max(500).optional() }));
   const slot = await one<{ id: number; mentor_id: number; starts_at: string }>(
     `SELECT s.id, s.mentor_id, s.starts_at FROM mentor_slots s JOIN mentors m ON m.user_id = s.mentor_id

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Starts the PathFinder API. Run from anywhere:  bash backend/start.sh
+# Starts the CareerNet API. Run from anywhere:  bash backend/start.sh
 set -e
 cd "$(dirname "$0")"
 if [ ! -f .env ]; then

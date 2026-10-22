@@ -29,7 +29,7 @@ export default function Plan() {
   function download() {
     try {
       const doc = buildReport({ name: user?.name ?? "", level: j.level ?? "g12", score: score.data!, career: c!, majors: j.majors, shortlist, nextSteps: next, session: session ? `${session.mentorName}, ${fmtWhen(session.startsAt)}` : null });
-      doc.save("PathFinder-report.pdf");
+      doc.save("CareerNet-report.pdf");
     } catch { toast(t("Could not create the PDF")); }
   }
   return (
@@ -45,13 +45,13 @@ export default function Plan() {
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="card"><h2 className="mb-2 text-lg">{t("Mentor session")}</h2>{session ? <p>{session.mentorName}, <span className="font-mono">{fmtWhen(session.startsAt)}</span></p> : (user?.isPro ? <><p className="text-muted">{t("Not booked (optional)")}</p><Link href="/student/mentors" className="btn-outline btn-sm mt-2 inline-flex">{t("Book a 1-hour mentor session")}</Link></>
-          : <><p className="text-muted">{t("Mentor sessions are part of PathFinder Pro.")}</p><Link href="/student/pro" className="btn-outline btn-sm mt-2 inline-flex">{t("Go Pro")}</Link></>)}</div>
+          : <><p className="text-muted">{t("Mentor sessions are part of CareerNet Pro.")}</p><Link href="/student/pro" className="btn-outline btn-sm mt-2 inline-flex">{t("Go Pro")}</Link></>)}</div>
         <div className="card"><h2 className="mb-2 text-lg">{t("Next steps")}</h2><ol className="list-decimal pl-5">{next.map(s => <li key={s}>{t(s)}</li>)}</ol></div>
       </div>
       <div className={`card flex flex-col gap-2 ${user?.isPro ? "border-ok" : ""}`}>
         <div className="flex justify-between"><h2 className="text-lg">{t("Full report (PDF)")}</h2><span className="rounded-md bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand">Pro</span></div>
         {user?.isPro ? <><p className="text-sm text-muted">{t("Your personal report with results, career plan, universities, scholarships and next steps.")}</p><button className="btn-primary self-start" onClick={download}>{t("Download PDF report")}</button></>
-          : <><p className="text-sm text-muted">{t("The full PDF report is part of PathFinder Pro.")}</p><Link href="/student/pro" className="btn-primary self-start">{t("Go Pro")}</Link></>}
+          : <><p className="text-sm text-muted">{t("The full PDF report is part of CareerNet Pro.")}</p><Link href="/student/pro" className="btn-primary self-start">{t("Go Pro")}</Link></>}
       </div>
     </>
   );

@@ -1,10 +1,10 @@
 {
-  "name": "pathfinder-frontend",
+  "name": "careernet-frontend",
   "version": "2.0.0",
   "private": true,
   "type": "module",
   "license": "MIT",
-  "description": "PathFinder web app — student, mentor and admin portals (React + Vite + Tailwind)",
+  "description": "CareerNet web app — student, mentor and admin portals (React + Vite + Tailwind)",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
