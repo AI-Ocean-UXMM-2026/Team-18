@@ -5,6 +5,7 @@
 //    content  universities (sheet check) and content
 // ===========================================================================
 import { Router } from "express";
+import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { ENV } from "../env.js";
 import { hashPassword } from "../auth.js";
@@ -43,6 +44,41 @@ const questionImportSchema = z.object({
   id: z.number().int().min(21).max(500), area: z.string().trim().min(2).max(80),
   code: z.enum(["R", "I", "A", "S", "E", "C"]), en: z.string().trim().min(4).max(300), my: z.string().trim().min(2).max(500),
 });
+const videoUploadSchema = z.object({
+  careerId: z.string().trim().min(1).max(40),
+  fileName: z.string().trim().min(1).max(180),
+  contentType: z.enum(["video/mp4", "video/webm", "video/quicktime"]),
+  size: z.number().int().positive().max(50 * 1024 * 1024),
+});
+const videoCompleteSchema = z.object({
+  careerId: z.string().trim().min(1).max(40),
+  objectPath: z.string().trim().min(1).max(300),
+  durationSeconds: z.number().finite().positive().max(180),
+});
+
+function requireVideoStorage() {
+  if (!ENV.supabaseUrl || !ENV.supabaseServiceRoleKey) {
+    throw new HttpError(503, "Career video uploads need SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in the backend environment.");
+  }
+}
+
+async function storageRequest(path: string, init: RequestInit = {}) {
+  const headers = new Headers(init.headers);
+  headers.set("apikey", ENV.supabaseServiceRoleKey);
+  headers.set("Authorization", `Bearer ${ENV.supabaseServiceRoleKey}`);
+  if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  const response = await fetch(`${ENV.supabaseUrl}/storage/v1${path}`, { ...init, headers });
+  return response;
+}
+
+function storageErrorMessage(payload: unknown, fallback: string) {
+  if (payload && typeof payload === "object") {
+    const body = payload as { message?: unknown; error?: unknown; error_description?: unknown };
+    const message = body.message ?? body.error_description ?? body.error;
+    if (typeof message === "string" && message) return message;
+  }
+  return fallback;
+}
 
 adminRouter.get("/admin/stats", route(async () => ({
   ...(await one(`SELECT
@@ -193,7 +229,72 @@ adminRouter.get("/admin/content", content, route(async () => ({
   careers: CAREERS.map(c => ({ id: c.id, title: c.t, majors: c.majors.map(m => m.n), videoLength: c.video.len, hasVideo: !!c.video.url })),
   questions: QUESTIONS.length, questionIds: QUESTIONS.map(q => q.id),
   storageReady: !!(await one<{ ready: boolean }>("SELECT to_regclass('public.admin_content') IS NOT NULL AS ready"))?.ready,
+  videoUploadReady: !!(ENV.supabaseUrl && ENV.supabaseServiceRoleKey && (await one<{ ready: boolean }>("SELECT to_regclass('public.admin_career_videos') IS NOT NULL AS ready"))?.ready),
 })));
+adminRouter.post("/admin/content/videos/sign", content, route(async req => {
+  requireVideoStorage();
+  const input = body(req, videoUploadSchema);
+  if (!CAREERS.some(career => career.id === input.careerId)) throw notFound("Career not found.");
+
+  const bucket = encodeURIComponent(ENV.supabaseVideoBucket);
+  const bucketResponse = await storageRequest("/bucket", {
+    method: "POST",
+    body: JSON.stringify({ id: ENV.supabaseVideoBucket, name: ENV.supabaseVideoBucket, public: true, file_size_limit: 50 * 1024 * 1024, allowed_mime_types: ["video/mp4", "video/webm", "video/quicktime"] }),
+  });
+  if (!bucketResponse.ok) {
+    const existingBucket = await storageRequest(`/bucket/${bucket}`);
+    if (!existingBucket.ok) {
+      const detail = await bucketResponse.json().catch(() => null);
+      throw new HttpError(502, `Could not prepare Supabase video storage: ${storageErrorMessage(detail, bucketResponse.statusText)}.`);
+    }
+    const existing = await existingBucket.json().catch(() => ({})) as { public?: boolean };
+    if (!existing.public) throw new HttpError(503, `Make the Supabase Storage bucket "${ENV.supabaseVideoBucket}" public so students can watch career videos.`);
+  }
+
+  const safeName = input.fileName.replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^\.+/, "").slice(-120) || "career-video.mp4";
+  const objectPath = `${input.careerId}/${randomUUID()}-${safeName}`;
+  const storagePath = objectPath.split("/").map(encodeURIComponent).join("/");
+  const signedResponse = await storageRequest(`/object/upload/sign/${bucket}/${storagePath}`, { method: "POST", body: JSON.stringify({}) });
+  const signed = await signedResponse.json().catch(() => null) as { url?: string; token?: string } | null;
+  if (!signedResponse.ok || !signed?.url) throw new HttpError(502, `Could not create a video upload: ${storageErrorMessage(signed, signedResponse.statusText)}.`);
+  let token = signed.token;
+  if (!token) {
+    try { token = new URL(signed.url, ENV.supabaseUrl).searchParams.get("token") ?? undefined; } catch { /* reported below */ }
+  }
+  if (!token) throw new HttpError(502, "Supabase did not return a signed video upload token.");
+
+  const supabase = new URL(ENV.supabaseUrl);
+  if (supabase.hostname.endsWith(".supabase.co")) supabase.hostname = supabase.hostname.replace(/\.supabase\.co$/, ".storage.supabase.co");
+  return { bucket: ENV.supabaseVideoBucket, objectPath, token, uploadEndpoint: `${supabase.origin}/storage/v1/upload/resumable` };
+}));
+adminRouter.post("/admin/content/videos/complete", content, route(async req => {
+  requireVideoStorage();
+  const input = body(req, videoCompleteSchema);
+  const career = CAREERS.find(item => item.id === input.careerId);
+  if (!career) throw notFound("Career not found.");
+  if (!input.objectPath.startsWith(`${input.careerId}/`) || input.objectPath.includes("..")) throw badRequest("The uploaded video path does not match this career.");
+
+  const bucket = encodeURIComponent(ENV.supabaseVideoBucket);
+  const encodedPath = input.objectPath.split("/").map(encodeURIComponent).join("/");
+  const publicUrl = `${ENV.supabaseUrl}/storage/v1/object/public/${bucket}/${encodedPath}`;
+  const storedObject = await fetch(publicUrl, { method: "HEAD" });
+  if (!storedObject.ok) throw new HttpError(400, "Supabase has not finished receiving this video. Please retry the upload.");
+  const duration = Math.max(1, Math.round(input.durationSeconds));
+  const videoLength = `${Math.floor(duration / 60)}:${String(duration % 60).padStart(2, "0")}`;
+  try {
+    await query(`INSERT INTO admin_career_videos (career_id, object_path, video_url, video_length, updated_by)
+      VALUES ($1, $2, $3, $4, $5)
+      ON CONFLICT (career_id) DO UPDATE SET object_path = EXCLUDED.object_path, video_url = EXCLUDED.video_url, video_length = EXCLUDED.video_length, updated_by = EXCLUDED.updated_by, updated_at = now()`,
+    [career.id, input.objectPath, publicUrl, videoLength, sessionOf(req).uid]);
+  } catch (error) {
+    if ((error as { code?: string }).code === "42P01") throw new HttpError(503, "Run database/migrations/20261022_admin_career_videos.sql before saving uploaded videos.");
+    throw error;
+  }
+  career.video.len = videoLength;
+  career.video.url = publicUrl;
+  await audit(sessionOf(req).uid, "career.video.upload", `career:${career.id}`, { objectPath: input.objectPath, videoLength });
+  return { ok: true, videoLength };
+}));
 adminRouter.post("/admin/content/import", content, route(async req => {
   const storageReady = !!(await one<{ ready: boolean }>("SELECT to_regclass('public.admin_content') IS NOT NULL AS ready"))?.ready;
   if (!storageReady) throw new HttpError(503, "Content import storage is not installed. Apply database/migrations/20261022_admin_content.sql first.");

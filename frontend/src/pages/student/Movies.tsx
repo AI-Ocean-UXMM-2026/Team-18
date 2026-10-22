@@ -21,7 +21,7 @@ export default function Movies() {
             <article key={c.id} className="card flex flex-col gap-3">
               <div className="relative grid aspect-video place-items-center overflow-hidden rounded-xl bg-gradient-to-br from-brand to-ink text-white">
                 <b className="absolute left-3 top-2">{c.t}</b>
-                {c.video.url ? <a href={c.video.url} target="_blank" rel="noreferrer" onClick={() => set(p => ({ watched: { ...p.watched, [c.id]: true } }))} className="grid h-14 w-14 place-items-center rounded-full bg-card/90 text-xl text-brand">▶</a>
+                {c.video.url ? <video src={c.video.url} controls preload="metadata" playsInline onEnded={() => set(p => ({ watched: { ...p.watched, [c.id]: true } }))} className="absolute inset-0 h-full w-full rounded-xl bg-black object-contain" aria-label={`${c.t} career video`} />
                   : <span className="rounded-lg bg-black/40 px-3 py-1 text-sm">{t("Video coming soon")}</span>}
                 <span className="absolute bottom-2 right-2 rounded bg-black/50 px-1.5 font-mono text-xs">{c.video.len}</span>
               </div>

@@ -146,6 +146,16 @@ CREATE TABLE IF NOT EXISTS admin_content (
   PRIMARY KEY (content_type, content_id)
 );
 
+-- Public career videos live in Supabase Storage; only their metadata is kept here.
+CREATE TABLE IF NOT EXISTS admin_career_videos (
+  career_id    TEXT PRIMARY KEY,
+  object_path  TEXT NOT NULL,
+  video_url    TEXT NOT NULL,
+  video_length TEXT NOT NULL DEFAULT '',
+  updated_by   INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  updated_at   TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- Default receiving accounts (edit them in Admin -> Payment accounts)
 INSERT INTO payment_accounts (provider, label, enabled) VALUES
   ('kbz', 'KBZPay', true), ('wave', 'Wave Money', true), ('aya', 'AYA Pay', true),

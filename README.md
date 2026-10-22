@@ -58,7 +58,7 @@ Requirements: Node.js 20 or later and PostgreSQL 16 or a compatible PostgreSQL s
 
    On Windows PowerShell, use `psql "postgresql://USER:PASSWORD@HOST:5432/careernet_db" -f database/schema.sql` with your database connection details.
 
-   For an existing database, apply every SQL script in `database/migrations/` after the schema, in filename order. These migrations include admin-managed university and content storage, plus optional payment transaction IDs.
+   For an existing database, apply every SQL script in `database/migrations/` after the schema, in filename order. These migrations include admin-managed university and content storage, optional payment transaction IDs, and career video references.
 
 2. Configure the backend:
 

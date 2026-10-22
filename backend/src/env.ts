@@ -16,6 +16,9 @@ const flag = (key: string, fallback: boolean) => {
 
 export const ENV = {
   databaseUrl: text("DATABASE_URL"),
+  supabaseUrl: text("SUPABASE_URL").replace(/\/+$/, ""),
+  supabaseServiceRoleKey: text("SUPABASE_SERVICE_ROLE_KEY"),
+  supabaseVideoBucket: text("SUPABASE_VIDEO_BUCKET", "career-videos"),
   jwtSecret: text("JWT_SECRET", "dev-only-change-me-please-set-JWT_SECRET"),
   jwtExpireMinutes: number("JWT_EXPIRE_MINUTES", 1440),
   port: number("PORT", 8000),

@@ -13,8 +13,10 @@ type CareerImport = {
 type QuestionImport = { id: number; area: string; code: AcceptCode; en: string; my: string };
 type D = {
   careers: { id: string; title: string; majors: string[]; videoLength: string; hasVideo: boolean }[];
-  questions: number; questionIds: number[]; storageReady: boolean;
+  questions: number; questionIds: number[]; storageReady: boolean; videoUploadReady: boolean;
 };
+
+type SignedVideoUpload = { bucket: string; objectPath: string; token: string; uploadEndpoint: string };
 
 const CAREER_COLUMNS = ["ID", "Career", "RIASEC", "Field IDs", "Demand", "Study", "Description", "Positions", "Skills", "Qualifications", "Outlook", "Subjects", "Majors", "Video length", "Video chapters", "Video URL"];
 const QUESTION_COLUMNS = ["ID", "Area", "RIASEC", "English statement", "Myanmar statement"];
@@ -22,6 +24,79 @@ const blankRow = (columns: number) => Array.from({ length: columns }, () => "");
 const splitList = (value: string) => value.split(";").map(s => s.trim()).filter(Boolean);
 const slug = (value: string) => value.trim().toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/^-|-$/g, "");
 const nonemptyRows = (rows: string[][]) => rows.filter(row => row.some(cell => cell.trim()));
+
+function readVideoDuration(file: File) {
+  return new Promise<number>((resolve, reject) => {
+    const video = document.createElement("video");
+    const url = URL.createObjectURL(file);
+    video.preload = "metadata";
+    video.onloadedmetadata = () => { URL.revokeObjectURL(url); resolve(video.duration); };
+    video.onerror = () => { URL.revokeObjectURL(url); reject(new Error("This video file could not be read.")); };
+    video.src = url;
+  });
+}
+
+function metadataValue(value: string) {
+  return btoa(unescape(encodeURIComponent(value)));
+}
+
+async function uploadResumableVideo(file: File, signed: SignedVideoUpload, onProgress: (progress: number) => void) {
+  const metadata = [
+    ["bucketName", signed.bucket], ["objectName", signed.objectPath], ["contentType", file.type], ["cacheControl", "3600"],
+  ].map(([key, value]) => `${key} ${metadataValue(value)}`).join(",");
+  const tusHeaders = { "Tus-Resumable": "1.0.0", "x-signature": signed.token };
+  const created = await fetch(signed.uploadEndpoint, { method: "POST", headers: {
+    ...tusHeaders, "Upload-Length": String(file.size), "Upload-Metadata": metadata,
+    "Content-Type": "application/offset+octet-stream",
+  } });
+  if (created.status !== 201) throw new Error(`Supabase could not start the upload (${created.status}).`);
+  const location = created.headers.get("Location");
+  if (!location) throw new Error("Supabase did not return an upload session.");
+  const uploadUrl = new URL(location, signed.uploadEndpoint).toString();
+  const chunkSize = 6 * 1024 * 1024;
+  let offset = 0;
+  while (offset < file.size) {
+    const chunk = file.slice(offset, Math.min(offset + chunkSize, file.size));
+    let response: Response | null = null;
+    let lastError: unknown;
+    let serverAdvanced = false;
+    for (let attempt = 0; attempt < 4; attempt++) {
+      try {
+        response = await fetch(uploadUrl, { method: "PATCH", headers: {
+          ...tusHeaders, "Upload-Offset": String(offset), "Content-Type": "application/offset+octet-stream",
+        }, body: chunk });
+        if (response.ok) break;
+        const head = await fetch(uploadUrl, { method: "HEAD", headers: tusHeaders });
+        const serverOffset = Number(head.headers.get("Upload-Offset"));
+        if (head.ok && Number.isFinite(serverOffset) && serverOffset > offset) {
+          offset = serverOffset;
+          onProgress(Math.min(100, Math.round(offset / file.size * 100)));
+          serverAdvanced = true;
+          break;
+        }
+        if (response.status < 500) throw new Error(`Supabase rejected a video chunk (${response.status}).`);
+        lastError = new Error(`Supabase temporarily failed (${response.status}).`);
+      } catch (error) {
+        lastError = error;
+        try {
+          const head = await fetch(uploadUrl, { method: "HEAD", headers: tusHeaders });
+          const serverOffset = Number(head.headers.get("Upload-Offset"));
+          if (head.ok && Number.isFinite(serverOffset) && serverOffset > offset) {
+            offset = serverOffset;
+            onProgress(Math.min(100, Math.round(offset / file.size * 100)));
+            serverAdvanced = true;
+          }
+        } catch { /* retry the same chunk after transient network errors */ }
+        if (serverAdvanced) break;
+      }
+      if (attempt < 3) await new Promise(resolve => setTimeout(resolve, 800 * (attempt + 1)));
+    }
+    if (serverAdvanced) continue;
+    if (!response?.ok) throw lastError instanceof Error ? lastError : new Error("The video upload failed.");
+    offset = Number(response.headers.get("Upload-Offset") ?? offset + chunk.size);
+    onProgress(Math.min(100, Math.round(offset / file.size * 100)));
+  }
+}
 
 function careerFromRow(row: string[]): CareerImport {
   const majors = splitList(row[12] ?? "").map(item => {
@@ -49,6 +124,27 @@ export default function Content() {
   const [careerErrors, setCareerErrors] = useState<string[]>([]);
   const [questionErrors, setQuestionErrors] = useState<string[]>([]);
   const [saving, setSaving] = useState<"career" | "question" | null>(null);
+  const [videoUploads, setVideoUploads] = useState<Record<string, number>>({});
+
+  async function uploadCareerVideo(careerId: string, file: File) {
+    if (!data?.videoUploadReady) return;
+    if (!["video/mp4", "video/webm", "video/quicktime"].includes(file.type)) { toast(t("Choose an MP4, WebM, or MOV video.")); return; }
+    if (file.size > 50 * 1024 * 1024) { toast(t("Video files must be 50 MB or smaller.")); return; }
+    setVideoUploads(current => ({ ...current, [careerId]: 0 }));
+    try {
+      const durationSeconds = await readVideoDuration(file);
+      if (!Number.isFinite(durationSeconds) || durationSeconds <= 0 || durationSeconds > 180) throw new Error(t("Video must be 3 minutes or shorter."));
+      const signed = await api.post<SignedVideoUpload>("/admin/content/videos/sign", { careerId, fileName: file.name, contentType: file.type, size: file.size });
+      await uploadResumableVideo(file, signed, progress => setVideoUploads(current => ({ ...current, [careerId]: progress })));
+      await api.post("/admin/content/videos/complete", { careerId, objectPath: signed.objectPath, durationSeconds });
+      toast(t("Career video uploaded."));
+      await refresh();
+    } catch (error) {
+      toast((error as Error).message || t("Video upload failed."));
+    } finally {
+      setVideoUploads(current => { const next = { ...current }; delete next[careerId]; return next; });
+    }
+  }
 
   function setCell(kind: "career" | "question", rowIndex: number, columnIndex: number, value: string) {
     const setRows = kind === "career" ? setCareerRows : setQuestionRows;
@@ -175,6 +271,7 @@ export default function Content() {
     <div className="grid grid-cols-2 gap-3 md:grid-cols-3">{[["Careers", data.careers.length], ["Quiz questions", data.questions], ["Short movies uploaded", data.careers.filter(c => c.hasVideo).length]].map(([label, value]) => <div key={label} className="tile"><b>{value}</b><span>{t(String(label))}</span></div>)}</div>
     <Note>{t("Add content in the cells below. You can type directly or copy cells from Excel and paste them into the grid. Save each sheet to add those rows to CareerNet.")}</Note>
     {!data.storageReady && <Note>{t("Run the admin content database migration before saving. Existing student and admin pages remain available until then.")}</Note>}
+    {!data.videoUploadReady && <Note>{t("To upload career videos, set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY on the backend, then run database/migrations/20261022_admin_career_videos.sql.")}</Note>}
 
     <section className="card flex flex-col gap-3">
       <div><h2 className="text-lg">{t("Careers")}</h2><p className="text-sm text-muted">{t("Lists inside a cell use semicolons. Enter majors as Major name|field ID; Major name|field ID.")}</p></div>
@@ -190,7 +287,10 @@ export default function Content() {
       <div className="flex flex-wrap gap-2"><button type="button" className="btn-outline btn-sm" onClick={() => addRow("question")}>{t("Add row")}</button><button type="button" className="btn-primary btn-sm" disabled={saving !== null || !data.storageReady} onClick={() => saveRows("question")}>{saving === "question" ? t("Saving…") : t("Save questions")}</button><span className="self-center text-xs text-muted">{t("Paste multiple rows and columns from Excel with Ctrl+V.")}</span></div>
     </section>
 
-    <div className="table-wrap"><table><thead><tr><th>{t("Career")}</th><th>{t("Majors")}</th><th>{t("Short movie")}</th></tr></thead><tbody>{data.careers.map(c => <tr key={c.id}><td><b>{c.title}</b></td><td className="text-xs">{c.majors.join(", ")}</td><td>{c.hasVideo ? <Pill tone="ok">{t("Uploaded")}</Pill> : <Pill tone="warn">{t("Video link needed")}</Pill>} <span className="font-mono text-xs">{c.videoLength}</span></td></tr>)}</tbody></table></div>
+    <div className="table-wrap"><table><thead><tr><th>{t("Career")}</th><th>{t("Majors")}</th><th>{t("Short movie")}</th><th>{t("Video file")}</th></tr></thead><tbody>{data.careers.map(c => <tr key={c.id}><td><b>{c.title}</b></td><td className="text-xs">{c.majors.join(", ")}</td><td>{c.hasVideo ? <Pill tone="ok">{t("Uploaded")}</Pill> : <Pill tone="warn">{t("Video needed")}</Pill>} <span className="font-mono text-xs">{c.videoLength}</span></td><td><label className={`btn-outline btn-sm inline-flex cursor-pointer items-center ${!data.videoUploadReady || videoUploads[c.id] !== undefined ? "pointer-events-none opacity-60" : ""}`}>
+      <input className="sr-only" type="file" accept="video/mp4,video/webm,video/quicktime" disabled={!data.videoUploadReady || videoUploads[c.id] !== undefined} onChange={event => { const file = event.currentTarget.files?.[0]; if (file) void uploadCareerVideo(c.id, file); event.currentTarget.value = ""; }} />
+      {videoUploads[c.id] !== undefined ? `${t("Uploading")} ${videoUploads[c.id]}%` : t(c.hasVideo ? "Replace video" : "Upload video")}
+    </label></td></tr>)}</tbody></table></div>
   </>;
 }
 

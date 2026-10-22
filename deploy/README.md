@@ -10,6 +10,7 @@
 - `CORS_ORIGIN` = your site only; `CORS_ORIGIN_REGEX` empty.
 - Real receiving accounts in Admin → Payment accounts.
 - AI keys set in the backend host environment (for example, Render → backend service → Environment). Never commit `.env`.
+- Direct career video uploads use Supabase Storage. Set `SUPABASE_URL` and the backend-only `SUPABASE_SERVICE_ROLE_KEY` on the backend host, then apply `database/migrations/20261022_admin_career_videos.sql`. The first admin upload creates a public `career-videos` bucket automatically. Videos must be MP4, WebM, or MOV, no longer than 3 minutes, and at most 50 MB.
 
 ## AI provider failover
 - With `AI_PROVIDER=gemini`, CareerNet tries `GEMINI_API_KEY` first. If Gemini returns HTTP 429, it tries `GEMINI_FALLBACK_API_KEY` once when set. Other Gemini failures go directly to OpenRouter when configured.
