@@ -2,6 +2,8 @@
 //  db.ts — the single PostgreSQL connection pool + small query helpers.
 // ===========================================================================
 import pg from "pg";
+import fs from "node:fs";
+import path from "node:path";
 import { ENV } from "./env.js";
 
 pg.types.setTypeParser(pg.types.builtins.INT8, v => Number(v));
@@ -10,7 +12,15 @@ pg.types.setTypeParser(pg.types.builtins.NUMERIC, v => Number(v));
 let pool: pg.Pool | null = null;
 export function getPool() {
   if (!pool) {
-    pool = new pg.Pool({ connectionString: ENV.databaseUrl, max: 10, idleTimeoutMillis: 30_000, connectionTimeoutMillis: 10_000 });
+    const connectionUrl = new URL(ENV.databaseUrl);
+    const usesSupabasePooler = connectionUrl.hostname.endsWith(".pooler.supabase.com");
+    const ssl = usesSupabasePooler
+      ? { ca: fs.readFileSync(path.resolve(import.meta.dirname, "../certs/prod-ca-2021.crt"), "utf8"), rejectUnauthorized: true }
+      : undefined;
+    // node-postgres lets sslmode in the URL override the explicit SSL options.
+    // Supabase's CA above provides certificate verification for its pooler.
+    if (usesSupabasePooler) connectionUrl.searchParams.delete("sslmode");
+    pool = new pg.Pool({ connectionString: connectionUrl.toString(), ...(ssl ? { ssl } : {}), max: 10, idleTimeoutMillis: 30_000, connectionTimeoutMillis: 10_000 });
     pool.on("error", e => console.error("[db] idle client error:", e.message));
   }
   return pool;
