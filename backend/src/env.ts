@@ -36,7 +36,11 @@ export const ENV = {
 
   aiProvider: (text("AI_PROVIDER", "gemini").toLowerCase() === "claude" ? "claude" : "gemini") as "gemini" | "claude",
   geminiKey: text("GEMINI_API_KEY"),
+  geminiFallbackKey: text("GEMINI_FALLBACK_API_KEY"),
   geminiModel: text("GEMINI_MODEL", "gemini-2.5-flash"),
+  openrouterKey: text("OPENROUTER_API_KEY"),
+  openrouterModel: text("OPENROUTER_MODEL", "nvidia/nemotron-3.5-lightning:free"),
+  openrouterReferer: text("OPENROUTER_REFERER", "https://careernet-team-18-web.onrender.com"),
   anthropicKey: text("ANTHROPIC_API_KEY"),
   claudeModel: text("CLAUDE_MODEL", "claude-haiku-5-5"),
   aiRateLimitPerHour: number("AI_RATE_LIMIT_PER_HOUR", 30),
@@ -46,7 +50,10 @@ export const ENV = {
   isProduction: text("NODE_ENV") === "production",
 } as const;
 
-export const aiConfigured = () => (ENV.aiProvider === "claude" ? !!ENV.anthropicKey : !!ENV.geminiKey);
+export const openrouterEnabled = () => !!ENV.openrouterKey && ENV.openrouterModel.endsWith(":free");
+export const aiConfigured = () => ENV.aiProvider === "claude"
+  ? !!ENV.anthropicKey
+  : !!(ENV.geminiKey || ENV.geminiFallbackKey || openrouterEnabled());
 
 export function assertEnv() {
   if (!ENV.databaseUrl) throw new Error("DATABASE_URL is not set. Copy backend/.env.example to backend/.env and add your PostgreSQL connection string.");
