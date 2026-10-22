@@ -20,7 +20,7 @@ export const adminCan = (adminRole: string | null | undefined, path: string) => 
 export function AppShell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const { user, isGuest, logout } = useAuth();
-  const { lang, setLang, t } = usePrefs();
+  const { lang, setLang, theme, setTheme, t } = usePrefs();
   const step = user?.role === "student" ? STUDENT_STEPS.find(([re]) => re.test(location))?.[1] ?? 0 : 0;
   const nav = user && user.role !== "student" ? NAV[user.role].filter(([p]) => user.role !== "admin" || adminCan(user.adminRole, p)) : [];
   return (
@@ -40,6 +40,10 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="ml-auto flex items-center gap-2">
             {user?.role === "student" && <Link href="/student/pro" className={user.isPro ? "btn btn-sm border border-ok bg-ok-soft text-ok" : "btn-outline btn-sm"}>{user.isPro ? "Pro ✓" : t("Go Pro")}</Link>}
             {isGuest && <><Link href="/login" className="btn-ghost btn-sm">{t("Sign in")}</Link><Link href="/register" className="btn-outline btn-sm">{t("Create account")}</Link><button className="btn-ghost btn-sm" onClick={logout}>{t("End guest session")}</button></>}
+            <div role="group" aria-label={t("Color theme")} className="flex items-center rounded-lg border border-line bg-soft p-0.5">
+              <button type="button" onClick={() => setTheme("light")} aria-label={t("Light theme")} aria-pressed={theme === "light"} title={t("Light theme")} className={`grid h-8 w-8 place-items-center rounded-md text-sm transition ${theme === "light" ? "bg-card text-brand shadow-sm" : "text-muted hover:text-ink"}`}><span aria-hidden>☀</span></button>
+              <button type="button" onClick={() => setTheme("dark")} aria-label={t("Dark theme")} aria-pressed={theme === "dark"} title={t("Dark theme")} className={`grid h-8 w-8 place-items-center rounded-md text-sm transition ${theme === "dark" ? "bg-card text-brand shadow-sm" : "text-muted hover:text-ink"}`}><span aria-hidden>☾</span></button>
+            </div>
             <button className="btn-ghost btn-sm" onClick={() => setLang(lang === "en" ? "my" : "en")} aria-label="Switch language">{lang === "en" ? "မြန်မာ" : "English"}</button>
             {user && <button className="btn-ghost btn-sm" onClick={logout}>{t("Sign out")}</button>}
           </div>

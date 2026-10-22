@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#f3f5fb" />
+    <script>
+      try {
+        const theme = localStorage.getItem("careernet_theme") === "dark" ? "dark" : "light";
+        document.documentElement.dataset.theme = theme;
+        if (theme === "dark") document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#0b1020");
+      } catch {}
+    </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>CareerNet — Career Guidance</title>
     <meta name="description" content="Career quiz, major selection and university choice for Grade 12, GED and IGCSE students in Myanmar." />

@@ -9,6 +9,9 @@
 export type Language = "en" | "my";
 
 export const MYANMAR: Record<string, string> = {
+  "Color theme": "အရောင်အပြင်အဆင်",
+  "Light theme": "အလင်းအပြင်အဆင်",
+  "Dark theme": "အမှောင်အပြင်အဆင်",
   "CareerNet · guided student pathway": "CareerNet · ကျောင်းသားများအတွက် လမ်းညွှန်ခရီးစဉ်",
   "Loading results": "ရလဒ်များကို ဖွင့်နေပါသည်",
   "Loading career examples": "အသက်မွေးဝမ်းကျောင်း ဥပမာများကို ဖွင့်နေပါသည်",

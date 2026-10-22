@@ -45,7 +45,7 @@ export default function Landing() {
 
           <div className="relative mx-auto w-full max-w-md">
             <div className="absolute -inset-3 rotate-3 rounded-[2rem] border border-white/10 bg-white/5" />
-            <div className="relative rounded-[1.6rem] border border-white/15 bg-white p-5 text-ink shadow-2xl shadow-black/20 sm:p-6">
+            <div className="relative rounded-[1.6rem] border border-white/15 bg-card p-5 text-ink shadow-2xl shadow-black/20 sm:p-6">
               <div className="flex items-center justify-between gap-3 border-b border-line pb-4">
                 <div><p className="eyebrow">{t("Your pathway")}</p><h2 className="mt-1 text-xl">{t("A clear next step")}</h2></div>
                 <div className="grid h-12 w-12 place-items-center rounded-2xl bg-brand text-xl text-white" aria-hidden>✦</div>
@@ -93,13 +93,13 @@ export default function Landing() {
         </div> : <div className="mx-auto max-w-3xl rounded-2xl border border-line bg-card p-6 text-center text-sm text-muted">{t("Start the quiz to explore career paths matched to you.")}</div>}
       </section>
 
-      <section id="journey" className="scroll-mt-24 rounded-3xl border border-line bg-white p-6 shadow-sm sm:p-9">
+      <section id="journey" className="scroll-mt-24 rounded-3xl border border-line bg-card p-6 shadow-sm sm:p-9">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div className="max-w-2xl"><p className="eyebrow">{t("The CareerNet pathway")}</p><h2 className="mt-2 text-3xl sm:text-4xl">{t("From self-discovery to a plan you can act on")}</h2></div>
           <p className="max-w-sm text-sm leading-6 text-muted">{t("Move through each step at your own pace. Your account keeps your progress ready for next time.")}</p>
         </div>
         <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          {pathway.map((item, index) => <article key={item.number} className="group rounded-2xl border border-line bg-bg/70 p-5 transition hover:-translate-y-1 hover:border-brand/40 hover:bg-white hover:shadow-md">
+          {pathway.map((item, index) => <article key={item.number} className="group rounded-2xl border border-line bg-bg/70 p-5 transition hover:-translate-y-1 hover:border-brand/40 hover:bg-card hover:shadow-md">
             <div className="flex items-center justify-between"><span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand-soft text-xl font-bold text-brand">{item.icon}</span><span className="font-mono text-sm font-bold text-brand">{item.number}</span></div>
             <h3 className="mt-5 text-lg">{t(item.title)}</h3><p className="mt-2 text-sm leading-6 text-muted">{t(item.detail)}</p>
             {index === 2 && <p className="mt-4 border-t border-line pt-3 text-xs font-semibold text-brand">{t("GED and IGCSE school data included")}</p>}
