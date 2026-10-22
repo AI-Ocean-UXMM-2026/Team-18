@@ -110,7 +110,10 @@ export default function Pro() {
                 <button className="btn-primary self-start" disabled={busy}>{t("Send for checking")}</button>
               </form>
             </>}
-            {!data.accounts.length && <p className="text-sm text-muted">{t("Payments are not open yet. Please try again later.")}</p>}
+            {!data.accounts.length && <div className="rounded-xl border border-warn bg-warn-soft p-4 text-sm">
+              <b>{t("Pro purchases are not set up yet.")}</b>
+              <p className="mt-1">{t("An admin needs to add and enable a payment account before students can send a Pro payment. Please contact the CareerNet team.")}</p>
+            </div>}
           </section>
         </>
       )}

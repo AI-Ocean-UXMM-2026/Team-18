@@ -16,6 +16,7 @@ const STUDENT_NAV = [
   ["/student/explorer", "University explorer", "⌕"],
   ["/student/compare", "Compare universities", "⇄"],
   ["/student/plan", "My plan", "✓"],
+  ["/student/pro", "Upgrade to Pro", "✦"],
   ["/student/mentors", "Meet a mentor · Pro", "◷"],
   ["/student/profile", "Profile & settings", "⚙"],
 ] as const;
@@ -60,14 +61,15 @@ export function AppShell({ children }: { children: ReactNode }) {
       {STUDENT_NAV.map(([path, label, glyph], index) => {
         const active = path === "/student" ? location === path : location === path || location.startsWith(`${path}/`);
         const needsPro = path === "/student/mentors" && flow.comparisonDone && !user?.isPro;
+        const itemLabel = path === "/student/pro" && user?.isPro ? "Pro plan" : label;
         const locked = JOURNEY_PATHS.includes(path) && (!ready || !content || !!studentRouteRedirect(path, flow, j.level, user?.isPro));
-        const badge = needsPro ? "Pro" : locked ? "Locked" : path === "/student/quiz" ? (quizDone ? "Done" : answered ? "In progress" : null)
+        const badge = path === "/student/pro" && user?.isPro ? "Active" : needsPro ? "Pro" : locked ? "Locked" : path === "/student/quiz" ? (quizDone ? "Done" : answered ? "In progress" : null)
           : path === "/student/results" || path === "/student/career" ? (quizDone ? "Ready" : "Locked")
           : path === "/student/compare" && j.compare.length ? `${j.compare.length} selected`
           : path === "/student/mentors" ? "Pro" : null;
-        const badgeTone = badge === "Done" || badge === "Ready" ? "bg-ok-soft text-ok" : badge === "In progress" ? "bg-warn-soft text-warn" : badge === "Locked" ? "border border-line bg-soft text-muted" : "bg-brand-soft text-brand";
+        const badgeTone = badge === "Done" || badge === "Ready" || badge === "Active" ? "bg-ok-soft text-ok" : badge === "In progress" ? "bg-warn-soft text-warn" : badge === "Locked" ? "border border-line bg-soft text-muted" : "bg-brand-soft text-brand";
         const contents = <>
-          <span className="flex min-w-0 items-center gap-2.5"><span aria-hidden="true" className={`grid h-7 w-7 shrink-0 place-items-center rounded-md text-sm ${active ? "bg-brand text-white" : "bg-soft text-muted"}`}>{glyph}</span><span className="truncate">{t(label)}</span></span>
+          <span className="flex min-w-0 items-center gap-2.5"><span aria-hidden="true" className={`grid h-7 w-7 shrink-0 place-items-center rounded-md text-sm ${active ? "bg-brand text-white" : "bg-soft text-muted"}`}>{glyph}</span><span className="truncate">{t(itemLabel)}</span></span>
           {badge && <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide ${badgeTone}`}>{t(badge)}</span>}
           {!badge && index === 0 && <span className="sr-only">{t("Current student portal")}</span>}
         </>;
@@ -88,7 +90,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   </>;
 
   const controls = <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
-    {user?.role === "student" && <Link href="/student/pro" aria-label={user.isPro ? t("Pro plan") : t("Normal plan · Upgrade to Pro")} className={user.isPro ? "btn btn-sm border border-ok bg-ok-soft text-ok" : "btn-outline btn-sm"}>{user.isPro ? "Pro ✓" : t("Normal")}</Link>}
+    {user?.role === "student" && <Link href={user.isPro ? "/student/profile" : "/student/pro"} aria-label={user.isPro ? t("Pro plan") : t("Upgrade to Pro")} className={user.isPro ? "btn btn-sm border border-ok bg-ok-soft text-ok" : "btn-primary btn-sm"}>{user.isPro ? "Pro ✓" : t("Upgrade to Pro")}</Link>}
     {isGuest && <><Link href="/login" className="btn-ghost btn-sm">{t("Sign in")}</Link><Link href="/register" className="btn-outline btn-sm">{t("Create account")}</Link></>}
     {user?.role === "student" && <Link href="/student/profile" className="grid h-8 w-8 place-items-center rounded-full bg-[#142B63] text-xs font-bold text-white hover:ring-2 hover:ring-brand" title={t("Profile & settings")} aria-label={t("Profile & settings")}>{user.name.trim().charAt(0).toUpperCase()}</Link>}
     {user && user.role !== "student" && <span className="hidden h-8 w-8 place-items-center rounded-full bg-[#142B63] text-xs font-bold text-white sm:grid" title={user.name}>{user.name.trim().charAt(0).toUpperCase()}</span>}

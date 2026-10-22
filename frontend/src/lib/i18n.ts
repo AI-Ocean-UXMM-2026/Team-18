@@ -431,6 +431,8 @@ export const MYANMAR: Record<string, string> = {
   "Payment waiting for admin check": "Admin စစ်ဆေးရန် စောင့်ဆိုင်းနေသည်",
   "Payments": "ငွေပေးချေမှုများ",
   "Payments are not open yet. Please try again later.": "ငွေပေးချေမှု မဖွင့်ရသေးပါ။ နောက်မှ ထပ်ကြိုးစားပါ။",
+  "Pro purchases are not set up yet.": "Pro ဝယ်ယူမှုကို မသတ်မှတ်ရသေးပါ။",
+  "An admin needs to add and enable a payment account before students can send a Pro payment. Please contact the CareerNet team.": "ကျောင်းသားများ Pro ငွေပေးချေမှု မပို့မီ Admin က ငွေလက်ခံအကောင့်ကို ထည့်သွင်းဖွင့်ပေးရပါမည်။ CareerNet အဖွဲ့ကို ဆက်သွယ်ပါ။",
   "Physics": "ရူပဗေဒ",
   "Pick at least 2 to compare.": "နှိုင်းယှဉ်ရန် အနည်းဆုံး ၂ ခု ရွေးပါ။",
   "Please send exactly": "တိတိကျကျ ပို့ပါ",
