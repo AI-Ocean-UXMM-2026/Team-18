@@ -4,7 +4,7 @@ CareerNest is a career guidance app for Grade 12, GED, and IGCSE students in Mya
 
 ## Current live demo
 
-- Website: [careernet-team-18-web.onrender.com](https://careernet-team-18-web.onrender.com)
+- Website: [careernest.onrender.com](https://careernest.onrender.com)
 - API health: [careernet-api.onrender.com/health](https://careernet-api.onrender.com/health)
 - Hosting: Render serves the frontend and API; Supabase provides PostgreSQL.
 

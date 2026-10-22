@@ -43,7 +43,7 @@ export const ENV = {
   geminiModel: text("GEMINI_MODEL", "gemini-2.5-flash"),
   openrouterKey: text("OPENROUTER_API_KEY"),
   openrouterModel: text("OPENROUTER_MODEL", "nvidia/nemotron-3.5-lightning:free"),
-  openrouterReferer: text("OPENROUTER_REFERER", "https://careernet-team-18-web.onrender.com"),
+  openrouterReferer: text("OPENROUTER_REFERER", "https://careernest.onrender.com"),
   anthropicKey: text("ANTHROPIC_API_KEY"),
   claudeModel: text("CLAUDE_MODEL", "claude-haiku-5-5"),
   aiRateLimitPerHour: number("AI_RATE_LIMIT_PER_HOUR", 30),
