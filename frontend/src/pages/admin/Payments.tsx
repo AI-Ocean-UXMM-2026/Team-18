@@ -11,7 +11,6 @@ export default function Payments() {
   const { t } = usePrefs(); const [tab, setTab] = useState<"open" | "decided">("open");
   const { data, loading, error, refresh } = useApiData(() => api.get<{ price: number; payments: Pay[] }>(`/admin/payments?status=${tab}`), [tab]);
   const [checked, setChecked] = useState<Record<number, boolean>>({}); const [reasons, setReasons] = useState<Record<number, string>>({});
-  const [zoom, setZoom] = useState<string | null>(null);
   async function approve(id: number) {
     if (!checked[id]) return toast(t("Tick the box after checking the money arrived"));
     try { await api.post(`/admin/payments/${id}/approve`, { checked: true }); toast(t("Approved. Pro is now on for this student")); refresh(); } catch (e) { toast((e as Error).message); }
@@ -30,7 +29,7 @@ export default function Payments() {
           {!data!.payments.length && <div className="card text-muted">{t("Nothing here.")}</div>}
           {data!.payments.map(p => (
             <article key={p.id} className="card flex flex-wrap items-start gap-4">
-              <button className="grid h-40 w-28 shrink-0 place-items-center overflow-hidden rounded-xl border border-dashed border-line bg-soft text-xs text-muted" onClick={() => p.proof && setZoom(p.proof)}>{p.proof ? <img src={p.proof} alt={`Payment screenshot from ${p.studentName}`} className="w-full" /> : t("Screenshot deleted")}</button>
+              <div className="grid h-40 w-28 shrink-0 place-items-center overflow-hidden rounded-xl border border-dashed border-line bg-soft text-xs text-muted">{p.proof ? <img src={p.proof} alt={`Payment screenshot from ${p.studentName}`} className="w-full" /> : t("Screenshot deleted")}</div>
               <div className="flex min-w-[240px] flex-1 flex-col gap-1 text-sm">
                 <div className="flex flex-wrap justify-between gap-2"><b>{p.studentName}</b><Pill tone={p.status === "approved" ? "ok" : p.status === "rejected" ? "bad" : p.status === "disputed" ? "warn" : "info"}>{t(p.status === "disputed" ? "Re-review asked" : p.status)}</Pill></div>
                 <span className="text-xs text-muted">{p.studentEmail}</span>
@@ -51,7 +50,6 @@ export default function Payments() {
           ))}
         </>
       )}
-      {zoom && <button className="fixed inset-0 z-50 grid place-items-center bg-black/70 p-4" onClick={() => setZoom(null)} aria-label="Close"><img src={zoom} alt="Payment screenshot" className="max-h-full max-w-full rounded-lg" /></button>}
     </>
   );
 }
