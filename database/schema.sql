@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS payments (
   account_name       TEXT NOT NULL,                 -- snapshot of where the student paid
   account_number     TEXT NOT NULL,
   amount_mmk         INTEGER NOT NULL CHECK (amount_mmk > 0),
-  transaction_id     VARCHAR(30) NOT NULL UNIQUE,   -- a transfer can only be used once
+  transaction_id     VARCHAR(30) UNIQUE,             -- optional receipt reference; older submissions may include it
   proof_data         TEXT,                          -- data URL, max 1 MB image; deleted after retention
   proof_sha256       CHAR(64) NOT NULL UNIQUE,      -- the same screenshot cannot be reused
   status             payment_status NOT NULL DEFAULT 'pending',

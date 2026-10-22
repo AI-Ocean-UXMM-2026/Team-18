@@ -1,4 +1,4 @@
-// Check screenshot + amount + transaction ID in the payment app, then approve (Pro on) or reject with a reason.
+// Confirm the payment arrived in the payment app, then approve (Pro on) or reject with a reason.
 import { useState } from "react";
 import { api } from "@/lib/api";
 import { useApiData } from "@/hooks/useApiData";
@@ -6,7 +6,7 @@ import { fmtKs, fmtWhen } from "@/lib/format";
 import { usePrefs } from "@/lib/prefs";
 import { CardListSkeleton, ErrorNote, Note, PageHead, Pill, Tabs, toast } from "@/components/ui";
 
-type Pay = { id: number; status: string; providerLabel: string; accountName: string; accountNumber: string; amount: number; transactionId: string; proof: string | null; reason: string | null; disputeUsed: boolean; createdAt: string; decidedAt: string | null; studentName: string; studentEmail: string };
+type Pay = { id: number; status: string; providerLabel: string; accountName: string; accountNumber: string; amount: number; transactionId: string | null; proof: string | null; reason: string | null; disputeUsed: boolean; createdAt: string; decidedAt: string | null; studentName: string; studentEmail: string };
 export default function Payments() {
   const { t } = usePrefs(); const [tab, setTab] = useState<"open" | "decided">("open");
   const { data, loading, error, refresh } = useApiData(() => api.get<{ price: number; payments: Pay[] }>(`/admin/payments?status=${tab}`), [tab]);
@@ -22,7 +22,7 @@ export default function Payments() {
   return (
     <>
       <PageHead eyebrow="Admin portal" title="Payments" />
-      <Note>{t("Check the money arrived in the CareerNet account in the payment app (amount + transaction ID) before approving. A screenshot alone is not proof.")}</Note>
+      <Note>{t("Check that the money arrived in the CareerNet account in the payment app before approving. The uploaded screenshot supports review but is not proof of receipt.")}</Note>
       <Tabs tabs={[["open", "To check"], ["decided", "Decided"]]} value={tab} onChange={setTab} />
       {loading ? <CardListSkeleton count={2} /> : error ? <ErrorNote message={error} onRetry={refresh} /> : (
         <>
@@ -35,7 +35,8 @@ export default function Payments() {
                 <span className="text-xs text-muted">{p.studentEmail}</span>
                 <p>CareerNet Pro · <b className="font-mono">{fmtKs(p.amount)}</b> {p.amount !== data!.price && <Pill tone="warn">{t("Amount does not match")}</Pill>}</p>
                 <p>{p.providerLabel} → {p.accountName} <span className="font-mono">{p.accountNumber}</span></p>
-                <p>{t("Transaction ID")} <b className="font-mono">{p.transactionId}</b> · <span className="text-muted">{fmtWhen(p.createdAt)}</span></p>
+                {p.transactionId && <p>{t("Transaction ID")} <b className="font-mono">{p.transactionId}</b> · <span className="text-muted">{fmtWhen(p.createdAt)}</span></p>}
+                {!p.transactionId && <p className="text-muted">{t("No transaction ID was submitted. Verify the payment directly in the wallet.")}</p>}
                 {p.reason && <p><b>{t("Reason")}:</b> {p.reason}</p>}
                 {(p.status === "pending" || p.status === "disputed") && (
                   <div className="mt-1 flex flex-col gap-2">

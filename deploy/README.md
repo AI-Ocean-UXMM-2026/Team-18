@@ -1,7 +1,7 @@
 # Deploying CareerNet
 - Frontend: `cd frontend && npm run build` → serve `frontend/dist` (Vercel/Netlify/nginx).
 - Backend: Node 20+ on Render/Railway/VPS: `cd backend && npm ci && npm start`.
-- Database: managed PostgreSQL 16, run `database/schema.sql` once.
+- Database: managed PostgreSQL 16, run `database/schema.sql` once and then apply scripts in `database/migrations/` to existing databases.
 - nginx: proxy `/api/` → `http://127.0.0.1:8000/`, serve `dist` with SPA fallback to `index.html`.
 
 ## Production checklist

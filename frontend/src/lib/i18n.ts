@@ -557,6 +557,7 @@ export const MYANMAR: Record<string, string> = {
   "This decides which universities and entry requirements you see in Step 3.": "အဆင့် ၃ တွင် မြင်ရမည့် တက္ကသိုလ်များနှင့် ဝင်ခွင့်လိုအပ်ချက်များကို ဤရွေးချယ်မှုက ဆုံးဖြတ်ပါသည်။",
   "Total": "စုစုပေါင်း",
   "Transaction ID": "Transaction ID",
+  "No transaction ID was submitted. Verify the payment directly in the wallet.": "Transaction ID မတင်ထားပါ။ Wallet ထဲရှိ ငွေလွှဲမှုကို တိုက်ရိုက် စစ်ဆေးပါ။",
   "Try again": "ထပ်ကြိုးစားရန်",
   "Type": "အမျိုးအစား",
   "Type a question in English or Myanmar": "မြန်မာ သို့မဟုတ် အင်္ဂလိပ်လို မေးခွန်း ရိုက်ပါ",

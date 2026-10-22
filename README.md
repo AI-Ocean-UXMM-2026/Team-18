@@ -25,7 +25,7 @@ Student navigation uses one left drawer opened by the menu button. Later steps r
 - Signed-in normal students have the configured free AI allowance (`FREE_AI_LIMIT`, default 5). Pro students have unlimited AI career coach and university advisor usage.
 - CareerNet tries the configured primary AI provider, then its configured fallback provider when applicable. See [deploy/README.md](deploy/README.md) for provider and key configuration.
 - Pro includes the full PDF report and mentor sessions. The PDF is generated in the browser from the student's saved journey; it does not call the AI API.
-- Students request Pro from the student portal by submitting payment details and proof. An admin reviews the request under **Admin → Payments**. Mentor booking and Pro entitlements are checked by the API.
+- Students request Pro from the student portal by submitting the amount and a payment screenshot; a transaction ID is not required. An admin verifies that the money arrived in the CareerNet payment account before approving under **Admin → Payments**. Mentor booking and Pro entitlements are checked by the API.
 
 ## Portals
 
@@ -57,6 +57,8 @@ Requirements: Node.js 20 or later and PostgreSQL 16 or a compatible PostgreSQL s
    ```
 
    On Windows PowerShell, use `psql "postgresql://USER:PASSWORD@HOST:5432/careernet_db" -f database/schema.sql` with your database connection details.
+
+   For an existing database, apply new scripts in `database/migrations/` after the schema. The optional payment transaction ID migration allows Pro requests without a receipt ID.
 
 2. Configure the backend:
 

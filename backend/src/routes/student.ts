@@ -120,7 +120,7 @@ studentRouter.get("/pro", student, route(async req => {
   const uid = sessionOf(req).uid;
   const user = await one<{ is_pro: boolean; ai_used: number }>("SELECT is_pro, ai_used FROM users WHERE id = $1", [uid]);
   const accounts = await query(`SELECT provider, label, account_name AS "accountName", account_number AS "accountNumber" FROM payment_accounts WHERE enabled AND account_number <> '' ORDER BY label`);
-  const latest = await one(`SELECT id, provider, account_name AS "accountName", account_number AS "accountNumber", amount_mmk AS amount, transaction_id AS "transactionId",
+  const latest = await one(`SELECT id, provider, account_name AS "accountName", account_number AS "accountNumber", amount_mmk AS amount,
       status, reason, dispute_used AS "disputeUsed", created_at AS "createdAt", decided_at AS "decidedAt", proof_data AS proof
       FROM payments WHERE student_id = $1 ORDER BY created_at DESC LIMIT 1`, [uid]);
   return { isPro: !!user?.is_pro, aiUsed: user?.ai_used ?? 0, freeAiLimit: ENV.freeAiLimit, price: ENV.proPrice, accounts, latest };
@@ -131,7 +131,7 @@ studentRouter.post("/pro/payments", student, route(async req => {
   const uid = sessionOf(req).uid;
   const b = body(req, z.object({
     requestKey: z.string().uuid(), provider: z.string().min(2).max(16), amount: z.number().int().positive().max(100_000_000),
-    transactionId: z.string().trim().regex(/^[A-Za-z0-9-]{6,30}$/, "Enter the transaction ID from your receipt (6–30 letters or numbers)."),
+    transactionId: z.string().trim().regex(/^[A-Za-z0-9-]{6,30}$/, "Enter the transaction ID from your receipt (6–30 letters or numbers).").optional(),
     proof: z.string().max(1_500_000),
   }));
   const again = await one("SELECT id, status FROM payments WHERE request_key = $1 AND student_id = $2", [b.requestKey, uid]);
@@ -145,11 +145,11 @@ studentRouter.post("/pro/payments", student, route(async req => {
   const bytes = Buffer.from(m[2], "base64");
   if (bytes.length > MAX_PROOF_BYTES) throw badRequest("The screenshot is larger than 1 MB.");
   const sha = createHash("sha256").update(bytes).digest("hex");
-  if (await one("SELECT 1 FROM payments WHERE transaction_id = $1", [b.transactionId])) throw conflict("This transaction ID was already used. Each payment can only be sent once.");
+  if (b.transactionId && await one("SELECT 1 FROM payments WHERE transaction_id = $1", [b.transactionId])) throw conflict("This transaction ID was already used. Each payment can only be sent once.");
   if (await one("SELECT 1 FROM payments WHERE proof_sha256 = $1", [sha])) throw conflict("This screenshot was already sent.");
   if (await one("SELECT 1 FROM payments WHERE student_id = $1 AND status IN ('pending', 'disputed')", [uid])) throw conflict("You already have a payment waiting for checking.");
   const row = await one(`INSERT INTO payments (student_id, request_key, provider, account_name, account_number, amount_mmk, transaction_id, proof_data, proof_sha256)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id, status`, [uid, b.requestKey, b.provider, acc.account_name, acc.account_number, b.amount, b.transactionId, b.proof, sha]);
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING id, status`, [uid, b.requestKey, b.provider, acc.account_name, acc.account_number, b.amount, b.transactionId ?? null, b.proof, sha]);
   await audit(uid, "payment.submit", `payment:${row.id}`, { amount: b.amount, provider: b.provider });
   return { payment: row, message: "Sent. We will check your payment soon." };
 }));
