@@ -94,7 +94,6 @@ export const MYANMAR: Record<string, string> = {
   "Career preview": "အသက်မွေးဝမ်းကျောင်း အကြိုကြည့်ရှုမှု",
   "Related majors": "ဆက်စပ် အဓိကဘာသာရပ်များ",
   "Useful school subjects": "အသုံးဝင်သော ကျောင်းဘာသာရပ်များ",
-  "Check my fit with the quiz": "မေးခွန်းလွှာဖြင့် ကိုက်ညီမှု စစ်ဆေးရန်",
   "Start the quiz to explore career paths matched to you.": "သင့်နှင့် ကိုက်ညီသော အသက်မွေးဝမ်းကျောင်း လမ်းကြောင်းများကို လေ့လာရန် မေးခွန်းလွှာ စတင်ပါ။",
   "The CareerNet pathway": "CareerNet ခရီးစဉ်",
   "From self-discovery to a plan you can act on": "မိမိကိုယ်ကို သိရှိခြင်းမှ လက်တွေ့လုပ်ဆောင်နိုင်သော အစီအစဉ်အထိ",

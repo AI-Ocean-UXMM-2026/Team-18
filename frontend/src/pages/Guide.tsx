@@ -54,7 +54,6 @@ export default function Guide() {
             <div className="flex flex-col justify-center gap-5 p-6 sm:p-8">
               <div><p className="text-xs font-bold uppercase tracking-wider text-muted">{t("Related majors")}</p><p className="mt-1 font-semibold">{activeCareer.majors.slice(0, 3).map(major => t(major.n)).join(" · ") || "–"}</p></div>
               <div><p className="text-xs font-bold uppercase tracking-wider text-muted">{t("Useful school subjects")}</p><p className="mt-1 text-sm text-muted">{activeCareer.subjects.slice(0, 4).map(subject => t(subject)).join(" · ") || "–"}</p></div>
-              <button className="btn-primary self-start" onClick={startGuestJourney}>{t("Check my fit with the quiz")} <span aria-hidden>→</span></button>
             </div>
           </div>}
         </div> : <div className="mx-auto max-w-3xl rounded-2xl border border-line bg-card p-6 text-center text-sm text-muted">{t("Start the quiz to explore career paths matched to you.")}</div>}
