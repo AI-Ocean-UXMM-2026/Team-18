@@ -11,7 +11,10 @@ const LIKERT = ["Not like me", "A little", "Somewhat", "Mostly", "Very like me"]
 export default function Quiz() {
   const { j, set, content, ready } = useJourney(); const { lang, t } = usePrefs(); const [, go] = useLocation();
   const { isGuest } = useAuth();
-  const [index, setIndex] = useState(() => Math.max(0, Math.min(19, Object.keys(j.answers).length)));
+  const [index, setIndex] = useState(() => {
+    const firstUnanswered = content?.questions.findIndex(question => !Number.isInteger(j.answers[question.id]) || j.answers[question.id] < 1 || j.answers[question.id] > 5) ?? -1;
+    return firstUnanswered >= 0 ? firstUnanswered : 0;
+  });
   const [showMissing, setShowMissing] = useState(false);
   const [help, setHelp] = useState<Record<number, string>>({});
   if (!ready || !content) return <Spinner />;

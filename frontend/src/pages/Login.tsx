@@ -19,10 +19,10 @@ export default function Login({ portal }: { portal: Role }) {
   const { user, login, startGuest } = useAuth(); const { t } = usePrefs(); const [, go] = useLocation();
   const [email, setEmail] = useState(""); const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null); const [busy, setBusy] = useState(false);
-  if (user) return <Redirect to={homeFor(user.role)} />;
+  if (user) return <Redirect to={user.role === "student" ? "/student/quiz" : homeFor(user.role)} />;
   async function submit(e: React.FormEvent) {
     e.preventDefault(); setBusy(true); setError(null);
-    try { const u = await login(portal, email, password); go(homeFor(u.role)); } catch (err) { setError(err instanceof Error ? err.message : "Could not sign in."); } finally { setBusy(false); }
+    try { const u = await login(portal, email, password); go(u.role === "student" ? "/student/quiz" : homeFor(u.role)); } catch (err) { setError(err instanceof Error ? err.message : "Could not sign in."); } finally { setBusy(false); }
   }
   return (
     <AuthLayout>
