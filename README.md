@@ -17,7 +17,10 @@ CareerNet/
 3. `cd frontend && cp .env.example .env && npm install && npm run dev` → http://localhost:5173
 
 ## Demo accounts (password `careernet123`, from SEED_PASSWORD)
-student@careernet.local · hnin@mentor.careernet.local · super@ / ops@ / content@careernet.local
+- Normal student: `student@careernet.local` (free AI allowance)
+- Pro student: `pro@careernet.local` (unlimited AI and PDF report; sample quiz profile included)
+- Mentor: `hnin@mentor.careernet.local`
+- Admins: `super@`, `ops@`, and `content@careernet.local`
 
 ## Rules worth knowing
 - Mentor booking is a Pro feature (checked in the API too). Approve a payment in Admin → Payments to test it.

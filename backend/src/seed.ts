@@ -24,24 +24,41 @@ const MENTORS = [
   { email: "eimon@mentor.careernet.local", name: "Daw Ei Mon Kyaw", title: "Teacher trainer & linguist", years: 11, fields: [7, 10, 8] },
   { email: "htetnaing@mentor.careernet.local", name: "U Htet Naing", title: "Product (UX) Designer", years: 6, fields: [8, 1, 9] },
 ];
-export const DEMO_STUDENT = { email: "student@careernet.local", name: "Demo Student" };
+export const DEMO_STUDENT = { email: "student@careernet.local", name: "Demo Student (Normal)", isPro: false };
+export const DEMO_PRO_STUDENT = { email: "pro@careernet.local", name: "Demo Student (Pro)", isPro: true };
 
-async function upsertUser(email: string, name: string, role: string, adminRole: string | null) {
+// A complete starter profile makes Results, the AI coach, and the Pro PDF
+// available immediately after signing in. Keep existing demo progress intact.
+const DEMO_JOURNEY = {
+  level: "g12",
+  answers: { "0": 5, "1": 3, "2": 3, "3": 3, "4": 4, "5": 5, "6": 5, "7": 3, "8": 3, "9": 3, "10": 5, "11": 5, "12": 4, "13": 3, "14": 3, "15": 4, "16": 3, "17": 5, "18": 3, "19": 5 },
+  careerId: "swe",
+  majors: ["Computer Science"],
+  shortlist: [],
+  compare: [],
+  videoChoice: "skip",
+  watched: {},
+};
+
+async function upsertUser(email: string, name: string, role: string, adminRole: string | null, isPro = false) {
   const found = await one<{ id: number }>("SELECT id FROM users WHERE email = $1", [email]);
   if (found) {
-    await one("UPDATE users SET password_hash = $1, name = $2, role = $3, admin_role = $4, active = TRUE WHERE id = $5",
-      [hashPassword(ENV.seedPassword), name, role, adminRole, found.id]);
+    await one("UPDATE users SET password_hash = $1, name = $2, role = $3, admin_role = $4, is_pro = $5, ai_used = 0, active = TRUE WHERE id = $6",
+      [hashPassword(ENV.seedPassword), name, role, adminRole, isPro, found.id]);
     return found.id;
   }
   const row = await one<{ id: number }>(
-    "INSERT INTO users (email, password_hash, name, role, admin_role) VALUES ($1, $2, $3, $4, $5) RETURNING id",
-    [email, hashPassword(ENV.seedPassword), name, role, adminRole]);
+    "INSERT INTO users (email, password_hash, name, role, admin_role, is_pro, ai_used) VALUES ($1, $2, $3, $4, $5, $6, 0) RETURNING id",
+    [email, hashPassword(ENV.seedPassword), name, role, adminRole, isPro]);
   return row!.id;
 }
 
 export async function seedDatabase() {
   for (const a of ADMINS) await upsertUser(a.email, a.name, "admin", a.adminRole);
-  await upsertUser(DEMO_STUDENT.email, DEMO_STUDENT.name, "student", null);
+  for (const student of [DEMO_STUDENT, DEMO_PRO_STUDENT]) {
+    const id = await upsertUser(student.email, student.name, "student", null, student.isPro);
+    await query("INSERT INTO journeys (student_id, data) VALUES ($1, $2) ON CONFLICT (student_id) DO NOTHING", [id, JSON.stringify(DEMO_JOURNEY)]);
+  }
   for (const m of MENTORS) {
     const id = await upsertUser(m.email, m.name, "mentor", null);
     await query(`INSERT INTO mentors (user_id, title, years, fields, status) VALUES ($1, $2, $3, $4, 'active') ON CONFLICT (user_id) DO NOTHING`,
@@ -59,7 +76,7 @@ export async function seedDatabase() {
       }
     }
   }
-  console.log(`[seed] demo accounts ready (password: SEED_PASSWORD). Admins: ${ADMINS.map(a => a.email).join(", ")} · Mentor: ${MENTORS[0].email} · Student: ${DEMO_STUDENT.email}`);
+  console.log(`[seed] demo accounts ready (password: SEED_PASSWORD). Admins: ${ADMINS.map(a => a.email).join(", ")} · Mentor: ${MENTORS[0].email} · Students: ${DEMO_STUDENT.email} (normal), ${DEMO_PRO_STUDENT.email} (Pro)`);
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {

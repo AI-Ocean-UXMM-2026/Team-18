@@ -7,7 +7,10 @@ import { usePrefs } from "@/lib/prefs";
 
 const TITLES: Record<Role, string> = { student: "Student sign in", mentor: "Mentor sign in", admin: "Admin sign in" };
 const DEMO_ACCOUNTS: Record<Role, { email: string; label: string }[]> = {
-  student: [{ email: "student@careernet.local", label: "Demo student" }],
+  student: [
+    { email: "student@careernet.local", label: "Demo student · Normal (limited AI)" },
+    { email: "pro@careernet.local", label: "Demo student · Pro (AI + PDF)" },
+  ],
   mentor: [{ email: "hnin@mentor.careernet.local", label: "Demo mentor" }],
   admin: [
     { email: "super@careernet.local", label: "Super admin" },
