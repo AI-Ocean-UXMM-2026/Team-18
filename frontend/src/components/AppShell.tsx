@@ -37,6 +37,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { j, ready, content } = useJourney();
   const { lang, setLang, theme, setTheme, t } = usePrefs();
   const [navOpen, setNavOpen] = useState(false);
+  const [headerHidden, setHeaderHidden] = useState(false);
   const nav = user && user.role !== "student" ? NAV[user.role].filter(([p]) => user.role !== "admin" || adminCan(user.adminRole, p)) : [];
   const studentWorkspace = location.startsWith("/student/") || location === "/student";
   const showGuide = (!user || user.role === "student") && !/^\/(admin|mentor)(\/|$)/.test(location);
@@ -45,6 +46,17 @@ export function AppShell({ children }: { children: ReactNode }) {
   const progress = flow.total ? Math.round((answered / flow.total) * 100) : 0;
 
   useEffect(() => { setNavOpen(false); }, [location]);
+  useEffect(() => {
+    let previousY = window.scrollY;
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      if (currentY < 80 || currentY < previousY - 4) setHeaderHidden(false);
+      else if (currentY > previousY + 4) setHeaderHidden(true);
+      previousY = currentY;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   useEffect(() => {
     if (!navOpen) return;
     const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setNavOpen(false); };
@@ -105,8 +117,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   </div>;
 
   return (
-    <div className="creative-shell flex h-dvh flex-col overflow-hidden bg-bg">
-      <header className="creative-header sticky top-0 z-30 shrink-0 bg-card/95 backdrop-blur">
+    <div className="creative-shell min-h-dvh bg-bg">
+      <header className={`creative-header sticky top-0 z-30 bg-card/95 backdrop-blur transition-transform duration-200 ${headerHidden ? "-translate-y-full" : "translate-y-0"}`}>
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-2 px-4 py-3 sm:gap-3 sm:px-6">
           {studentWorkspace && <button type="button" className="grid h-10 w-10 place-items-center rounded-lg border border-line text-lg text-ink hover:bg-soft" onClick={() => setNavOpen(true)} aria-label={t("Open navigation")} aria-expanded={navOpen} aria-controls="student-navigation">☰</button>}
           <Link href={user ? (user.role === "student" ? "/student" : `/${user.role}`) : isGuest ? "/student" : "/"} className="flex items-center gap-2.5 text-ink"><span className="creative-logo" aria-hidden="true">⌖</span><span className="flex flex-col"><span className="creative-brand">CareerNet<span className="text-brand">.</span></span><span className="hidden text-[10px] leading-3 text-muted md:block">{t("Career & University Guidance Platform")}</span></span></Link>
@@ -121,16 +133,16 @@ export function AppShell({ children }: { children: ReactNode }) {
         {nav.length > 0 && <nav aria-label={t("Portal navigation")} className="mx-auto flex max-w-[1440px] gap-1 overflow-x-auto px-4 sm:px-6">{nav.map(([p, l]) => <Link key={p} href={p} className={`tab ${location === p ? "tab-on" : ""}`}>{t(l)}</Link>)}</nav>}
       </header>
 
-      {studentWorkspace ? <div className="mx-auto flex min-h-0 w-full max-w-[1440px] flex-1">
+      {studentWorkspace ? <div className="mx-auto flex min-h-[calc(100dvh-4rem)] max-w-[1440px]">
         {navOpen && <div className="fixed inset-0 z-40" role="presentation">
           <button type="button" className="absolute inset-0 bg-[#142B63]/40 backdrop-blur-[2px]" onClick={() => setNavOpen(false)} aria-label={t("Close navigation")} />
           <aside id="student-navigation" role="dialog" aria-modal="true" className="creative-sidebar relative z-10 flex h-full w-[min(20rem,85vw)] flex-col overflow-y-auto border-r-2 border-line bg-card py-2 shadow-2xl" aria-label={t("Student navigation")}>{studentNav()}</aside>
         </div>}
-        <main tabIndex={0} className="mx-auto flex min-h-0 min-w-0 w-full max-w-6xl flex-1 flex-col gap-6 overflow-y-auto overscroll-y-contain px-4 pb-16 pt-6 sm:px-6 sm:pt-8">
+        <main className="mx-auto flex min-w-0 w-full max-w-6xl flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 sm:pt-8">
           {isGuest && <div className="rounded-xl border border-info bg-info-soft px-4 py-3 text-sm">{t("Guest progress is temporary and won't be saved until you create an account.")} <Link href="/register" className="ml-1 font-semibold text-brand">{t("Create account to save your progress")}</Link></div>}
           {children}
         </main>
-      </div> : <main tabIndex={0} className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col gap-6 overflow-y-auto overscroll-y-contain px-4 pb-16 pt-8">{children}</main>}
+      </div> : <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 pb-16 pt-8">{children}</main>}
     </div>
   );
 }
