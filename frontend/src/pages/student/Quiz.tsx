@@ -7,7 +7,13 @@ import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
 import { Spinner } from "@/components/ui";
 
-const LIKERT = ["Not like me", "A little", "Somewhat", "Mostly", "Very like me"];
+const LIKERT = [
+  { label: "Very like me", value: 5 },
+  { label: "Mostly", value: 4 },
+  { label: "Somewhat", value: 3 },
+  { label: "A little", value: 2 },
+  { label: "Not like me", value: 1 },
+];
 export default function Quiz() {
   const { j, set, content, ready } = useJourney(); const { lang, t } = usePrefs(); const [, go] = useLocation();
   const { isGuest } = useAuth();
@@ -54,9 +60,9 @@ export default function Quiz() {
       <div className="card quiz-sheet flex flex-col gap-5">
         <span className="self-start rounded-full bg-ai-soft px-3 py-1 text-xs font-semibold text-ai">{t(q.area)}</span><h1 className="min-h-[3.75em] text-xl leading-tight sm:text-2xl">{lang === "my" ? q.my : q.en}</h1>
         <div className="grid gap-3" role="radiogroup">
-          {LIKERT.map((label, k) => { const on = j.answers[q.id] === k + 1; return (
-            <button key={label} role="radio" aria-checked={on} onClick={() => answer(k + 1)} className={`quiz-option flex min-h-16 items-center justify-start gap-2 rounded-xl border-2 p-3 text-sm font-semibold  ${on ? "border-brand bg-brand-soft" : "border-line bg-card hover:border-brand"}`}>
-              <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full font-mono ${on ? "bg-brand text-on-brand" : "border border-line bg-card"}`}>{k + 1}</span><span className="text-left">{t(label)}</span>
+          {LIKERT.map(({ label, value }) => { const on = j.answers[q.id] === value; return (
+            <button key={label} role="radio" aria-checked={on} onClick={() => answer(value)} className={`quiz-option flex min-h-16 items-center justify-start gap-2 rounded-xl border-2 p-3 text-sm font-semibold  ${on ? "border-brand bg-brand-soft" : "border-line bg-card hover:border-brand"}`}>
+              <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full font-mono ${on ? "bg-brand text-on-brand" : "border border-line bg-card"}`}>{value}</span><span className="text-left">{t(label)}</span>
             </button>); })}
         </div>
         <div className="flex flex-col items-start gap-2">
