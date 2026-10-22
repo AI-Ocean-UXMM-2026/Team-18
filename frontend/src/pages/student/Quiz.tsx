@@ -39,13 +39,13 @@ export default function Quiz() {
     <section className="mx-auto flex w-full max-w-3xl flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3"><Link href="/student" className="text-sm font-semibold text-muted">← {t("Back to dashboard")}</Link><span className="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">{qs.length - missing.length} / {qs.length} {t("Answered")}</span></div>
       <div className="card flex items-center gap-4"><div className="flex-1"><p className="mb-3 text-sm font-semibold">{t("Question")} {index + 1} / {qs.length} · {t(q.area)}</p><div className="h-2 overflow-hidden rounded-full bg-soft"><div className="h-full bg-brand transition-all" style={{ width: `${((qs.length - missing.length) / qs.length) * 100}%` }} /></div></div><Kip size={75} /></div>
-      <div className="flex gap-1.5 overflow-x-auto pb-2">{qs.map((x, k) => <button key={x.id} aria-label={`Question ${k + 1}`} onClick={() => setIndex(k)} className={`h-7 w-7 shrink-0 rounded-md border text-xs font-semibold ${j.answers[x.id] ? "border-brand bg-brand" : "border-line bg-card"} ${k === index ? "ring-2 ring-brand ring-offset-2" : ""}`}>{k + 1}</button>)}</div>
+      <div className="flex gap-1.5 overflow-x-auto pb-2">{qs.map((x, k) => <button key={x.id} aria-label={`Question ${k + 1}`} onClick={() => setIndex(k)} className={`h-7 w-7 shrink-0 rounded-md border text-xs font-semibold ${j.answers[x.id] ? "border-brand bg-brand text-on-brand" : "border-line bg-card"} ${k === index ? "ring-2 ring-brand ring-offset-2" : ""}`}>{k + 1}</button>)}</div>
       <div className="card quiz-sheet flex flex-col gap-5">
         <span className="self-start rounded-full bg-ai-soft px-3 py-1 text-xs font-semibold text-ai">{t(q.area)}</span><h1 className="min-h-[3.75em] text-xl leading-tight sm:text-2xl">{lang === "my" ? q.my : q.en}</h1>
         <div className="grid gap-3" role="radiogroup">
           {LIKERT.map((label, k) => { const on = j.answers[q.id] === k + 1; return (
             <button key={label} role="radio" aria-checked={on} onClick={() => answer(k + 1)} className={`quiz-option flex min-h-16 items-center justify-start gap-2 rounded-xl border-2 p-3 text-sm font-semibold  ${on ? "border-brand bg-brand-soft" : "border-line bg-card hover:border-brand"}`}>
-              <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full font-mono ${on ? "bg-brand text-white" : "border border-line bg-card"}`}>{k + 1}</span><span className="text-left">{t(label)}</span>
+              <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full font-mono ${on ? "bg-brand text-on-brand" : "border border-line bg-card"}`}>{k + 1}</span><span className="text-left">{t(label)}</span>
             </button>); })}
         </div>
         <div className="flex flex-col items-start gap-2">

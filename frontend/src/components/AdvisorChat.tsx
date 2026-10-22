@@ -42,7 +42,7 @@ export function AdvisorChat({ title, subtitle, endpoint, payload, suggestions }:
       <p className="text-sm text-muted">{t(subtitle)}</p>
       {(messages.length > 0 || busy) && (
         <div ref={box} className="flex max-h-96 flex-col gap-2 overflow-y-auto">
-          {messages.map((m, i) => <div key={i} className={`max-w-[88%] whitespace-pre-wrap break-words rounded-xl px-3 py-2 text-sm ${m.role === "user" ? "self-end bg-brand text-white" : "ai-soft self-start"}`}>{m.content}</div>)}
+          {messages.map((m, i) => <div key={i} className={`max-w-[88%] whitespace-pre-wrap break-words rounded-xl px-3 py-2 text-sm ${m.role === "user" ? "self-end bg-brand text-on-brand" : "ai-soft self-start"}`}>{m.content}</div>)}
           {busy && <div className="ai-soft self-start rounded-xl px-3 py-2 text-sm text-muted">{t("Thinking…")}</div>}
         </div>
       )}

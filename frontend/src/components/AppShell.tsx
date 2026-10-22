@@ -81,7 +81,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           : path === "/student/mentors" ? "Pro" : null;
         const badgeTone = badge === "Done" || badge === "Ready" || badge === "Active" ? "bg-ok-soft text-ok" : badge === "In progress" ? "bg-warn-soft text-warn" : badge === "Locked" ? "border border-line bg-soft text-muted" : "bg-brand-soft text-brand";
         const contents = <>
-          <span className="flex min-w-0 items-center gap-2.5"><span aria-hidden="true" className={`grid h-7 w-7 shrink-0 place-items-center rounded-md text-sm ${active ? "bg-brand text-white" : "bg-soft text-muted"}`}>{glyph}</span><span className="truncate">{t(itemLabel)}</span></span>
+          <span className="flex min-w-0 items-center gap-2.5"><span aria-hidden="true" className={`grid h-7 w-7 shrink-0 place-items-center rounded-md text-sm ${active ? "bg-brand text-on-brand" : "bg-soft text-muted"}`}>{glyph}</span><span className="truncate">{t(itemLabel)}</span></span>
           {badge && <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide ${badgeTone}`}>{t(badge)}</span>}
           {!badge && index === 0 && <span className="sr-only">{t("Current student portal")}</span>}
         </>;

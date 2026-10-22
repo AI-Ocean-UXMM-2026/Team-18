@@ -15,7 +15,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
         <div className="grid grid-cols-3 gap-3 text-sm font-semibold">
           {["Discover", "Explore", "Plan"].map((step, index) => (
             <div key={step} className="rounded-xl border border-line bg-card/70 p-4">
-              <span className="mb-3 grid h-9 w-9 place-items-center rounded-lg bg-brand text-white">0{index + 1}</span>
+              <span className="mb-3 grid h-9 w-9 place-items-center rounded-lg bg-brand text-on-brand">0{index + 1}</span>
               {step}
             </div>
           ))}

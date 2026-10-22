@@ -46,10 +46,10 @@ export default function Guide() {
           <span className="sr-only">{t("Loading career examples")}</span>
         </div> : careers.length > 0 ? <div className="mx-auto max-w-5xl">
           <div className="flex flex-wrap justify-center gap-2" role="tablist" aria-label={t("Career examples")}>
-            {careers.map(career => <button key={career.id} role="tab" aria-selected={activeCareer?.id === career.id} onClick={() => setSelectedCareer(career.id)} className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${activeCareer?.id === career.id ? "border-brand bg-brand text-white" : "border-line bg-card text-muted hover:border-brand hover:text-brand"}`}>{t(career.t)}</button>)}
+            {careers.map(career => <button key={career.id} role="tab" aria-selected={activeCareer?.id === career.id} onClick={() => setSelectedCareer(career.id)} className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${activeCareer?.id === career.id ? "border-brand bg-brand text-on-brand" : "border-line bg-card text-muted hover:border-brand hover:text-brand"}`}>{t(career.t)}</button>)}
           </div>
           {activeCareer && <div className="mt-4 grid overflow-hidden rounded-3xl border border-line bg-card shadow-sm md:grid-cols-[0.8fr_1.2fr]">
-            <div className="flex min-h-56 flex-col justify-between bg-gradient-to-br from-brand to-[#18215a] p-6 text-white sm:p-8">
+            <div className="flex min-h-56 flex-col justify-between bg-gradient-to-br from-[#142b63] to-[#18215a] p-6 text-white sm:p-8">
               <div><p className="text-xs font-bold uppercase tracking-[0.15em] text-indigo-100">{t("Career preview")}</p><h3 className="mt-3 text-3xl font-bold">{t(activeCareer.t)}</h3><p className="mt-3 max-w-sm text-sm leading-6 text-indigo-100">{t(activeCareer.blurb)}</p></div>
               <p className="mt-6 text-xs font-semibold text-indigo-100">{t("Career outlook")}: {t(activeCareer.demand)}</p>
             </div>

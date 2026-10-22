@@ -74,10 +74,10 @@ export const toast = (m: string) => push?.(m);
 export function Toaster() {
   const [msg, setMsg] = useState<string | null>(null);
   useEffect(() => { push = m => { setMsg(m); setTimeout(() => setMsg(null), 2600); }; return () => { push = null; }; }, []);
-  return msg ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-xl bg-brand px-4 py-2.5 text-sm text-white shadow-lg">{msg}</div> : null;
+  return msg ? <div role="status" className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2 rounded-xl bg-brand px-4 py-2.5 text-sm text-on-brand shadow-lg">{msg}</div> : null;
 }
 
 export function Tabs<T extends string>({ tabs, value, onChange }: { tabs: [T, string, number?][]; value: T; onChange: (v: T) => void }) {
   const { t } = usePrefs();
-  return <nav className="tabs">{tabs.map(([k, l, n]) => <button key={k} className={`tab ${value === k ? "tab-on" : ""}`} onClick={() => onChange(k)}>{t(l)}{n ? <span className="ml-1.5 rounded-full bg-brand px-1.5 text-[11px] text-white">{n}</span> : null}</button>)}</nav>;
+  return <nav className="tabs">{tabs.map(([k, l, n]) => <button key={k} className={`tab ${value === k ? "tab-on" : ""}`} onClick={() => onChange(k)}>{t(l)}{n ? <span className="ml-1.5 rounded-full bg-brand px-1.5 text-[11px] text-on-brand">{n}</span> : null}</button>)}</nav>;
 }

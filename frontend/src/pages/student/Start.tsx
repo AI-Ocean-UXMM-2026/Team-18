@@ -24,7 +24,7 @@ export default function Start() {
           <p className="creative-sticker px-3 py-1 text-xs font-semibold">✦ {t("Career quiz")}</p>
           <h1 className="creative-display">{t("Find your")}<br /><span className="text-[#8ec5ff]">{t("next move.")}</span></h1>
           <p className="max-w-md text-base leading-7 text-blue-100">{content?.questions.length ?? 0} {t("questions · about 15 minutes. There are no right or wrong answers.")}</p>
-          <span className="rounded-full border border-line bg-card px-3 py-1.5 font-mono text-xs font-semibold">{answered} / {flow.total} · {t("Quiz progress")}</span>
+          <span className="rounded-full border border-line bg-card px-3 py-1.5 font-mono text-xs font-semibold text-ink">{answered} / {flow.total} · {t("Quiz progress")}</span>
         </div>
         <div className="block"><KipGuide /></div>
       </section>

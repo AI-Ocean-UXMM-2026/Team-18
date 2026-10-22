@@ -8,7 +8,8 @@
   --color-ink: #24324b;
   --color-muted: #65748b;
   --color-line: #d9e2ef;
-  --color-brand: #2f80ed;
+  --color-brand: #1e5fbf;
+  --color-on-brand: #ffffff;
   --color-brand-soft: #eaf4ff;
   --color-ai: #7958e8;
   --color-ai-soft: #f2eefd;
@@ -38,6 +39,7 @@ html[data-theme="dark"] {
   --color-muted: #a7b6cc;
   --color-line: #334563;
   --color-brand: #5d9eff;
+  --color-on-brand: #10203b;
   --color-brand-soft: #203b61;
   --color-ai: #aa9aff;
   --color-ai-soft: #30294c;
@@ -72,7 +74,7 @@ html[data-theme="dark"] .skeleton-block::after { background: linear-gradient(90d
 @layer components {
   .card { @apply rounded-xl border border-line bg-card p-5; }
   .btn { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50; }
-  .btn-primary { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-white transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-primary { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-on-brand transition hover:brightness-105 disabled:cursor-not-allowed disabled:opacity-50; }
   .btn-outline { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-brand bg-card px-4 py-2.5 text-sm font-semibold text-brand transition hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-50; }
   .btn-ghost { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border border-line bg-card px-4 py-2.5 text-sm font-semibold text-ink transition hover:border-brand hover:bg-soft disabled:cursor-not-allowed disabled:opacity-50; }
   .btn-sm { @apply px-3 py-1.5 text-xs; min-height: 2.25rem; }
