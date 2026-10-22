@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/lib/auth";
 import { usePrefs } from "@/lib/prefs";
+import AuthLayout from "@/components/AuthLayout";
 
 export default function Register() {
   const { register } = useAuth(); const { t } = usePrefs(); const [, go] = useLocation();
@@ -17,7 +18,8 @@ export default function Register() {
   }
   const field = (k: keyof typeof f, label: string, type = "text", ac = "") => <label className="label">{t(label)}<input className="input" type={type} autoComplete={ac} value={f[k]} onChange={e => setF({ ...f, [k]: e.target.value })} /></label>;
   return (
-    <section className="card mx-auto flex w-full max-w-md flex-col gap-4">
+    <AuthLayout>
+    <section className="card mx-auto flex w-full max-w-md flex-col gap-4 lg:max-w-none">
       <p className="eyebrow">CareerNet</p><h1 className="text-2xl">{t("Create your account")}</h1>
       <p className="text-sm text-muted">{t("Save your results and come back any time, on any device.")}</p>
       <form className="flex flex-col gap-3" onSubmit={submit} noValidate>
@@ -27,5 +29,6 @@ export default function Register() {
       </form>
       <p className="text-center text-sm">{t("I already have an account")} · <Link href="/login" className="font-semibold text-brand">{t("Sign in")}</Link></p>
     </section>
+    </AuthLayout>
   );
 }

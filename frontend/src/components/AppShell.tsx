@@ -138,11 +138,11 @@ export function AppShell({ children }: { children: ReactNode }) {
           <button type="button" className="absolute inset-0 bg-[#142B63]/40 backdrop-blur-[2px]" onClick={() => setNavOpen(false)} aria-label={t("Close navigation")} />
           <aside id="student-navigation" role="dialog" aria-modal="true" className="creative-sidebar relative z-10 flex h-full w-[min(20rem,85vw)] flex-col overflow-y-auto border-r-2 border-line bg-card py-2 shadow-2xl" aria-label={t("Student navigation")}>{studentNav()}</aside>
         </div>}
-        <main className="mx-auto flex min-w-0 w-full max-w-6xl flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 sm:pt-8">
+        <main className="mx-auto flex min-w-0 w-full max-w-7xl flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 sm:pt-8">
           {isGuest && <div className="rounded-xl border border-info bg-info-soft px-4 py-3 text-sm">{t("Guest progress is temporary and won't be saved until you create an account.")} <Link href="/register" className="ml-1 font-semibold text-brand">{t("Create account to save your progress")}</Link></div>}
           {children}
         </main>
-      </div> : <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 pb-16 pt-8">{children}</main>}
+      </div> : <main className="mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 pb-16 pt-8 sm:px-6 lg:px-8">{children}</main>}
     </div>
   );
 }

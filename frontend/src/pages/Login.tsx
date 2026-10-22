@@ -4,6 +4,7 @@ import { Link, Redirect, useLocation } from "wouter";
 import type { Role } from "@/lib/api";
 import { homeFor, useAuth } from "@/lib/auth";
 import { usePrefs } from "@/lib/prefs";
+import AuthLayout from "@/components/AuthLayout";
 
 const TITLES: Record<Role, string> = { student: "Student sign in", mentor: "Mentor sign in", admin: "Admin sign in" };
 const DEMO_ACCOUNTS: Record<Role, { email: string; label: string }[]> = {
@@ -24,7 +25,8 @@ export default function Login({ portal }: { portal: Role }) {
     try { const u = await login(portal, email, password); go(homeFor(u.role)); } catch (err) { setError(err instanceof Error ? err.message : "Could not sign in."); } finally { setBusy(false); }
   }
   return (
-    <section className="card login-sheet mx-auto mt-3 flex w-full max-w-md flex-col gap-5">
+    <AuthLayout>
+    <section className="card login-sheet mx-auto flex w-full max-w-md flex-col gap-5 lg:max-w-none">
       <p className="creative-sticker creative-sticker-pink">✦ CareerNet</p><h1 className="text-3xl">{t(TITLES[portal])}</h1>
       <form className="flex flex-col gap-3" onSubmit={submit} noValidate>
         <label className="label">{t("Email")}<input className="input" type="email" autoComplete="username" value={email} onChange={e => setEmail(e.target.value)} required /></label>
@@ -45,5 +47,6 @@ export default function Login({ portal }: { portal: Role }) {
       {portal === "mentor" && <p className="text-center text-sm"><Link href="/mentor/apply" className="font-semibold text-brand">{t("Apply to become a mentor")}</Link></p>}
       {portal === "admin" && <p className="text-center text-xs text-muted">{t("Admin accounts are created by the Super admin only.")}</p>}
     </section>
+    </AuthLayout>
   );
 }
