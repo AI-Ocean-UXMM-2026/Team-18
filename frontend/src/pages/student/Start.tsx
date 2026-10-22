@@ -4,7 +4,7 @@ import type { Level } from "@/lib/api";
 import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
 import { Actions, Spinner } from "@/components/ui";
-import { FutureSketch } from "@/components/FutureSketch";
+import { KipGuide } from "@/components/Kip";
 import { studentProgress } from "@/lib/studentFlow";
 
 export default function Start() {
@@ -21,17 +21,17 @@ export default function Start() {
     <>
       <section className="creative-hero grid items-center gap-2 p-6 sm:p-8 md:grid-cols-[1.3fr_0.7fr]">
         <div className="flex min-w-0 flex-col items-start gap-5">
-          <p className="creative-sticker creative-sticker-pink">✦ {t("Career quiz")}</p>
-          <h1 className="creative-display">{t("Find your")}<br /><span className="creative-highlight">{t("next move.")}</span></h1>
-          <p className="max-w-md text-sm leading-6 text-muted">{content?.questions.length ?? 0} {t("questions · about 15 minutes. There are no right or wrong answers.")}</p>
+          <p className="creative-sticker px-3 py-1 text-xs font-semibold">✦ {t("Career quiz")}</p>
+          <h1 className="creative-display">{t("Find your")}<br /><span className="text-[#8ec5ff]">{t("next move.")}</span></h1>
+          <p className="max-w-md text-base leading-7 text-blue-100">{content?.questions.length ?? 0} {t("questions · about 15 minutes. There are no right or wrong answers.")}</p>
           <span className="rounded-full border border-line bg-card px-3 py-1.5 font-mono text-xs font-semibold">{answered} / {flow.total} · {t("Quiz progress")}</span>
         </div>
-        <div className="hidden md:block"><FutureSketch /></div>
+        <div className="block"><KipGuide /></div>
       </section>
       <section className="mt-3 flex flex-col gap-4">
         <div className="flex items-center gap-3"><span aria-hidden="true" className="font-mono text-xs font-bold text-brand">01 /</span><h2 className="text-xl">{t("Select your education level")}</h2></div>
         <div className="grid gap-4 sm:grid-cols-3">
-          {levels.map(([id, name, sub], index) => <button key={id} aria-pressed={j.level === id} className={`choice level-choice ${j.level === id ? "choice-on" : ""}`} onClick={() => set({ level: id, shortlist: [], compare: [] })}><span className="level-number" aria-hidden="true">0{index + 1}</span>{j.level === id && <span className="absolute right-4 top-4 text-lg font-bold text-brand" aria-hidden="true">✓</span>}<b className="text-xl">{t(name)}</b><small className="mt-1 text-muted">{t(sub)}</small></button>)}
+          {levels.map(([id, name, sub], index) => <button key={id} aria-pressed={j.level === id} className={`choice relative level-choice ${j.level === id ? "choice-on" : ""}`} onClick={() => set({ level: id, shortlist: [], compare: [] })}><span className="level-number grid place-items-center" aria-hidden="true">0{index + 1}</span>{j.level === id && <span className="absolute right-4 top-4 text-lg font-bold text-brand" aria-hidden="true">✓</span>}<b className="text-xl">{t(name)}</b><small className="mt-1 text-muted">{t(sub)}</small></button>)}
         </div>
       </section>
       {flow.quizDone && <p className="text-sm text-muted">{t("You already finished the quiz.")}</p>}

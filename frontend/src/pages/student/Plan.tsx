@@ -54,9 +54,10 @@ export default function Plan() {
   return (
     <>
       <PageHead back="/student/compare" eyebrow="Your plan" title={user ? `${t("Your plan")}, ${user.name.split(" ")[0]}` : t("Your plan")} />
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="card"><h2 className="text-sm text-muted">{t("Chosen career")}</h2><p className="text-xl font-bold">{c.t}</p><p className="text-sm text-muted">{score.data.top.find(x => x.career.id === c.id)?.pct ?? "–"}% · {t("Demand")} {c.demand}</p></div>
-        <div className="card"><h2 className="text-sm text-muted">{t("Major")}</h2><p className="text-xl font-bold">{j.majors.join(" · ")}</p><p className="text-sm text-muted">{LEVELS[j.level ?? "g12"]}</p></div>
+      <div className="grid gap-5 md:grid-cols-3">
+        <div className="card border-t-4 border-t-brand"><h2 className="text-sm text-muted">{t("Chosen career")}</h2><p className="text-xl font-bold">{c.t}</p><p className="text-sm text-muted">{score.data.top.find(x => x.career.id === c.id)?.pct ?? "–"}% · {t("Demand")} {c.demand}</p></div>
+        <div className="card border-t-4 border-t-ai"><h2 className="text-sm text-muted">{t("Major")}</h2><p className="text-xl font-bold">{j.majors.join(" · ")}</p><p className="text-sm text-muted">{LEVELS[j.level ?? "g12"]}</p></div>
+      <div className="card border-t-4 border-t-ok"><h2 className="text-sm text-muted">{t("University shortlist")}</h2><p className="mt-2 text-3xl font-bold">{shortlist.length}</p><Link href="/student/explorer" className="mt-2 inline-block text-sm font-semibold text-brand">{t("Explore universities")} →</Link></div>
       </div>
       <div className="card"><h2 className="mb-2 text-lg">{t("Shortlisted universities")}</h2>
         {shortlist.length ? <ul className="divide-y divide-line">{shortlist.map(i => <li key={i.key} className="flex items-center justify-between gap-3 py-2"><span>{i.kind === "g12" ? i.university.name : i.school.name}</span>{i.kind === "intl" && i.school.hasScholarship && <Pill tone="ok">{t("Scholarship")}</Pill>}</li>)}</ul>

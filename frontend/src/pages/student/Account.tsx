@@ -9,7 +9,7 @@ import { usePrefs } from "@/lib/prefs";
 type PlanInfo = { isPro: boolean; aiUsed: number; freeAiLimit: number };
 
 export default function StudentAccount() {
-  const { t } = usePrefs();
+  const { t, lang, setLang, theme, setTheme } = usePrefs();
   const { user, isGuest, refresh } = useAuth();
   const { data, loading, error, refresh: refreshPlan } = useApiData(() => user ? api.get<PlanInfo>("/pro") : Promise.resolve({ isPro: false, aiUsed: 0, freeAiLimit: 0 }), [user?.id]);
   const [name, setName] = useState(user?.name ?? "");
@@ -54,7 +54,7 @@ export default function StudentAccount() {
   return <>
     <PageHead eyebrow="Student account" title="Profile & settings">{t("Manage your account and see which CareerNet features are available.")}</PageHead>
 
-    <section className="card flex flex-wrap items-center justify-between gap-4">
+    <section className="card flex flex-wrap items-center justify-between gap-4 border-t-4 border-t-brand">
       <div>
         <p className="eyebrow">{t("Current plan")}</p>
         <h2 className="mt-2 text-2xl">{data?.isPro ?? user.isPro ? t("CareerNet Pro") : t("Normal account")}</h2>
@@ -85,6 +85,8 @@ export default function StudentAccount() {
       </div>
       {error && <ErrorNote message={error} onRetry={refreshPlan} />}
     </section>
+
+    <section className="card"><h2 className="text-lg">{t("Language & appearance")}</h2><div className="mt-4 grid gap-5 sm:grid-cols-2"><div><p className="label mb-2">{t("Language")}</p><div className="grid grid-cols-2 gap-2">{([['en', 'English'], ['my', 'မြန်မာ']] as const).map(([value,label]) => <button key={value} aria-pressed={lang === value} onClick={() => setLang(value)} className={`choice ${lang === value ? 'choice-on' : ''}`}>{label}{lang === value && <span className="text-brand">✓</span>}</button>)}</div></div><div><p className="label mb-2">{t("Appearance")}</p><div className="grid grid-cols-2 gap-2">{(['light','dark'] as const).map(value => <button key={value} aria-pressed={theme === value} onClick={() => setTheme(value)} className={`choice capitalize ${theme === value ? 'choice-on' : ''}`}>{t(value === 'light' ? 'Light' : 'Dark')}{theme === value && <span className="text-brand">✓</span>}</button>)}</div></div></div></section>
 
     <section className="card">
       <h2 className="text-lg">{t("Change password")}</h2>

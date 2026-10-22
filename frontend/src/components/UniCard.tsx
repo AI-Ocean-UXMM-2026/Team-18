@@ -5,7 +5,7 @@ export function UniPhoto({ item, small }: { item: UniItem; small?: boolean }) {
   const src = item.kind === "g12" ? item.university.photo : item.school.photo;
   const code = item.kind === "g12" ? item.university.code : item.school.code;
   const where = item.kind === "g12" ? item.university.location : `${item.school.city.split("·")[0].trim()}, ${item.school.country}`;
-  const cls = small ? "mb-2 aspect-[2/1] w-full rounded-lg" : "-mx-5 -mt-5 aspect-[16/7] w-[calc(100%+2.5rem)] max-w-none";
+  const cls = small ? "mb-2 aspect-[2/1] w-full rounded-lg" : "aspect-[16/7] w-full rounded-lg";
   if (src) return <img src={src} alt={`${code} campus`} loading="lazy" className={`${cls} object-cover`} />;
   return <div className={`${cls} flex flex-col justify-end bg-gradient-to-br from-brand-soft to-soft p-4 text-brand`} aria-hidden="true"><b className="text-2xl">{code}</b><span className="text-xs text-muted">{where}</span></div>;
 }

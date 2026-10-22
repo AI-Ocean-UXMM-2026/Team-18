@@ -66,11 +66,12 @@ function MentorMarketplace() {
       )}
       {mentors.error && <ErrorNote message={mentors.error} onRetry={mentors.refresh} />}
       {mentors.loading ? <CardGridSkeleton count={2} /> : (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {mentors.data?.mentors.map(m => (
             <article key={m.id} className={`card flex flex-col gap-2 ${m.recommended ? "border-brand" : ""}`}>
-              <div className="flex items-start justify-between gap-2"><div><b>{m.name}</b><p className="text-sm">{m.title}</p><p className="text-xs text-muted">{m.years} {t("years experience")} · {m.languages}</p></div></div>
+              <div className="flex items-start gap-3"><span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-brand-soft text-lg font-semibold text-brand" aria-hidden="true">{m.name.split(" ").slice(0,2).map(n => n[0]).join("")}</span><div><b>{m.name}</b><p className="text-sm">{m.title}</p><p className="text-xs text-muted">{m.years} {t("years experience")} · {m.languages}</p></div></div>
               {m.recommended && career && <span className="self-start rounded-md bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand">{t("Recommended for")} {career.t}</span>}
+              {m.bio && <p className="my-2 text-sm leading-6 text-muted">{m.bio}</p>}
               {m.slots.length ? <div className="flex flex-wrap gap-1.5">{m.slots.slice(0, 9).map(s => <button key={s.id} className={`rounded-lg border px-2 py-1 font-mono text-xs ${pick?.slot.id === s.id ? "border-brand bg-brand text-white" : "border-line hover:border-brand"}`} onClick={() => setPick({ mentor: m, slot: s })}>{fmtDay(s.startsAt)} {fmtTime(s.startsAt)}</button>)}</div>
                 : <p className="text-sm text-muted">{t("No free times right now. Check again later.")}</p>}
             </article>
