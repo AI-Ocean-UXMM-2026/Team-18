@@ -6,7 +6,7 @@ import { usePrefs } from "@/lib/prefs";
 import { PageHead, Skeleton, Spinner } from "@/components/ui";
 
 const pathway = [
-  { number: "01", title: "Career quiz", detail: "Answer 20 questions about your strengths and interests.", icon: "✦" },
+  { number: "01", title: "Career quiz", detail: "Answer questions about your strengths and interests.", icon: "✦" },
   { number: "02", title: "Career matches", detail: "Review your top matches and choose a direction to explore.", icon: "◎" },
   { number: "03", title: "Majors and schools", detail: "Find related majors, explore universities, and compare your options.", icon: "⌂" },
   { number: "04", title: "Your next steps", detail: "Build your plan, then add a mentor session with Pro if you want.", icon: "↗" },

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { api } from "@/lib/api";
 import { useApiData } from "@/hooks/useApiData";
 import { usePrefs } from "@/lib/prefs";
+import { parseCsv } from "@/lib/csv";
 import { ErrorNote, Note, PageHead, Pill, Spinner, toast } from "@/components/ui";
 
 type Accepts = "yes" | "no" | "confirm";
@@ -25,25 +26,6 @@ const blank: Form = {
   programs: "", english: "", admission: "", pathway: "", duration: "", intakes: "",
 };
 const ok = (v: Accepts) => <Pill tone={v === "yes" ? "ok" : v === "no" ? "bad" : "warn"}>{v === "yes" ? "Accepted" : v === "no" ? "Not direct" : "Confirm"}</Pill>;
-
-function parseCsv(text: string): string[][] {
-  const rows: string[][] = [];
-  let row: string[] = [], cell = "", quoted = false;
-  const csv = text.replace(/^\uFEFF/, "");
-  for (let i = 0; i < csv.length; i++) {
-    const ch = csv[i];
-    if (ch === '"') {
-      if (quoted && csv[i + 1] === '"') { cell += '"'; i++; }
-      else quoted = !quoted;
-    } else if (!quoted && ch === ",") { row.push(cell); cell = ""; }
-    else if (!quoted && (ch === "\n" || ch === "\r")) {
-      if (ch === "\r" && csv[i + 1] === "\n") i++;
-      row.push(cell); rows.push(row); row = []; cell = "";
-    } else cell += ch;
-  }
-  if (cell || row.length) { row.push(cell); rows.push(row); }
-  return rows.filter(values => values.some(value => value.trim()));
-}
 
 function parseAccepts(value: string): Accepts {
   const normalized = value.trim().toLowerCase();

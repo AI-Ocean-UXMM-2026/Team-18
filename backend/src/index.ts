@@ -19,6 +19,7 @@ import { aiRouter } from "./routes/ai.js";
 import { mentorRouter } from "./routes/mentor.js";
 import { adminRouter } from "./routes/admin.js";
 import { getSchools, schoolsSource } from "./schools.js";
+import { loadManagedContent } from "./contentStore.js";
 import { seedDatabase } from "./seed.js";
 import { startSweeper } from "./retention.js";
 
@@ -49,6 +50,7 @@ app.use(errorMiddleware);
 
 async function main() {
   await assertSchemaInstalled();
+  await loadManagedContent();
   if (ENV.seedOnStart) await seedDatabase();
   startSweeper();
   const server = app.listen(ENV.port, ENV.host, async () => {

@@ -27,7 +27,7 @@ async function spend(req: Request) {
 const last12 = (l: ChatMessage[]) => l.slice(-12);
 
 aiRouter.post("/ai/question", requireRole("student"), route(async req => {
-  const b = body(req, z.object({ questionId: z.number().int().min(0).max(100), lang }));
+  const b = body(req, z.object({ questionId: z.number().int().min(0).max(500), lang }));
   await spend(req);
   return { reply: await askAI(questionPrompt(b.questionId, b.lang), [{ role: "user", content: "Please explain this statement." }]) };
 }));

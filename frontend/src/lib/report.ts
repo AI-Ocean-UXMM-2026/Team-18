@@ -61,7 +61,7 @@ export function buildReport(o: Input) {
   title("01", "Find your next move.", "Your personal career & university playbook", LIME);
   card(clean(o.name).trim() || "Your personal playbook", [
     `${LEVELS[o.level] ?? o.level} | ${new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}`,
-    `Holland code: ${o.score.holland} | Your interests, based on 20 quiz answers.`,
+    `Holland code: ${o.score.holland} | Your interests, based on your quiz answers.`,
   ], LILAC);
   const names: Record<string, string> = { R: "Realistic", I: "Investigative", A: "Artistic", S: "Social", E: "Enterprising", C: "Conventional" };
   const colors = [VIOLET, PINK, BLUE, LIME, VIOLET, PINK];

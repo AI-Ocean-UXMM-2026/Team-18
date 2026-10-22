@@ -25,7 +25,7 @@ export default function Landing() {
               <Link href="/register" className="btn-outline min-h-12 px-5">{t("Create a free account")}</Link>
             </div>
             <div className="flex flex-wrap gap-x-5 gap-y-2 pt-2 text-xs font-semibold text-muted sm:text-sm">
-              <span>✓ {t("Grade 12, GED and IGCSE")}</span><span>✓ {t("20-question assessment")}</span><span>✓ {t("Start as a guest")}</span>
+              <span>✓ {t("Grade 12, GED and IGCSE")}</span><span>✓ {t("Career interest assessment")}</span><span>✓ {t("Start as a guest")}</span>
             </div>
           </div>
 

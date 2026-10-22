@@ -8,11 +8,11 @@ import { Router } from "express";
 import { z } from "zod";
 import { ENV } from "../env.js";
 import { hashPassword } from "../auth.js";
-import { CAREERS, QUESTIONS, G12_UNIS, G12_PROGRAMS } from "../data.js";
+import { CAREERS, QUESTIONS, G12_UNIS, G12_PROGRAMS, type Career, type Question } from "../data.js";
 import { addSchoolToCache, adminSchoolsCount, getSchools, schoolsSource, type School } from "../schools.js";
 import { RETIRED_DEMO_MENTORS } from "../demoAccounts.js";
 import { audit, one, query, tx } from "../db.js";
-import { badRequest, body, conflict, notFound, requireAdmin, requireRole, route, sessionOf } from "../http.js";
+import { badRequest, body, conflict, HttpError, notFound, requireAdmin, requireRole, route, sessionOf } from "../http.js";
 
 export const adminRouter = Router();
 adminRouter.use("/admin", requireRole("admin"));
@@ -29,16 +29,30 @@ const adminUniversitySchema = z.object({
   duration: z.string().trim().max(100).default(""), intakes: z.string().trim().max(500).default(""), hasScholarship: z.boolean().default(false),
   scholarship: z.string().trim().max(1000).default(""), website: z.string().trim().max(500).default(""), source: z.string().trim().max(500).default(""), photo: z.string().trim().max(500).default(""),
 });
+const careerImportSchema = z.object({
+  id: z.string().trim().toLowerCase().regex(/^[a-z0-9-]{2,40}$/), t: z.string().trim().min(2).max(120),
+  codes: z.string().trim().toUpperCase().regex(/^[RIASEC]{1,3}$/), f: z.array(z.number().int().min(1).max(11)).min(1).max(11),
+  demand: z.string().trim().max(80).default(""), study: z.string().trim().max(120).default(""), blurb: z.string().trim().min(2).max(1000),
+  positions: z.array(z.string().trim().min(1).max(160)).max(30).default([]), skills: z.array(z.string().trim().min(1).max(160)).max(30).default([]),
+  quals: z.array(z.string().trim().min(1).max(240)).max(30).default([]), outlook: z.string().trim().max(1500).default(""),
+  subjects: z.array(z.string().trim().min(1).max(100)).max(30).default([]),
+  majors: z.array(z.object({ n: z.string().trim().min(1).max(160), f: z.number().int().min(1).max(11) })).min(1).max(50),
+  video: z.object({ len: z.string().trim().max(20).default(""), ch: z.array(z.string().trim().min(1).max(200)).max(20).default([]), url: z.union([z.string().url().max(500), z.literal("")]).default("") }),
+});
+const questionImportSchema = z.object({
+  id: z.number().int().min(21).max(500), area: z.string().trim().min(2).max(80),
+  code: z.enum(["R", "I", "A", "S", "E", "C"]), en: z.string().trim().min(4).max(300), my: z.string().trim().min(2).max(500),
+});
 
 adminRouter.get("/admin/stats", route(async () => ({
   ...(await one(`SELECT
      (SELECT count(*) FROM users WHERE role = 'student')::int AS students,
-     (SELECT count(*) FROM journeys WHERE jsonb_typeof(data->'answers') = 'object' AND (SELECT count(*) FROM jsonb_object_keys(data->'answers')) >= 20)::int AS "quizzesCompleted",
+     (SELECT count(*) FROM journeys WHERE jsonb_typeof(data->'answers') = 'object' AND ((data->>'quizCompleted' = 'true') OR (data->>'quizCompleted' IS NULL AND (SELECT count(*) FROM jsonb_object_keys(data->'answers')) >= $1)))::int AS "quizzesCompleted",
      (SELECT count(*) FROM users WHERE is_pro)::int AS "proMembers",
      (SELECT count(*) FROM payments WHERE status IN ('pending', 'disputed'))::int AS "paymentsToCheck",
      (SELECT count(*) FROM mentors WHERE status = 'pending')::int AS "mentorApplications",
      (SELECT count(*) FROM bookings WHERE status IN ('confirmed', 'completed'))::int AS "mentorSessions",
-     (SELECT coalesce(sum(amount_mmk), 0) FROM payments WHERE status = 'approved' AND decided_at > date_trunc('month', now()))::int AS "revenueThisMonth"`)),
+     (SELECT coalesce(sum(amount_mmk), 0) FROM payments WHERE status = 'approved' AND decided_at > date_trunc('month', now()))::int AS "revenueThisMonth"`, [QUESTIONS.length])),
   careers: await query(`SELECT data->>'careerId' AS "careerId", count(*)::int AS n FROM journeys WHERE data->>'careerId' IS NOT NULL GROUP BY 1 ORDER BY n DESC LIMIT 5`),
   levels: await query(`SELECT data->>'level' AS level, count(*)::int AS n FROM journeys WHERE data->>'level' IS NOT NULL GROUP BY 1`),
 })));
@@ -175,10 +189,40 @@ adminRouter.post("/admin/universities/import", content, route(async req => {
   for (const school of normalized) addSchoolToCache(school);
   return { ok: true, imported: normalized.length };
 }));
-adminRouter.get("/admin/content", content, route(() => ({
+adminRouter.get("/admin/content", content, route(async () => ({
   careers: CAREERS.map(c => ({ id: c.id, title: c.t, majors: c.majors.map(m => m.n), videoLength: c.video.len, hasVideo: !!c.video.url })),
-  questions: QUESTIONS.length,
+  questions: QUESTIONS.length, questionIds: QUESTIONS.map(q => q.id),
+  storageReady: !!(await one<{ ready: boolean }>("SELECT to_regclass('public.admin_content') IS NOT NULL AS ready"))?.ready,
 })));
+adminRouter.post("/admin/content/import", content, route(async req => {
+  const storageReady = !!(await one<{ ready: boolean }>("SELECT to_regclass('public.admin_content') IS NOT NULL AS ready"))?.ready;
+  if (!storageReady) throw new HttpError(503, "Content import storage is not installed. Apply database/migrations/20261022_admin_content.sql first.");
+  const payload = body(req, z.object({
+    careers: z.array(careerImportSchema).max(50).default([]),
+    questions: z.array(questionImportSchema).max(100).default([]),
+  }).refine(value => value.careers.length > 0 || value.questions.length > 0, "Choose at least one career or quiz question to import."));
+  const careerIds = payload.careers.map(c => c.id);
+  const questionIds = payload.questions.map(q => q.id);
+  if (new Set(careerIds).size !== careerIds.length || careerIds.some(id => CAREERS.some(c => c.id.toLowerCase() === id))) throw conflict("A career ID is repeated or already exists.");
+  if (new Set(questionIds).size !== questionIds.length || questionIds.some(id => QUESTIONS.some(q => q.id === id))) throw conflict("A quiz question ID is repeated or already exists.");
+
+  const careers = payload.careers as Career[];
+  const questions = payload.questions as Question[];
+  const actorId = sessionOf(req).uid;
+  await tx(async client => {
+    for (const career of careers) {
+      await client.query("INSERT INTO admin_content (content_type, content_id, data, created_by) VALUES ('career', $1, $2, $3)", [career.id, JSON.stringify(career), actorId]);
+    }
+    for (const question of questions) {
+      await client.query("INSERT INTO admin_content (content_type, content_id, data, created_by) VALUES ('question', $1, $2, $3)", [String(question.id), JSON.stringify(question), actorId]);
+    }
+    await client.query("INSERT INTO audit_log (actor_id, action, target, details) VALUES ($1, 'content.import', 'content', $2)", [actorId, { careers: careers.length, questions: questions.length }]);
+  });
+  CAREERS.push(...careers);
+  QUESTIONS.push(...questions);
+  QUESTIONS.sort((a, b) => a.id - b.id);
+  return { ok: true, careers: careers.length, questions: questions.length };
+}));
 
 // --- admins & audit (super only) --------------------------------------------------------
 adminRouter.get("/admin/admins", superOnly, route(async () => ({

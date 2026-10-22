@@ -136,6 +136,16 @@ CREATE TABLE IF NOT EXISTS admin_universities (
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Extra careers and quiz questions added through the Admin content importer.
+CREATE TABLE IF NOT EXISTS admin_content (
+  content_type TEXT NOT NULL CHECK (content_type IN ('career', 'question')),
+  content_id   TEXT NOT NULL,
+  data         JSONB NOT NULL CHECK (jsonb_typeof(data) = 'object'),
+  created_by   INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+  PRIMARY KEY (content_type, content_id)
+);
+
 -- Default receiving accounts (edit them in Admin -> Payment accounts)
 INSERT INTO payment_accounts (provider, label, enabled) VALUES
   ('kbz', 'KBZPay', true), ('wave', 'Wave Money', true), ('aya', 'AYA Pay', true),

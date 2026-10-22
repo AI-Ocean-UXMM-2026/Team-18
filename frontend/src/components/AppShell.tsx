@@ -81,7 +81,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     </nav>
     <div className="mt-auto p-3">
       <div className="rounded-xl border border-line bg-soft/60 p-3">
-        <div className="flex items-center justify-between gap-2 text-xs font-semibold"><span>{t("Quiz progress")}</span><span className="font-mono text-muted">{answered} / 20</span></div>
+        <div className="flex items-center justify-between gap-2 text-xs font-semibold"><span>{t("Quiz progress")}</span><span className="font-mono text-muted">{answered} / {flow.total}</span></div>
         <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-line"><div className="h-full rounded-full bg-brand transition-all" style={{ width: `${progress}%` }} /></div>
         <p className="mt-2 text-[11px] leading-4 text-muted">{t(answered ? "Your answers are ready when you are." : "Start with the career quiz when you are ready.")}</p>
       </div>

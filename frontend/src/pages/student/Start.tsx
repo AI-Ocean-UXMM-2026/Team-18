@@ -23,8 +23,8 @@ export default function Start() {
         <div className="flex min-w-0 flex-col items-start gap-5">
           <p className="creative-sticker creative-sticker-pink">✦ {t("Career quiz")}</p>
           <h1 className="creative-display">{t("Find your")}<br /><span className="creative-highlight">{t("next move.")}</span></h1>
-          <p className="max-w-md text-sm leading-6 text-muted">{t("20 questions · about 15 minutes. There are no right or wrong answers.")}</p>
-          <span className="rounded-full border border-line bg-card px-3 py-1.5 font-mono text-xs font-semibold">{answered} / 20 · {t("Quiz progress")}</span>
+          <p className="max-w-md text-sm leading-6 text-muted">{content?.questions.length ?? 0} {t("questions · about 15 minutes. There are no right or wrong answers.")}</p>
+          <span className="rounded-full border border-line bg-card px-3 py-1.5 font-mono text-xs font-semibold">{answered} / {flow.total} · {t("Quiz progress")}</span>
         </div>
         <div className="hidden md:block"><FutureSketch /></div>
       </section>
