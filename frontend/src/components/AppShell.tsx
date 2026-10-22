@@ -109,7 +109,8 @@ export function AppShell({ children }: { children: ReactNode }) {
       <header className="creative-header sticky top-0 z-30 bg-card/95 backdrop-blur">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-2 px-4 py-3 sm:gap-3 sm:px-6">
           {studentWorkspace && <button type="button" className="grid h-10 w-10 place-items-center rounded-lg border border-line text-lg text-ink hover:bg-soft" onClick={() => setNavOpen(true)} aria-label={t("Open navigation")} aria-expanded={navOpen} aria-controls="student-navigation">☰</button>}
-          <Link href={user ? (user.role === "student" ? "/student" : `/${user.role}`) : isGuest ? "/student" : "/"} className="flex items-center gap-2.5 text-ink"><span className="creative-logo" aria-hidden="true">✦</span><span className="creative-brand">CareerNet<span className="text-brand">.</span></span></Link>
+          <Link href={user ? (user.role === "student" ? "/student" : `/${user.role}`) : isGuest ? "/student" : "/"} className="flex items-center gap-2.5 text-ink"><span className="creative-logo" aria-hidden="true">⌖</span><span className="flex flex-col"><span className="creative-brand">CareerNet<span className="text-brand">.</span></span><span className="hidden text-[10px] leading-3 text-muted md:block">{t("Career & University Guidance Platform")}</span></span></Link>
+          {studentWorkspace && <div role="status" className={`ml-auto hidden items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold xl:inline-flex ${quizDone ? "border-ok/20 bg-ok-soft text-ok" : answered ? "border-warn/20 bg-warn-soft text-warn" : "border-line bg-soft text-muted"}`}><span className={`h-2 w-2 rounded-full ${quizDone ? "bg-ok" : answered ? "bg-warn" : "bg-muted"}`} aria-hidden="true" />{t(quizDone ? "Career results ready" : answered ? "Quiz in progress" : "Career quiz")}</div>}
           {user && user.role !== "student" && <span className="hidden rounded-full bg-soft px-2.5 py-1 text-xs font-semibold text-muted sm:inline-flex">{t(user.role === "mentor" ? "Mentor portal" : "Admin portal")}</span>}
           {!user && !isGuest && <nav aria-label={t("Portals")} className="hidden items-center gap-1 sm:flex">
             {[ ["/login", "Student"], ["/mentor/login", "Mentor"], ["/admin/login", "Admin"] ].map(([href, label]) => <Link key={href} href={href} className={`rounded-lg px-3 py-2 text-sm font-semibold transition hover:bg-brand-soft hover:text-brand ${location === href ? "bg-brand-soft text-brand" : "text-muted"}`}>{t(label)}</Link>)}
@@ -125,7 +126,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <button type="button" className="absolute inset-0 bg-[#142B63]/40 backdrop-blur-[2px]" onClick={() => setNavOpen(false)} aria-label={t("Close navigation")} />
           <aside id="student-navigation" role="dialog" aria-modal="true" className="creative-sidebar relative z-10 flex h-full w-[min(20rem,85vw)] flex-col overflow-y-auto border-r-2 border-line bg-card py-2 shadow-2xl" aria-label={t("Student navigation")}>{studentNav()}</aside>
         </div>}
-        <main className="mx-auto flex min-w-0 w-full max-w-5xl flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 sm:pt-8">
+        <main className="mx-auto flex min-w-0 w-full max-w-6xl flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 sm:pt-8">
           {isGuest && <div className="rounded-xl border border-info bg-info-soft px-4 py-3 text-sm">{t("Guest progress is temporary and won't be saved until you create an account.")} <Link href="/register" className="ml-1 font-semibold text-brand">{t("Create account to save your progress")}</Link></div>}
           {children}
         </main>
