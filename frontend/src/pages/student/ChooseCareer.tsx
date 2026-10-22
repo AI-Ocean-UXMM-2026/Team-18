@@ -19,7 +19,7 @@ export default function ChooseCareer() {
           {top.map(x => {
             const chosen = j.careerId === x.career.id;
             return <article key={x.career.id} className={`card flex h-full flex-col gap-4 ${chosen ? "border-brand ring-1 ring-brand/30" : ""}`}>
-              <div className="flex items-start justify-between gap-3"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-soft font-mono text-sm font-bold text-brand">#{x.priority}</span><span className="rounded-full bg-ok-soft px-3 py-1 text-xs font-bold text-ok">{x.pct}% {t("match")}</span></div>
+              <div className="flex items-start justify-between gap-3"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-soft font-mono text-sm font-bold text-brand">#{x.priority}</span><span className="rounded-full border border-ok/20 bg-ok-soft px-3 py-1 text-xs font-bold text-ok">✦ {x.pct}% {t("match")}</span></div>
               <h3 className="text-lg leading-snug">{x.career.t}</h3>
               <div className="flex items-center justify-between gap-3 border-t border-line pt-3 text-sm"><span className="text-muted">{t("Job demand")}</span><b>{t(x.career.demand)}</b></div>
               <button className={`mt-auto w-full ${chosen ? "btn-primary" : "btn-outline"}`} aria-pressed={chosen} onClick={() => choose(x.career.id)}>{t(chosen ? "Chosen" : "Choose")}</button>
