@@ -19,7 +19,7 @@ export const adminCan = (adminRole: string | null | undefined, path: string) => 
 
 export function AppShell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
-  const { user, logout } = useAuth();
+  const { user, isGuest, logout } = useAuth();
   const { lang, setLang, t } = usePrefs();
   const step = user?.role === "student" ? STUDENT_STEPS.find(([re]) => re.test(location))?.[1] ?? 0 : 0;
   const nav = user && user.role !== "student" ? NAV[user.role].filter(([p]) => user.role !== "admin" || adminCan(user.adminRole, p)) : [];
@@ -27,7 +27,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-dvh">
       <header className="sticky top-0 z-20 border-b border-line bg-card/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 py-3">
-          <Link href={user ? (user.role === "student" ? "/student" : `/${user.role}`) : "/"} className="flex items-center gap-2 font-bold"><img src="/favicon.svg" alt="" className="h-7 w-7" />CareerNet</Link>
+          <Link href={user ? (user.role === "student" ? "/student" : `/${user.role}`) : isGuest ? "/student" : "/"} className="flex items-center gap-2 font-bold"><img src="/favicon.svg" alt="" className="h-7 w-7" />CareerNet</Link>
           {user && user.role !== "student" && <span className="rounded-full bg-soft px-2.5 py-0.5 text-xs font-semibold text-muted">{t(user.role === "mentor" ? "Mentor portal" : "Admin portal")}</span>}
           {step > 0 && (
             <ol className="order-3 flex w-full flex-wrap gap-1 md:order-none md:w-auto md:flex-1 md:justify-center">
@@ -36,6 +36,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           )}
           <div className="ml-auto flex items-center gap-2">
             {user?.role === "student" && <Link href="/student/pro" className={user.isPro ? "btn btn-sm border border-ok bg-ok-soft text-ok" : "btn-outline btn-sm"}>{user.isPro ? "Pro ✓" : t("Go Pro")}</Link>}
+            {isGuest && <><Link href="/login" className="btn-ghost btn-sm">{t("Sign in")}</Link><Link href="/register" className="btn-outline btn-sm">{t("Create account")}</Link><button className="btn-ghost btn-sm" onClick={logout}>{t("End guest session")}</button></>}
             <button className="btn-ghost btn-sm" onClick={() => setLang(lang === "en" ? "my" : "en")} aria-label="Switch language">{lang === "en" ? "မြန်မာ" : "English"}</button>
             {user && <button className="btn-ghost btn-sm" onClick={logout}>{t("Sign out")}</button>}
           </div>
@@ -46,7 +47,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </nav>
         )}
       </header>
-      <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 pb-16 pt-8">{children}</main>
+      <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 pb-16 pt-8">{isGuest && <div className="rounded-xl border border-info bg-info-soft px-4 py-3 text-sm">{t("Guest progress is temporary and won't be saved until you create an account.")} <Link href="/register" className="ml-1 font-semibold text-brand">{t("Create account to save your progress")}</Link></div>}{children}</main>
     </div>
   );
 }

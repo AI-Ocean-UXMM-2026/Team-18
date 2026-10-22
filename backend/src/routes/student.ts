@@ -3,7 +3,7 @@
 //    content, quiz, universities, mentor booking, Pro payment
 // ===========================================================================
 import { createHash } from "node:crypto";
-import { Router } from "express";
+import { Router, type Request } from "express";
 import { z } from "zod";
 import { ENV } from "../env.js";
 import { CAREERS, CODES, FIELD_NAMES, G12_PROGRAMS, G12_UNIS, QUESTIONS, careerById } from "../data.js";
@@ -14,6 +14,13 @@ import { HttpError, badRequest, body, conflict, notFound, requireRole, route, se
 
 export const studentRouter = Router();
 const student = requireRole("student");
+
+async function requireProStudent(req: Request) {
+  const uid = sessionOf(req).uid;
+  const me = await one<{ is_pro: boolean }>("SELECT is_pro FROM users WHERE id = $1", [uid]);
+  if (!me?.is_pro) throw new HttpError(402, "Mentor sessions are part of CareerNet Pro.");
+  return uid;
+}
 
 // --- content (public) -----------------------------------------------------------
 studentRouter.get("/content", route(() => ({ questions: QUESTIONS, codes: CODES, careers: CAREERS, fields: FIELD_NAMES })));
@@ -67,6 +74,7 @@ studentRouter.get("/universities", route(async req => {
 
 // --- mentors & bookings (step 3, optional) ---------------------------------------------
 studentRouter.get("/mentors", student, route(async req => {
+  await requireProStudent(req);
   const career = careerById(String(req.query.careerId ?? ""));
   const mentors = await query(`SELECT u.id, u.name, m.title, m.years, m.fields, m.languages, m.bio,
       (SELECT json_agg(json_build_object('id', s.id, 'startsAt', s.starts_at, 'minutes', s.minutes) ORDER BY s.starts_at)
@@ -78,9 +86,7 @@ studentRouter.get("/mentors", student, route(async req => {
 }));
 
 studentRouter.post("/bookings", student, route(async req => {
-  const uid = sessionOf(req).uid;
-  const me = await one<{ is_pro: boolean }>(`SELECT is_pro FROM users WHERE id = $1`, [uid]);
-  if (!me?.is_pro) throw new HttpError(402, "Mentor sessions are part of CareerNet Pro.");
+  const uid = await requireProStudent(req);
   const b = body(req, z.object({ slotId: z.number().int().positive(), question: z.string().trim().max(500).optional() }));
   const slot = await one<{ id: number; mentor_id: number; starts_at: string }>(
     `SELECT s.id, s.mentor_id, s.starts_at FROM mentor_slots s JOIN mentors m ON m.user_id = s.mentor_id
@@ -94,14 +100,16 @@ studentRouter.post("/bookings", student, route(async req => {
   } catch (e: any) { if (e?.code === "23505") throw conflict("Someone just booked this time. Please pick another."); throw e; }
 }));
 
-studentRouter.get("/me/bookings", student, route(async req => ({
-  bookings: await query(`SELECT b.id, b.status, b.question, b.meeting_link AS "meetingLink", b.created_at AS "createdAt", s.starts_at AS "startsAt", s.minutes,
+studentRouter.get("/me/bookings", student, route(async req => {
+  const uid = await requireProStudent(req);
+  return { bookings: await query(`SELECT b.id, b.status, b.question, b.meeting_link AS "meetingLink", b.created_at AS "createdAt", s.starts_at AS "startsAt", s.minutes,
       u.name AS "mentorName", m.title AS "mentorTitle" FROM bookings b JOIN mentor_slots s ON s.id = b.slot_id
-      JOIN users u ON u.id = b.mentor_id JOIN mentors m ON m.user_id = b.mentor_id WHERE b.student_id = $1 ORDER BY s.starts_at DESC`, [sessionOf(req).uid]),
-})));
+      JOIN users u ON u.id = b.mentor_id JOIN mentors m ON m.user_id = b.mentor_id WHERE b.student_id = $1 ORDER BY s.starts_at DESC`, [uid]) };
+}));
 
 studentRouter.post("/me/bookings/:id/cancel", student, route(async req => {
-  const row = await one(`UPDATE bookings SET status = 'cancelled', responded_at = now() WHERE id = $1 AND student_id = $2 AND status IN ('pending', 'confirmed') RETURNING id`, [Number(req.params.id), sessionOf(req).uid]);
+  const uid = await requireProStudent(req);
+  const row = await one(`UPDATE bookings SET status = 'cancelled', responded_at = now() WHERE id = $1 AND student_id = $2 AND status IN ('pending', 'confirmed') RETURNING id`, [Number(req.params.id), uid]);
   if (!row) throw notFound("Booking not found or already finished.");
   return { ok: true };
 }));

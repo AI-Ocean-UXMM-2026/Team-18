@@ -17,9 +17,9 @@ const NEXT = {
   igcse: ["Book IELTS if your shortlist needs it.", "Get certified copies of IGCSE results.", "Decide between a foundation year or A-Levels for direct entry.", "Email admissions to confirm IGCSE entry before you apply."],
 };
 export default function Plan() {
-  const { j, content } = useJourney(); const { user } = useAuth(); const { t } = usePrefs();
+  const { j, content } = useJourney(); const { user, isGuest } = useAuth(); const { t } = usePrefs();
   const score = useScore(j); const unis = useUniversities(false, true);
-  const bookings = useApiData(() => api.get<{ bookings: { status: string; startsAt: string; mentorName: string }[] }>("/me/bookings"));
+  const bookings = useApiData(() => user?.isPro ? api.get<{ bookings: { status: string; startsAt: string; mentorName: string }[] }>("/me/bookings") : Promise.resolve({ bookings: [] }), [user?.id, user?.isPro]);
   if (score.loading || unis.loading || !content) return <Spinner />;
   const c = content.careers.find(x => x.id === j.careerId);
   if (!c || !score.data) return <section className="card"><p>{t("Finish the quiz and choose a career first.")}</p><Link href="/student" className="btn-primary mt-3 inline-flex">{t("Start quiz")}</Link></section>;
@@ -34,7 +34,7 @@ export default function Plan() {
   }
   return (
     <>
-      <PageHead back="/student/compare" eyebrow="Your plan" title={`${t("Your plan")}, ${user?.name.split(" ")[0] ?? ""}`} />
+      <PageHead back="/student/compare" eyebrow="Your plan" title={user ? `${t("Your plan")}, ${user.name.split(" ")[0]}` : t("Your plan")} />
       <div className="grid gap-4 md:grid-cols-2">
         <div className="card"><h2 className="text-sm text-muted">{t("Chosen career")}</h2><p className="text-xl font-bold">{c.t}</p><p className="text-sm text-muted">{score.data.top.find(x => x.career.id === c.id)?.pct ?? "–"}% · {t("Demand")} {c.demand}</p></div>
         <div className="card"><h2 className="text-sm text-muted">{t("Major")}</h2><p className="text-xl font-bold">{j.majors.join(" · ")}</p><p className="text-sm text-muted">{LEVELS[j.level ?? "g12"]}</p></div>
@@ -45,12 +45,14 @@ export default function Plan() {
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="card"><h2 className="mb-2 text-lg">{t("Mentor session")}</h2>{session ? <p>{session.mentorName}, <span className="font-mono">{fmtWhen(session.startsAt)}</span></p> : (user?.isPro ? <><p className="text-muted">{t("Not booked (optional)")}</p><Link href="/student/mentors" className="btn-outline btn-sm mt-2 inline-flex">{t("Book a 1-hour mentor session")}</Link></>
+          : isGuest ? <><p className="text-muted">{t("Mentor sessions require an account and CareerNet Pro.")}</p><Link href="/register" className="btn-outline btn-sm mt-2 inline-flex">{t("Create an account")}</Link></>
           : <><p className="text-muted">{t("Mentor sessions are part of CareerNet Pro.")}</p><Link href="/student/pro" className="btn-outline btn-sm mt-2 inline-flex">{t("Go Pro")}</Link></>)}</div>
         <div className="card"><h2 className="mb-2 text-lg">{t("Next steps")}</h2><ol className="list-decimal pl-5">{next.map(s => <li key={s}>{t(s)}</li>)}</ol></div>
       </div>
       <div className={`card flex flex-col gap-2 ${user?.isPro ? "border-ok" : ""}`}>
         <div className="flex justify-between"><h2 className="text-lg">{t("Full report (PDF)")}</h2><span className="rounded-md bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand">Pro</span></div>
         {user?.isPro ? <><p className="text-sm text-muted">{t("Your personal report with results, career plan, universities, scholarships and next steps.")}</p><button className="btn-primary self-start" onClick={download}>{t("Download PDF report")}</button></>
+          : isGuest ? <><p className="text-sm text-muted">{t("Create an account to save your plan and see CareerNet Pro.")}</p><Link href="/register" className="btn-primary self-start">{t("Create an account")}</Link></>
           : <><p className="text-sm text-muted">{t("The full PDF report is part of CareerNet Pro.")}</p><Link href="/student/pro" className="btn-primary self-start">{t("Go Pro")}</Link></>}
       </div>
     </>

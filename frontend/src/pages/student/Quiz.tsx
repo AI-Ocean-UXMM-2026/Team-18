@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Redirect, useLocation } from "wouter";
+import { Link, Redirect, useLocation } from "wouter";
 import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
 import { Spinner } from "@/components/ui";
@@ -8,6 +9,7 @@ import { Spinner } from "@/components/ui";
 const LIKERT = ["Not like me", "A little", "Somewhat", "Mostly", "Very like me"];
 export default function Quiz() {
   const { j, set, content, ready } = useJourney(); const { lang, t } = usePrefs(); const [, go] = useLocation();
+  const { isGuest } = useAuth();
   const [index, setIndex] = useState(() => Math.max(0, Math.min(19, Object.keys(j.answers).length)));
   const [showMissing, setShowMissing] = useState(false);
   const [help, setHelp] = useState<Record<number, string>>({});
@@ -45,7 +47,7 @@ export default function Quiz() {
             </button>); })}
         </div>
         <div className="flex flex-col items-start gap-2">
-          <button className="btn-ghost btn-sm" onClick={explain}>✦ {t("Not sure what this means? Ask AI")}</button>
+          {isGuest ? <p className="text-sm text-muted">{t("Create an account to use the AI coach and save your progress.")} <Link href="/register" className="font-semibold text-brand">{t("Create an account")}</Link></p> : <button className="btn-ghost btn-sm" onClick={explain}>✦ {t("Not sure what this means? Ask AI")}</button>}
           {help[q.id] && <p className="w-full whitespace-pre-wrap rounded-xl bg-brand-soft p-3 text-sm">{help[q.id]}</p>}
         </div>
       </div>

@@ -6,10 +6,11 @@
 //  Each portal has its own sign-in page; nobody can open another role's pages.
 // ===========================================================================
 import type { ComponentType } from "react";
-import { Redirect, Route, Switch } from "wouter";
+import { Link, Redirect, Route, Switch } from "wouter";
 import { AppShell, adminCan } from "@/components/AppShell";
 import { Spinner, Toaster } from "@/components/ui";
 import { homeFor, useAuth } from "@/lib/auth";
+import { usePrefs } from "@/lib/prefs";
 import type { Role } from "@/lib/api";
 
 import Landing from "@/pages/Landing";
@@ -47,9 +48,12 @@ import AdminAdmins from "@/pages/admin/Admins";
 
 function guard(role: Role, Page: ComponentType, path?: string) {
   return function Guarded() {
-    const { user, loading } = useAuth();
+    const { user, loading, isGuest } = useAuth();
     if (loading) return <Spinner />;
-    if (!user) return <Redirect to={role === "student" ? "/login" : `/${role}/login`} />;
+    if (!user) {
+      if (role === "student" && isGuest) return <Page />;
+      return <Redirect to={role === "student" ? "/login" : `/${role}/login`} />;
+    }
     if (user.role !== role) return <Redirect to={homeFor(user.role)} />;
     if (role === "admin" && path && !adminCan(user.adminRole, path)) return <Redirect to="/admin" />;
     return <Page />;
@@ -70,7 +74,16 @@ const G_Explorer = S(Explorer);
 const G_Compare = S(Compare);
 const G_Mentors = S(Mentors);
 const G_Plan = S(Plan);
-const G_Pro = S(Pro);
+function StudentProRoute() {
+  const { user, loading, isGuest } = useAuth();
+  const { t } = usePrefs();
+  if (loading) return <Spinner />;
+  if (isGuest) return <section className="card mx-auto flex max-w-lg flex-col items-center gap-3 text-center"><p className="eyebrow">CareerNet Pro</p><h1 className="text-2xl">{t("Create an account to view Pro")}</h1><p className="text-muted">{t("Guest sessions cannot submit payments or save progress.")}</p><div className="flex flex-wrap justify-center gap-2"><Link href="/register" className="btn-primary">{t("Create an account")}</Link><Link href="/student/compare" className="btn-ghost">{t("Continue")}</Link></div></section>;
+  if (!user) return <Redirect to="/login" />;
+  if (user.role !== "student") return <Redirect to={homeFor(user.role)} />;
+  return <Pro />;
+}
+const G_Pro = StudentProRoute;
 const G_MentorDashboard = M(MentorDashboard);
 const G_MentorRequests = M(MentorRequests);
 const G_MentorAvailability = M(MentorAvailability);

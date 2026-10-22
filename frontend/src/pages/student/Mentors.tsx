@@ -17,6 +17,23 @@ const STATUS: Record<string, [string, "ok" | "warn" | "bad" | "info"]> = {
 };
 
 export default function Mentors() {
+  const { t } = usePrefs(); const { user, isGuest } = useAuth();
+  if (isGuest) return <section className="card mx-auto flex max-w-lg flex-col items-center gap-3 text-center"><p className="eyebrow">Step 3 · Meet a mentor</p><h1 className="text-2xl">{t("Mentor sessions are part of CareerNet Pro")}</h1><p className="text-muted">{t("Create an account and upgrade to Pro to meet a mentor.")}</p><div className="flex flex-wrap justify-center gap-2"><Link href="/register" className="btn-primary">{t("Create an account")}</Link><Link href="/student/compare" className="btn-ghost">{t("Continue")}</Link></div></section>;
+  if (!user?.isPro) return (
+    <>
+      <PageHead back="/student/compare" eyebrow="Step 3 · Meet a mentor (optional)" title="A 1-hour session with a professional in your career" />
+      <section className="card flex flex-col items-center gap-3 text-center">
+        <span className="rounded-md bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand">Pro</span>
+        <h2 className="text-lg">{t("Mentor sessions are part of CareerNet Pro")}</h2>
+        <p className="text-muted">{t("Upgrade once to book a 1-hour session with a professional.")}</p>
+        <Link href="/student/pro" className="btn-primary">{t("Go Pro")}</Link>
+      </section>
+    </>
+  );
+  return <MentorMarketplace />;
+}
+
+function MentorMarketplace() {
   const { j, content } = useJourney(); const { t } = usePrefs(); const { user } = useAuth();
   const mentors = useApiData(() => api.get<{ mentors: Mentor[] }>(`/mentors?careerId=${j.careerId ?? ""}`), [j.careerId]);
   const bookings = useApiData(() => api.get<{ bookings: Booking[] }>("/me/bookings"));
@@ -31,17 +48,6 @@ export default function Mentors() {
   }
   async function cancel(id: number) { try { await api.post(`/me/bookings/${id}/cancel`); bookings.refresh(); mentors.refresh(); toast(t("Booking cancelled")); } catch (e) { toast((e as Error).message); } }
 
-  if (!user?.isPro) return (
-    <>
-      <PageHead back="/student/compare" eyebrow="Step 3 · Meet a mentor (optional)" title="A 1-hour session with a professional in your career" />
-      <section className="card flex flex-col items-center gap-3 text-center">
-        <span className="rounded-md bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand">Pro</span>
-        <h2 className="text-lg">{t("Mentor sessions are part of CareerNet Pro")}</h2>
-        <p className="text-muted">{t("Upgrade once to book a 1-hour session with a professional.")}</p>
-        <Link href="/student/pro" className="btn-primary">{t("Go Pro")}</Link>
-      </section>
-    </>
-  );
   return (
     <>
       <PageHead back="/student/compare" eyebrow="Step 3 · Meet a mentor (optional)" title="A 1-hour session with a professional in your career">

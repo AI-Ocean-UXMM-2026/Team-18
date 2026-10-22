@@ -9,6 +9,15 @@
 export type Language = "en" | "my";
 
 export const MYANMAR: Record<string, string> = {
+  "Guest progress is temporary and won't be saved until you create an account.": "အကောင့်မဖွင့်မချင်း ဧည့်သည်အဖြစ် လုပ်ဆောင်ထားသည့် တိုးတက်မှုကို သိမ်းမည်မဟုတ်ပါ။",
+  "Create account to save your progress": "တိုးတက်မှုကို သိမ်းရန် အကောင့်ဖွင့်ပါ",
+  "End guest session": "ဧည့်သည်အသုံးပြုမှုကို အဆုံးသတ်မည်",
+  "Create an account to use the AI coach and save your progress.": "AI နည်းပြကို အသုံးပြုပြီး တိုးတက်မှုကို သိမ်းရန် အကောင့်ဖွင့်ပါ။",
+  "Create an account to view Pro": "Pro ကိုကြည့်ရန် အကောင့်ဖွင့်ပါ",
+  "Guest sessions cannot submit payments or save progress.": "ဧည့်သည်အနေဖြင့် ငွေပေးချေမှု ပေးပို့ခြင်းနှင့် တိုးတက်မှု သိမ်းဆည်းခြင်း မပြုနိုင်ပါ။",
+  "Create an account and upgrade to Pro to meet a mentor.": "Mentor နှင့်တွေ့ရန် အကောင့်ဖွင့်ပြီး Pro သို့ အဆင့်မြှင့်ပါ။",
+  "Mentor sessions require an account and CareerNet Pro.": "Mentor နှင့်တွေ့ရန် အကောင့်နှင့် CareerNet Pro လိုအပ်သည်။",
+  "Create an account to save your plan and see CareerNet Pro.": "အစီအစဉ်ကို သိမ်းဆည်းပြီး CareerNet Pro ကိုကြည့်ရန် အကောင့်ဖွင့်ပါ။",
   "Watch short movies": "ရုပ်ရှင်တိုများ ကြည့်မည်",
   "3 movies, about 3 minutes each. Or skip and choose your career below.": "ရုပ်ရှင် ၃ ကား၊ တစ်ကားလျှင် ၃ မိနစ်ခန့်။ သို့မဟုတ် ကျော်ပြီး အောက်တွင် အသက်မွေးဝမ်းကျောင်း ရွေးပါ။",
   "Save & continue": "သိမ်းပြီး ဆက်သွားမည်",

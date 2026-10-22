@@ -8,13 +8,21 @@ import { usePrefs } from "@/lib/prefs";
 type Props = { title: string; subtitle: string; endpoint: string; payload: Record<string, unknown>; suggestions: string[] };
 export function AdvisorChat({ title, subtitle, endpoint, payload, suggestions }: Props) {
   const { lang, t } = usePrefs();
-  const { refresh } = useAuth();
+  const { refresh, isGuest } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [needPro, setNeedPro] = useState(false);
   const box = useRef<HTMLDivElement>(null);
   useEffect(() => { box.current?.scrollTo(0, box.current.scrollHeight); }, [messages, busy]);
+
+  if (isGuest) return (
+    <section className="card flex flex-col gap-3 border-brand">
+      <h2 className="text-lg text-brand">✦ {t(title)}</h2>
+      <p className="text-sm text-muted">{t("Create an account to use the AI coach and save your progress.")}</p>
+      <Link href="/register" className="btn-primary btn-sm self-start">{t("Create an account")}</Link>
+    </section>
+  );
 
   async function ask(text: string) {
     text = text.trim(); if (!text || busy) return;

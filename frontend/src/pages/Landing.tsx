@@ -3,8 +3,9 @@ import { homeFor, useAuth } from "@/lib/auth";
 import { usePrefs } from "@/lib/prefs";
 
 export default function Landing() {
-  const { t } = usePrefs(); const { user } = useAuth();
+  const { t } = usePrefs(); const { user, isGuest, startGuest } = useAuth();
   if (user) return <Redirect to={homeFor(user.role)} />;
+  if (isGuest) return <Redirect to="/student" />;
   const steps = [["Career & major", "15-min quiz · top 3 careers · 3-min short movies"], ["University / College", "Explore & compare · scholarships · AI advisor"], ["Mentor (optional)", "1-hour session with a professional"]];
   return (
     <>
@@ -13,7 +14,7 @@ export default function Landing() {
           <p className="eyebrow">{t("For Grade 12 · GED · IGCSE students and graduates")}</p>
           <h1 className="text-4xl sm:text-5xl">{t("Find a career path you will actually love.")}</h1>
           <p className="text-lg text-muted">{t("Take a 15-minute quiz to find your top 3 careers, choose your major, compare universities and colleges, and meet a professional mentor if you want.")}</p>
-          <div className="flex flex-wrap gap-3"><Link href="/register" className="btn-primary">{t("Start the journey, it's free")}</Link><Link href="/login" className="btn-ghost">{t("Sign in")}</Link></div>
+          <div className="flex flex-wrap gap-3"><Link href="/register" className="btn-primary">{t("Start the journey, it's free")}</Link><Link href="/login" className="btn-ghost">{t("Sign in")}</Link><button className="btn-outline" onClick={startGuest}>{t("Continue as guest")}</button></div>
           <p className="text-sm text-muted"><Link href="/mentor/login" className="text-brand">{t("Mentor sign in")}</Link> · <Link href="/mentor/apply" className="text-brand">{t("Apply to become a mentor")}</Link></p>
         </div>
         <div className="card flex flex-col gap-3">

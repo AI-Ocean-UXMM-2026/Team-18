@@ -16,26 +16,40 @@ type Ctx = { j: Journey; ready: boolean; content: Content | null; set: (patch: P
 const JourneyCtx = createContext<Ctx | null>(null);
 
 export function JourneyProvider({ children }: { children: ReactNode }) {
-  const { user } = useAuth();
+  const { user, isGuest } = useAuth();
   const [j, setJ] = useState<Journey>(EMPTY);
   const [ready, setReady] = useState(false);
   const [content, setContent] = useState<Content | null>(null);
   const pending = useRef<Partial<Journey>>({});
+  const guestDraft = useRef<Journey | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => { api.get<Content>("/content").then(setContent).catch(() => setContent(null)); }, []);
   useEffect(() => {
     setReady(false);
-    if (user?.role !== "student") { setJ(EMPTY); setReady(true); return; }
-    api.get<{ journey: Partial<Journey> }>("/me/journey").then(r => setJ({ ...EMPTY, ...r.journey })).catch(() => setJ(EMPTY)).finally(() => setReady(true));
-  }, [user?.id, user?.role]);
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = null; pending.current = {};
+    if (isGuest) { guestDraft.current = null; setJ(EMPTY); setReady(true); return; }
+    if (user?.role !== "student") { guestDraft.current = null; setJ(EMPTY); setReady(true); return; }
+    const draft = guestDraft.current;
+    guestDraft.current = null;
+    api.get<{ journey: Partial<Journey> }>("/me/journey").then(async r => {
+      const journey = { ...EMPTY, ...r.journey, ...(draft ?? {}) };
+      setJ(journey);
+      if (draft) await api.put("/me/journey", draft).catch(() => { /* account remains usable if saving fails */ });
+    }).catch(() => setJ({ ...EMPTY, ...(draft ?? {}) })).finally(() => setReady(true));
+  }, [user?.id, user?.role, isGuest]);
 
   const set: Ctx["set"] = patch => setJ(prev => {
     const p = typeof patch === "function" ? patch(prev) : patch;
-    pending.current = { ...pending.current, ...p };
-    if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => { const body = pending.current; pending.current = {}; api.put("/me/journey", body).catch(() => { /* retried on next change */ }); }, 500);
-    return { ...prev, ...p };
+    const next = { ...prev, ...p };
+    if (isGuest) guestDraft.current = next;
+    if (user?.role === "student") {
+      pending.current = { ...pending.current, ...p };
+      if (timer.current) clearTimeout(timer.current);
+      timer.current = setTimeout(() => { const body = pending.current; pending.current = {}; api.put("/me/journey", body).catch(() => { /* retried on next change */ }); }, 500);
+    }
+    return next;
   });
   return <JourneyCtx.Provider value={{ j, ready, content, set }}>{children}</JourneyCtx.Provider>;
 }

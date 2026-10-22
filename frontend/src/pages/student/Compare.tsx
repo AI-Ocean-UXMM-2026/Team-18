@@ -11,7 +11,7 @@ import { UniPhoto } from "@/components/UniCard";
 import { Actions, Note, PageHead, Spinner, toast } from "@/components/ui";
 
 export default function Compare() {
-  const { j, set } = useJourney(); const { t } = usePrefs(); const { user } = useAuth(); const [, go] = useLocation();
+  const { j, set } = useJourney(); const { t } = usePrefs(); const { user, isGuest } = useAuth(); const [, go] = useLocation();
   const { data, loading } = useUniversities(false, true);
   if (loading || !data) return <Spinner />;
   const find = (k: string) => data.items.find(i => i.key === k);
@@ -45,7 +45,7 @@ export default function Compare() {
         </table></div>
       )}
       {j.level !== "g12" && chosen.length > 0 && <AdvisorChat title="AI university advisor" subtitle="Ask about the options in this table." endpoint="/ai/advisor" payload={{ level: j.level, careerId: j.careerId, majors: j.majors, comparing: chosen.map(itemName) }} suggestions={["Compare these for me in plain words", "Which one is the safest choice?"]} />}
-      <Actions>{user?.isPro && <Link href="/student/mentors" className="btn-outline">{t("Meet a mentor")}</Link>}<button className="btn-primary" onClick={() => { toast(t("Saved")); go("/student/plan"); }}>{t("Save & continue")}</button></Actions>
+      <Actions>{user?.isPro && <Link href="/student/mentors" className="btn-outline">{t("Meet a mentor")}</Link>}<button className="btn-primary" onClick={() => { if (!isGuest) toast(t("Saved")); go("/student/plan"); }}>{t(isGuest ? "Continue" : "Save & continue")}</button></Actions>
     </>
   );
 }
