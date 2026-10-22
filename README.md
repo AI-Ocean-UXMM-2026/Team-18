@@ -41,10 +41,8 @@ The sign-in pages include buttons to fill in the demo credentials. All seeded de
 | Student | `pro@careernet.local` | Pro account with a sample completed career profile for AI and PDF demos |
 | Mentor | `hnin@mentor.careernet.local` | Active demo mentor with availability |
 | Admin | `super@careernet.local` | Full admin access |
-| Admin | `ops@careernet.local` | Operations admin |
-| Admin | `content@careernet.local` | Content editor |
 
-With `SEED_ON_START=true`, the backend restores seeded demo credentials on startup and resets their AI usage. Keep this enabled only for a demo database. For a real deployment, disable it after setup and replace shared demo credentials. Never publish a real `.env` file or commit API keys.
+The demo provides one account for each portal, plus separate normal and Pro student accounts. The sign-in page's **Use account** buttons fill in the matching email and password. With the default `SEED_PASSWORD=careernet123`, the backend restores the four demo accounts on startup and resets student AI usage. Seeding also disables the old Operations admin, Content editor, and extra mentor demo accounts while retaining their records. Keep `SEED_ON_START=true` only for a demo database. For a real deployment, disable it after setup and replace shared demo credentials. Never publish a real `.env` file or commit API keys.
 
 ## Run locally
 
