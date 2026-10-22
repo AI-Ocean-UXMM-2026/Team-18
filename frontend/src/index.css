@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* EduCompass prototype design system, adapted to CareerNet's existing flows. */
+/* EduCompass prototype design system, adapted to CareerNest's existing flows. */
 @theme {
   --color-bg: #f7f9fc;
   --color-card: #ffffff;
@@ -111,7 +111,7 @@ html[data-theme="dark"] .skeleton-block::after { background: linear-gradient(90d
 .student-sidebar-link[aria-current="page"] { border-color: var(--color-brand); background: var(--color-brand-soft); color: var(--color-outline); }
 html[data-theme="dark"] .student-sidebar-link[aria-current="page"] { color: var(--color-ink); }
 
-/* Re-skin the existing CareerNet shell with the EduCompass prototype visual language. */
+/* Re-skin the existing CareerNest shell with the EduCompass prototype visual language. */
 .creative-shell { background: var(--color-bg); background-image: none; }
 .creative-header { border-bottom: 1px solid var(--color-line); }
 .creative-logo { border: 0; border-radius: 9px; background: linear-gradient(135deg, #2f80ed, #142b63); color: #fff; box-shadow: none; transform: none; }

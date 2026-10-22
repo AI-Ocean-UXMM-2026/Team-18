@@ -21,7 +21,7 @@ async function spend(req: Request) {
   const uid = sessionOf(req).uid;
   if (!allow("ai:" + uid, ENV.aiRateLimitPerHour, 3_600_000)) throw tooMany("You asked a lot of questions. Please try again in an hour.");
   const u = await one<{ is_pro: boolean; ai_used: number }>("SELECT is_pro, ai_used FROM users WHERE id = $1", [uid]);
-  if (!u?.is_pro && (u?.ai_used ?? 0) >= ENV.freeAiLimit) throw new HttpError(402, `You have used your ${ENV.freeAiLimit} free AI questions. Upgrade to CareerNet Pro for unlimited questions.`);
+  if (!u?.is_pro && (u?.ai_used ?? 0) >= ENV.freeAiLimit) throw new HttpError(402, `You have used your ${ENV.freeAiLimit} free AI questions. Upgrade to CareerNest Pro for unlimited questions.`);
   await one("UPDATE users SET ai_used = ai_used + 1 WHERE id = $1", [uid]);
 }
 const last12 = (l: ChatMessage[]) => l.slice(-12);

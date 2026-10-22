@@ -1,5 +1,5 @@
 // ===========================================================================
-//  index.ts — the CareerNet API server.
+//  index.ts — the CareerNest API server.
 //
 //      cd backend
 //      npm install
@@ -54,7 +54,7 @@ async function main() {
   if (ENV.seedOnStart) await seedDatabase();
   startSweeper();
   const server = app.listen(ENV.port, ENV.host, async () => {
-    console.log(`CareerNet API  → http://localhost:${ENV.port}/health`);
+    console.log(`CareerNest API  → http://localhost:${ENV.port}/health`);
     console.log(`AI provider     → ${ENV.aiProvider}${aiConfigured() ? "" : "  (NOT configured: add the API key to backend/.env)"}`);
     try { const s = await getSchools(); console.log(`School data     → ${s.length} universities from ${schoolsSource()}`); }
     catch (e) { console.warn("School data     → could not load:", (e as Error).message); }
@@ -62,4 +62,4 @@ async function main() {
   const stop = () => server.close(() => closeDatabase().finally(() => process.exit(0)));
   process.on("SIGINT", stop); process.on("SIGTERM", stop);
 }
-main().catch(e => { console.error("\n✖ CareerNet API could not start:\n  " + (e instanceof Error ? e.message : e) + "\n"); process.exit(1); });
+main().catch(e => { console.error("\n✖ CareerNest API could not start:\n  " + (e instanceof Error ? e.message : e) + "\n"); process.exit(1); });

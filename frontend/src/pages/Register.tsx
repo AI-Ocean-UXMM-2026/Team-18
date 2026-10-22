@@ -20,7 +20,7 @@ export default function Register() {
   return (
     <AuthLayout>
     <section className="card mx-auto flex w-full max-w-md flex-col gap-4 lg:max-w-none">
-      <p className="eyebrow">CareerNet</p><h1 className="text-2xl">{t("Create your account")}</h1>
+      <p className="eyebrow">CareerNest</p><h1 className="text-2xl">{t("Create your account")}</h1>
       <p className="text-sm text-muted">{t("Save your results and come back any time, on any device.")}</p>
       <form className="flex flex-col gap-3" onSubmit={submit} noValidate>
         {field("name", "Name", "text", "name")}{field("email", "Email", "email", "email")}{field("password", "Password", "password", "new-password")}

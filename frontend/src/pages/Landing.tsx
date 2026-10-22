@@ -17,7 +17,7 @@ export default function Landing() {
         <span className="pointer-events-none absolute right-6 top-2 text-7xl text-brand/20" aria-hidden="true">✳</span>
         <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
           <div className="flex flex-col items-start gap-5">
-            <p className="creative-sticker px-3 py-1 text-xs">✦ {t("CareerNet · guided student pathway")}</p>
+            <p className="creative-sticker px-3 py-1 text-xs">✦ {t("CareerNest · guided student pathway")}</p>
             <h1 className="creative-display max-w-2xl">{t("Your future.")}<br /><span className="text-[#8ec5ff]">{t("Make it yours.")}</span></h1>
             <p className="max-w-xl text-base leading-7 text-blue-100 sm:text-lg">{t("Take the career quiz, discover your top matches, then explore majors and universities that fit your education level.")}</p>
             <div className="flex w-full flex-col gap-3 pt-1 sm:w-auto sm:flex-row">
@@ -34,7 +34,7 @@ export default function Landing() {
       </section>
 
       <footer className="flex flex-col items-center justify-between gap-3 border-t border-line pt-5 text-sm text-muted sm:flex-row">
-        <span>CareerNet · {t("Career guidance for students in Myanmar")}</span>
+        <span>CareerNest · {t("Career guidance for students in Myanmar")}</span>
         <div className="flex flex-wrap justify-center gap-4"><Link href="/guide" className="hover:text-brand">{t("Guide")}</Link><Link href="/mentor/login" className="hover:text-brand">{t("Mentor sign in")}</Link><Link href="/mentor/apply" className="hover:text-brand">{t("Apply to become a mentor")}</Link><Link href="/admin/login" className="hover:text-brand">{t("Admin sign in")}</Link></div>
       </footer>
     </div>

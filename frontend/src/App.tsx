@@ -88,7 +88,7 @@ function StudentProRoute() {
   const { user, loading, isGuest } = useAuth();
   const { t } = usePrefs();
   if (loading) return <Spinner />;
-  if (isGuest) return <section className="card mx-auto flex max-w-lg flex-col items-center gap-3 text-center"><p className="eyebrow">CareerNet Pro</p><h1 className="text-2xl">{t("Create an account to view Pro")}</h1><p className="text-muted">{t("Guest sessions cannot submit payments or save progress.")}</p><div className="flex flex-wrap justify-center gap-2"><Link href="/register" className="btn-primary">{t("Create an account")}</Link><Link href="/student/compare" className="btn-ghost">{t("Continue")}</Link></div></section>;
+  if (isGuest) return <section className="card mx-auto flex max-w-lg flex-col items-center gap-3 text-center"><p className="eyebrow">CareerNest Pro</p><h1 className="text-2xl">{t("Create an account to view Pro")}</h1><p className="text-muted">{t("Guest sessions cannot submit payments or save progress.")}</p><div className="flex flex-wrap justify-center gap-2"><Link href="/register" className="btn-primary">{t("Create an account")}</Link><Link href="/student/compare" className="btn-ghost">{t("Continue")}</Link></div></section>;
   if (!user) return <Redirect to="/login" />;
   if (user.role !== "student") return <Redirect to={homeFor(user.role)} />;
   return <Pro />;

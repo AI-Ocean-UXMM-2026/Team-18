@@ -1,5 +1,5 @@
 -- ===========================================================================
---  CareerNet — PostgreSQL schema
+--  CareerNest — PostgreSQL schema
 --  Career guidance for Grade 12 / GED / IGCSE students
 --
 --  HOW TO RUN (pgAdmin4)

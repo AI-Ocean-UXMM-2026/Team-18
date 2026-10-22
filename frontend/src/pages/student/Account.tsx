@@ -52,12 +52,12 @@ export default function StudentAccount() {
   if (!user) return <Spinner />;
 
   return <>
-    <PageHead eyebrow="Student account" title="Profile & settings">{t("Manage your account and see which CareerNet features are available.")}</PageHead>
+    <PageHead eyebrow="Student account" title="Profile & settings">{t("Manage your account and see which CareerNest features are available.")}</PageHead>
 
     <section className="card flex flex-wrap items-center justify-between gap-4 border-t-4 border-t-brand">
       <div>
         <p className="eyebrow">{t("Current plan")}</p>
-        <h2 className="mt-2 text-2xl">{data?.isPro ?? user.isPro ? t("CareerNet Pro") : t("Normal account")}</h2>
+        <h2 className="mt-2 text-2xl">{data?.isPro ?? user.isPro ? t("CareerNest Pro") : t("Normal account")}</h2>
         <p className="mt-1 text-sm text-muted">{data?.isPro ?? user.isPro ? t("Your Pro features are active.") : t("You are using the normal free account.")}</p>
       </div>
       {(data?.isPro ?? user.isPro)

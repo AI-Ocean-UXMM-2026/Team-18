@@ -97,7 +97,7 @@ async function openrouter(system: string, messages: ChatMessage[], timeoutMs: nu
         "Content-Type": "application/json",
         Authorization: `Bearer ${ENV.openrouterKey}`,
         "HTTP-Referer": ENV.openrouterReferer,
-        "X-Title": "CareerNet",
+        "X-Title": "CareerNest",
       },
       body: JSON.stringify({
         model: ENV.openrouterModel,

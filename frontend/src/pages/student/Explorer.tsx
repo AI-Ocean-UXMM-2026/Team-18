@@ -28,7 +28,7 @@ export default function Explorer() {
     <>
       <PageHead back="/student/majors" eyebrow="Step 2 · University / college explorer" title={g12 ? "Myanmar universities for your major" : "Universities for GED / IGCSE students"} />
       {!g12 && <Note>{t("GED and IGCSE students usually study abroad. These universities in Thailand, Singapore and Malaysia accept GED or IGCSE students. Use the filter to see only those with scholarships.")}</Note>}
-      {!g12 && <AdvisorChat title="AI university advisor" subtitle="Answers use only the CareerNet data on this page. Always confirm with the university." endpoint="/ai/advisor" payload={{ level: j.level, careerId: j.careerId, majors: j.majors }} suggestions={["Which option fits me best, and why?", "Which ones offer scholarships?", "Draft an email to confirm GED/IGCSE entry"]} />}
+      {!g12 && <AdvisorChat title="AI university advisor" subtitle="Answers use only the CareerNest data on this page. Always confirm with the university." endpoint="/ai/advisor" payload={{ level: j.level, careerId: j.careerId, majors: j.majors }} suggestions={["Which option fits me best, and why?", "Which ones offer scholarships?", "Draft an email to confirm GED/IGCSE entry"]} />}
       <div className="card grid items-end gap-4 md:grid-cols-3">
         <label className="label grow">{t("Search")}<input className="input" value={query} onChange={e => setQuery(e.target.value)} placeholder={t("University or programme")} /></label>
         <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={allFields} onChange={e => setAllFields(e.target.checked)} />{t("Show all fields")}</label>

@@ -269,7 +269,7 @@ export default function Content() {
   return <>
     <PageHead eyebrow="Admin portal" title="Content" />
     <div className="grid grid-cols-2 gap-3 md:grid-cols-3">{[["Careers", data.careers.length], ["Quiz questions", data.questions], ["Short movies uploaded", data.careers.filter(c => c.hasVideo).length]].map(([label, value]) => <div key={label} className="tile"><b>{value}</b><span>{t(String(label))}</span></div>)}</div>
-    <Note>{t("Add content in the cells below. You can type directly or copy cells from Excel and paste them into the grid. Save each sheet to add those rows to CareerNet.")}</Note>
+    <Note>{t("Add content in the cells below. You can type directly or copy cells from Excel and paste them into the grid. Save each sheet to add those rows to CareerNest.")}</Note>
     {!data.storageReady && <Note>{t("Run the admin content database migration before saving. Existing student and admin pages remain available until then.")}</Note>}
     {!data.videoUploadReady && <Note>{t("To upload career videos, set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY on the backend, then run database/migrations/20261022_admin_career_videos.sql.")}</Note>}
 

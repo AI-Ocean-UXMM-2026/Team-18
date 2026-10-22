@@ -1,4 +1,4 @@
-# Deploying CareerNet
+# Deploying CareerNest
 - Frontend: `cd frontend && npm run build` → serve `frontend/dist` (Vercel/Netlify/nginx).
 - Backend: Node 20+ on Render/Railway/VPS: `cd backend && npm ci && npm start`.
 - Database: managed PostgreSQL 16, run `database/schema.sql` once and then apply scripts in `database/migrations/` to existing databases.
@@ -13,8 +13,8 @@
 - Direct career video uploads use Supabase Storage. Set `SUPABASE_URL` and the backend-only `SUPABASE_SERVICE_ROLE_KEY` on the backend host, then apply `database/migrations/20261022_admin_career_videos.sql`. The first admin upload creates a public `career-videos` bucket automatically. Videos must be MP4, WebM, or MOV, no longer than 3 minutes, and at most 50 MB.
 
 ## AI provider failover
-- With `AI_PROVIDER=gemini`, CareerNet tries `GEMINI_API_KEY` first. If Gemini returns HTTP 429, it tries `GEMINI_FALLBACK_API_KEY` once when set. Other Gemini failures go directly to OpenRouter when configured.
-- Set `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` to enable the second AI provider. CareerNet will call OpenRouter only when the model name ends in `:free`, so a paid model cannot be used accidentally. The default is `nvidia/nemotron-3.5-lightning:free`.
-- `OPENROUTER_REFERER` identifies the deployed CareerNet website. Set it to your public frontend URL if the domain changes.
+- With `AI_PROVIDER=gemini`, CareerNest tries `GEMINI_API_KEY` first. If Gemini returns HTTP 429, it tries `GEMINI_FALLBACK_API_KEY` once when set. Other Gemini failures go directly to OpenRouter when configured.
+- Set `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` to enable the second AI provider. CareerNest will call OpenRouter only when the model name ends in `:free`, so a paid model cannot be used accidentally. The default is `nvidia/nemotron-3.5-lightning:free`.
+- `OPENROUTER_REFERER` identifies the deployed CareerNest website. Set it to your public frontend URL if the domain changes.
 - Provider keys are optional alternatives: Gemini can run on its own; OpenRouter can run directly if no Gemini key is set. If both providers fail, the API returns a generic retry message while provider diagnostics stay in backend logs.
 - `AI_PROVIDER=claude` continues to use Anthropic directly and does not use the Gemini/OpenRouter failover chain.

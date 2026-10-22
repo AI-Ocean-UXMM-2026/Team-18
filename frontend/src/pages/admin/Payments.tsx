@@ -22,7 +22,7 @@ export default function Payments() {
   return (
     <>
       <PageHead eyebrow="Admin portal" title="Payments" />
-      <Note>{t("Check that the money arrived in the CareerNet account in the payment app before approving. The uploaded screenshot supports review but is not proof of receipt.")}</Note>
+      <Note>{t("Check that the money arrived in the CareerNest account in the payment app before approving. The uploaded screenshot supports review but is not proof of receipt.")}</Note>
       <Tabs tabs={[["open", "To check"], ["decided", "Decided"]]} value={tab} onChange={setTab} />
       {loading ? <CardListSkeleton count={2} /> : error ? <ErrorNote message={error} onRetry={refresh} /> : (
         <>
@@ -33,7 +33,7 @@ export default function Payments() {
               <div className="flex min-w-[240px] flex-1 flex-col gap-1 text-sm">
                 <div className="flex flex-wrap justify-between gap-2"><b>{p.studentName}</b><Pill tone={p.status === "approved" ? "ok" : p.status === "rejected" ? "bad" : p.status === "disputed" ? "warn" : "info"}>{t(p.status === "disputed" ? "Re-review asked" : p.status)}</Pill></div>
                 <span className="text-xs text-muted">{p.studentEmail}</span>
-                <p>CareerNet Pro · <b className="font-mono">{fmtKs(p.amount)}</b> {p.amount !== data!.price && <Pill tone="warn">{t("Amount does not match")}</Pill>}</p>
+                <p>CareerNest Pro · <b className="font-mono">{fmtKs(p.amount)}</b> {p.amount !== data!.price && <Pill tone="warn">{t("Amount does not match")}</Pill>}</p>
                 <p>{p.providerLabel} → {p.accountName} <span className="font-mono">{p.accountNumber}</span></p>
                 {p.transactionId && <p>{t("Transaction ID")} <b className="font-mono">{p.transactionId}</b> · <span className="text-muted">{fmtWhen(p.createdAt)}</span></p>}
                 {!p.transactionId && <p className="text-muted">{t("No transaction ID was submitted. Verify the payment directly in the wallet.")}</p>}

@@ -14,7 +14,7 @@ export default function MentorApply() {
     try { await api.post("/auth/mentor-apply", { name: f.name, email: f.email, password: f.password, title: f.title, years: Number(f.years), fields: [Number(f.field)], languages: f.languages, bio: f.bio }); setDone(true); }
     catch (err) { setError(err instanceof Error ? err.message : "Could not send."); } finally { setBusy(false); }
   }
-  if (done) return <section className="card mx-auto flex max-w-md flex-col gap-3 text-center"><h1 className="text-2xl">{t("Application sent")}</h1><p className="text-muted">{t("The CareerNet team will review it. You can sign in after it is approved.")}</p><Link href="/mentor/login" className="btn-primary">{t("Mentor sign in")}</Link></section>;
+  if (done) return <section className="card mx-auto flex max-w-md flex-col gap-3 text-center"><h1 className="text-2xl">{t("Application sent")}</h1><p className="text-muted">{t("The CareerNest team will review it. You can sign in after it is approved.")}</p><Link href="/mentor/login" className="btn-primary">{t("Mentor sign in")}</Link></section>;
   const inp = (k: keyof typeof f, label: string, type = "text") => <label className="label">{t(label)}<input className="input" type={type} value={f[k] as string | number} onChange={e => setF({ ...f, [k]: e.target.value })} /></label>;
   return (
     <section className="card mx-auto flex w-full max-w-lg flex-col gap-4">

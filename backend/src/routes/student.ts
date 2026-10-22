@@ -18,7 +18,7 @@ const student = requireRole("student");
 async function requireProStudent(req: Request) {
   const uid = sessionOf(req).uid;
   const me = await one<{ is_pro: boolean }>("SELECT is_pro FROM users WHERE id = $1", [uid]);
-  if (!me?.is_pro) throw new HttpError(402, "Mentor sessions are part of CareerNet Pro.");
+  if (!me?.is_pro) throw new HttpError(402, "Mentor sessions are part of CareerNest Pro.");
   return uid;
 }
 

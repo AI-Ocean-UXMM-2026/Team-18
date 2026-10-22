@@ -38,14 +38,14 @@ export default function Plan() {
       objectUrl = URL.createObjectURL(pdf);
       const link = document.createElement("a");
       link.href = objectUrl;
-      link.download = "CareerNet-report.pdf";
+      link.download = "CareerNest-report.pdf";
       link.style.display = "none";
       document.body.appendChild(link);
       link.click();
       link.remove();
       setPdfStatus(t("Your PDF report is downloading. Check your Downloads folder."));
     } catch (error) {
-      console.error("CareerNet PDF generation failed", error);
+      console.error("CareerNest PDF generation failed", error);
       setPdfStatus(t("Could not create the PDF"));
       toast(t("Could not create the PDF"));
     }
@@ -65,15 +65,15 @@ export default function Plan() {
       </div>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="card"><h2 className="mb-2 text-lg">{t("Mentor session")}</h2>{session ? <p>{session.mentorName}, <span className="font-mono">{fmtWhen(session.startsAt)}</span></p> : (user?.isPro ? <><p className="text-muted">{t("Not booked (optional)")}</p><Link href="/student/mentors" className="btn-outline btn-sm mt-2 inline-flex">{t("Book a 1-hour mentor session")}</Link></>
-          : isGuest ? <><p className="text-muted">{t("Mentor sessions require an account and CareerNet Pro.")}</p><Link href="/register" className="btn-outline btn-sm mt-2 inline-flex">{t("Create an account")}</Link></>
-          : <><p className="text-muted">{t("Mentor sessions are part of CareerNet Pro.")}</p><Link href="/student/pro" className="btn-outline btn-sm mt-2 inline-flex">{t("Go Pro")}</Link></>)}</div>
+          : isGuest ? <><p className="text-muted">{t("Mentor sessions require an account and CareerNest Pro.")}</p><Link href="/register" className="btn-outline btn-sm mt-2 inline-flex">{t("Create an account")}</Link></>
+          : <><p className="text-muted">{t("Mentor sessions are part of CareerNest Pro.")}</p><Link href="/student/pro" className="btn-outline btn-sm mt-2 inline-flex">{t("Go Pro")}</Link></>)}</div>
         <div className="card"><h2 className="mb-2 text-lg">{t("Next steps")}</h2><ol className="list-decimal pl-5">{next.map(s => <li key={s}>{t(s)}</li>)}</ol></div>
       </div>
       <div className={`card flex flex-col gap-2 ${user?.isPro ? "border-ok" : ""}`}>
         <div className="flex justify-between"><h2 className="text-lg">{t("Full report (PDF)")}</h2><span className="rounded-md bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand">Pro</span></div>
         {user?.isPro ? <><p className="text-sm text-muted">{t("Your personal report with results, career plan, universities, scholarships and next steps.")}</p><button className="btn-primary self-start" onClick={download}>{t("Download PDF report")}</button>{pdfStatus && <p className="text-sm text-muted" role="status" aria-live="polite">{pdfStatus}</p>}</>
-          : isGuest ? <><p className="text-sm text-muted">{t("Create an account to save your plan and see CareerNet Pro.")}</p><Link href="/register" className="btn-primary self-start">{t("Create an account")}</Link></>
-          : <><p className="text-sm text-muted">{t("The full PDF report is part of CareerNet Pro.")}</p><Link href="/student/pro" className="btn-primary self-start">{t("Go Pro")}</Link></>}
+          : isGuest ? <><p className="text-sm text-muted">{t("Create an account to save your plan and see CareerNest Pro.")}</p><Link href="/register" className="btn-primary self-start">{t("Create an account")}</Link></>
+          : <><p className="text-sm text-muted">{t("The full PDF report is part of CareerNest Pro.")}</p><Link href="/student/pro" className="btn-primary self-start">{t("Go Pro")}</Link></>}
       </div>
     </>
   );

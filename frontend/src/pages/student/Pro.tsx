@@ -60,7 +60,7 @@ export default function Pro() {
   );
   return (
     <>
-      <PageHead back="/student/plan" eyebrow="CareerNet Pro" title="Upgrade to Pro" />
+      <PageHead back="/student/plan" eyebrow="CareerNest Pro" title="Upgrade to Pro" />
       <div className="grid gap-4 md:grid-cols-2">
         <div className="card"><b>{t("Free")}</b><ul className="mt-2 list-disc pl-5 text-sm"><li>{t("Career quiz & top 3 careers")}</li><li>{t("Majors, university explorer & compare")}</li><li>{t("AI questions")}: {data.freeAiLimit} ({t("used")} {data.aiUsed})</li></ul></div>
         <div className="card border-2 border-ai bg-ai-soft"><b>Pro · <span className="font-mono">{fmtKs(data.price)}</span> {t("one time")}</b><ul className="mt-2 list-disc pl-5 text-sm"><li>{t("Full PDF report")}</li><li>{t("Unlimited AI career coach and university advisor")}</li><li>{t("1-hour sessions with professional mentors")}</li><li>{t("Pro badge on your account")}</li></ul></div>
@@ -108,7 +108,7 @@ export default function Pro() {
             </>}
             {!data.accounts.length && <div className="rounded-xl border border-warn bg-warn-soft p-4 text-sm">
               <b>{t("Pro purchases are not set up yet.")}</b>
-              <p className="mt-1">{t("An admin needs to add and enable a payment account before students can send a Pro payment. Please contact the CareerNet team.")}</p>
+              <p className="mt-1">{t("An admin needs to add and enable a payment account before students can send a Pro payment. Please contact the CareerNest team.")}</p>
             </div>}
           </section>
         </>

@@ -77,7 +77,7 @@ export default function Universities() {
       if (!/^[A-Za-z0-9-]{2,20}$/.test(university.code)) errors.push(`Row ${row}: code must use 2–20 letters, numbers, or hyphens.`);
       if (university.name.length < 2 || !university.country) errors.push(`Row ${row}: university name and country are required.`);
       const code = university.code.toLowerCase();
-      if (code && (seen.has(code) || existingCodes.has(code))) errors.push(`Row ${row}: code “${university.code}” already exists in CareerNet or this sheet.`);
+      if (code && (seen.has(code) || existingCodes.has(code))) errors.push(`Row ${row}: code “${university.code}” already exists in CareerNest or this sheet.`);
       seen.add(code);
       for (const [label, url] of [["website", university.website], ["source link", university.source]] as const) {
         if (url && !/^https?:\/\//i.test(url)) errors.push(`Row ${row}: ${label} must start with http:// or https://.`);
@@ -107,7 +107,7 @@ export default function Universities() {
   return <>
     <PageHead eyebrow="Admin portal" title="Universities" />
     <div className="grid grid-cols-2 gap-3 md:grid-cols-5">{[["Grade 12 universities", data.g12.universities], ["Grade 12 programmes", data.g12.programs], ["GED / IGCSE universities", data.schools.length], ["With scholarships", data.schools.filter(s => s.hasScholarship).length], ["Need re-check", data.schools.filter(s => s.needsCheck).length]].map(([label, value]) => <div key={label} className="tile"><b>{value}</b><span>{t(String(label))}</span></div>)}</div>
-    <Note>{data.sheetConnected ? t("Imported GED / IGCSE entries still sync from the Google Sheet.") : t("Imported GED / IGCSE entries use the local CSV file.")} {t("Universities added here are saved in CareerNet and appear alongside imported entries. No Google Sheet is needed to add one.")} {t("Re-check every university every 6 months. Grade 12 data remains in backend/data/g12.json.")}</Note>
+    <Note>{data.sheetConnected ? t("Imported GED / IGCSE entries still sync from the Google Sheet.") : t("Imported GED / IGCSE entries use the local CSV file.")} {t("Universities added here are saved in CareerNest and appear alongside imported entries. No Google Sheet is needed to add one.")} {t("Re-check every university every 6 months. Grade 12 data remains in backend/data/g12.json.")}</Note>
 
     <section className="card flex flex-col gap-4">
       <div><h2 className="text-lg">{t("Add a university directly")}</h2><p className="text-sm text-muted">{t("Type into cells or paste rows copied from Excel. Add one or more universities, then save the sheet.")}</p><p className="mt-1 text-xs text-muted">{t("Use yes, no, or confirm for GED/IGCSE. Separate programmes with semicolons.")}</p></div>
@@ -133,7 +133,7 @@ export default function Universities() {
     <div className="table-wrap"><table>
       <thead><tr><th>{t("University")}</th><th>{t("Country")}</th><th>{t("Scholarship")}</th><th>GED</th><th>IGCSE</th><th>{t("Last checked")}</th><th>{t("Source")}</th></tr></thead>
       <tbody>{data.schools.map(s => <tr key={s.id}><td><b className="font-mono text-xs text-brand">{s.code}</b> {s.name}</td><td>{s.country}</td><td>{s.hasScholarship ? <Pill tone="ok">Yes</Pill> : <Pill tone="warn">No</Pill>}</td><td>{acceptance(s.ged)}</td><td>{acceptance(s.igcse)}</td>
-        <td className="font-mono text-xs">{s.lastChecked}{s.needsCheck && <> <Pill tone="warn">{t("Re-check")}</Pill></>}</td><td>{s.source ? <a className="text-brand" href={s.source} target="_blank" rel="noreferrer">{t("Source")}</a> : <span className="text-muted">{t("Added in CareerNet")}</span>}</td></tr>)}</tbody>
+        <td className="font-mono text-xs">{s.lastChecked}{s.needsCheck && <> <Pill tone="warn">{t("Re-check")}</Pill></>}</td><td>{s.source ? <a className="text-brand" href={s.source} target="_blank" rel="noreferrer">{t("Source")}</a> : <span className="text-muted">{t("Added in CareerNest")}</span>}</td></tr>)}</tbody>
     </table></div>
   </>;
 }

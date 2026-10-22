@@ -27,7 +27,7 @@ export function buildReport(o: Input) {
   const newPage = () => {
     if (pageStarted) doc.addPage(); pageStarted = true;
     doc.setFillColor(...CREAM); doc.rect(0, 0, 210, 297, "F");
-    label("CareerNet.", M, 14, 12, INK, true); label("YOUR FUTURE, YOUR WAY", 133, 14, 8, MUTED, true);
+    label("CareerNest.", M, 14, 12, INK, true); label("YOUR FUTURE, YOUR WAY", 133, 14, 8, MUTED, true);
     doc.setDrawColor(...INK); doc.setLineWidth(0.4); doc.line(M, 19, 193, 19);
     label(section, M, 27, 8, VIOLET, true); y = 35;
   };
@@ -105,9 +105,9 @@ export function buildReport(o: Input) {
   const total = doc.getNumberOfPages();
   for (let page = 1; page <= total; page++) {
     doc.setPage(page); doc.setDrawColor(...INK); doc.line(M, 282, 193, 282);
-    label("CareerNet / Personal career playbook", M, 289, 8, MUTED);
+    label("CareerNest / Personal career playbook", M, 289, 8, MUTED);
     label(`${String(page).padStart(2, "0")} / ${String(total).padStart(2, "0")}`, 177, 289, 9, INK, true);
   }
-  doc.setProperties({ title: "CareerNet - Your career playbook", subject: "Personal career and university plan", author: "CareerNet" });
+  doc.setProperties({ title: "CareerNest - Your career playbook", subject: "Personal career and university plan", author: "CareerNest" });
   return doc;
 }

@@ -1,5 +1,5 @@
 @echo off
-REM Starts the CareerNet API on Windows. Double-click or run: backend\start.bat
+REM Starts the CareerNest API on Windows. Double-click or run: backend\start.bat
 cd /d "%~dp0"
 if not exist .env (
   echo No .env found - copying .env.example. Edit DATABASE_URL, JWT_SECRET and GEMINI_API_KEY!

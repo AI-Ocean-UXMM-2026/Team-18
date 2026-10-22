@@ -30,7 +30,7 @@ export default function Guide() {
   };
   return (
     <div className="flex flex-col gap-10 sm:gap-14">
-      <PageHead back={home} eyebrow="Guide" title="How to use CareerNet" />
+      <PageHead back={home} eyebrow="Guide" title="How to use CareerNest" />
       <section id="career-preview" className="scroll-mt-24">
         <div className="mx-auto mb-7 max-w-2xl text-center">
           <p className="eyebrow">{t("Explore your options")}</p>
@@ -63,7 +63,7 @@ export default function Guide() {
 
       <section id="journey" className="scroll-mt-24 rounded-3xl border border-line bg-card p-6 shadow-sm sm:p-9">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-          <div className="max-w-2xl"><p className="eyebrow">{t("The CareerNet pathway")}</p><h2 className="mt-2 text-3xl sm:text-4xl">{t("From self-discovery to a plan you can act on")}</h2></div>
+          <div className="max-w-2xl"><p className="eyebrow">{t("The CareerNest pathway")}</p><h2 className="mt-2 text-3xl sm:text-4xl">{t("From self-discovery to a plan you can act on")}</h2></div>
           <p className="max-w-sm text-sm leading-6 text-muted">{t("Move through each step at your own pace. Your account keeps your progress ready for next time.")}</p>
         </div>
         <div className="mt-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">

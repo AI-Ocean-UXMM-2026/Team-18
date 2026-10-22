@@ -1,10 +1,10 @@
 {
-  "name": "careernet-backend",
+  "name": "careernest-backend",
   "version": "2.0.0",
   "private": true,
   "type": "module",
   "license": "MIT",
-  "description": "CareerNet REST API: Express + PostgreSQL + admin-managed university data + AI (Gemini or Claude)",
+  "description": "CareerNest REST API: Express + PostgreSQL + admin-managed university data + AI (Gemini or Claude)",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",

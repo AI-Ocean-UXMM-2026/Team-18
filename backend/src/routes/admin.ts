@@ -213,7 +213,7 @@ adminRouter.post("/admin/universities/import", content, route(async req => {
   if (new Set(ids).size !== ids.length) throw conflict("The import contains duplicate university codes.");
   const existing = await getSchools();
   if (normalized.some(next => existing.some(s => s.id.toLowerCase() === next.id || s.code.toLowerCase() === next.code.toLowerCase()))) {
-    throw conflict("The import includes a university code already in CareerNet. Remove it from the sheet and retry.");
+    throw conflict("The import includes a university code already in CareerNest. Remove it from the sheet and retry.");
   }
   const actorId = sessionOf(req).uid;
   await tx(async client => {

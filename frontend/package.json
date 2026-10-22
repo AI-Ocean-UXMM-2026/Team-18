@@ -1,10 +1,10 @@
 {
-  "name": "careernet-frontend",
+  "name": "careernest-frontend",
   "version": "2.0.0",
   "private": true,
   "type": "module",
   "license": "MIT",
-  "description": "CareerNet web app — student, mentor and admin portals (React + Vite + Tailwind)",
+  "description": "CareerNest web app — student, mentor and admin portals (React + Vite + Tailwind)",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -227,7 +227,7 @@ export function KipGuide() {
   const [tip, setTip] = useState(0);
   const tips = ["Focus on your strengths, not just exam scores.", "There are no right or wrong answers. Choose what feels like you.", "Your career matches are a starting point. Explore the paths that interest you."];
   return <div className="relative mx-auto flex w-full max-w-sm flex-col items-center rounded-[20px] border border-white/25 bg-white/10 p-6 text-center shadow-xl">
-    <span className="absolute -top-3 rounded-full bg-[#d99513] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">CareerNet Navigator</span>
+    <span className="absolute -top-3 rounded-full bg-[#d99513] px-3 py-1 text-[11px] font-bold uppercase tracking-wide text-white">CareerNest Navigator</span>
     <button type="button" onClick={() => setTip(i => (i + 1) % tips.length)} className="mt-3 w-full rounded-xl border border-line bg-white p-3 text-left text-[#142b63]" aria-label={t("Show another tip")}><span className="mb-1 block text-[10px] font-bold uppercase tracking-wide text-[#b84b00]">✦ Kip the navigator</span><span className="text-sm font-semibold">{t(tips[tip])}</span></button>
     <Kip size={170} />
     <p className="w-full border-t border-white/20 pt-3 text-xs text-blue-100">{t("A little encouragement for your next big step.")}</p>

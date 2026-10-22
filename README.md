@@ -1,6 +1,6 @@
-# CareerNet
+# CareerNest
 
-CareerNet is a career guidance app for Grade 12, GED, and IGCSE students in Myanmar. It has student, mentor, and admin portals, a career matching quiz, AI career guidance, university discovery, mentor booking, and a Pro PDF report.
+CareerNest is a career guidance app for Grade 12, GED, and IGCSE students in Myanmar. It has student, mentor, and admin portals, a career matching quiz, AI career guidance, university discovery, mentor booking, and a Pro PDF report.
 
 ## Current live demo
 
@@ -23,9 +23,9 @@ Student navigation uses one left drawer opened by the menu button. Later steps r
 ## AI, Pro, and payments
 
 - Signed-in normal students have the configured free AI allowance (`FREE_AI_LIMIT`, default 5). Pro students have unlimited AI career coach and university advisor usage.
-- CareerNet tries the configured primary AI provider, then its configured fallback provider when applicable. See [deploy/README.md](deploy/README.md) for provider and key configuration.
+- CareerNest tries the configured primary AI provider, then its configured fallback provider when applicable. See [deploy/README.md](deploy/README.md) for provider and key configuration.
 - Pro includes the full PDF report and mentor sessions. The PDF is generated in the browser from the student's saved journey; it does not call the AI API.
-- Students request Pro from the student portal by submitting the amount and a payment screenshot; a transaction ID is not required. An admin verifies that the money arrived in the CareerNet payment account before approving under **Admin → Payments**. Mentor booking and Pro entitlements are checked by the API.
+- Students request Pro from the student portal by submitting the amount and a payment screenshot; a transaction ID is not required. An admin verifies that the money arrived in the CareerNest payment account before approving under **Admin → Payments**. Mentor booking and Pro entitlements are checked by the API.
 
 ## Portals
 
