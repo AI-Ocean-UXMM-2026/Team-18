@@ -18,6 +18,7 @@ const STUDENT_NAV = [
   ["/student/movies", "Career videos (optional)", "▷"],
   ["/student/mentors", "Meet a mentor · Pro", "◷"],
   ["/student/plan", "My plan", "✓"],
+  ["/student/profile", "Profile & settings", "⚙"],
 ] as const;
 const NAV: Record<string, [string, string][]> = {
   mentor: [["/mentor", "Dashboard"], ["/mentor/requests", "Requests"], ["/mentor/availability", "Availability"], ["/mentor/sessions", "Sessions"], ["/mentor/profile", "Profile"]],
@@ -82,9 +83,10 @@ export function AppShell({ children }: { children: ReactNode }) {
   </>;
 
   const controls = <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
-    {user?.role === "student" && <Link href="/student/pro" className={user.isPro ? "btn btn-sm border border-ok bg-ok-soft text-ok" : "btn-outline btn-sm"}>{user.isPro ? "Pro ✓" : t("Go Pro")}</Link>}
+    {user?.role === "student" && <Link href="/student/pro" aria-label={user.isPro ? t("Pro plan") : t("Normal plan · Upgrade to Pro")} className={user.isPro ? "btn btn-sm border border-ok bg-ok-soft text-ok" : "btn-outline btn-sm"}>{user.isPro ? "Pro ✓" : t("Normal")}</Link>}
     {isGuest && <><Link href="/login" className="btn-ghost btn-sm">{t("Sign in")}</Link><Link href="/register" className="btn-outline btn-sm">{t("Create account")}</Link></>}
-    {user && <span className="hidden h-8 w-8 place-items-center rounded-full bg-[#142B63] text-xs font-bold text-white sm:grid" title={user.name}>{user.name.trim().charAt(0).toUpperCase()}</span>}
+    {user?.role === "student" && <Link href="/student/profile" className="grid h-8 w-8 place-items-center rounded-full bg-[#142B63] text-xs font-bold text-white hover:ring-2 hover:ring-brand" title={t("Profile & settings")} aria-label={t("Profile & settings")}>{user.name.trim().charAt(0).toUpperCase()}</Link>}
+    {user && user.role !== "student" && <span className="hidden h-8 w-8 place-items-center rounded-full bg-[#142B63] text-xs font-bold text-white sm:grid" title={user.name}>{user.name.trim().charAt(0).toUpperCase()}</span>}
     <div role="group" aria-label={t("Color theme")} className="flex items-center rounded-lg border border-line bg-soft p-0.5">
       <button type="button" onClick={() => setTheme("light")} aria-label={t("Light theme")} aria-pressed={theme === "light"} title={t("Light theme")} className={`grid h-8 w-8 place-items-center rounded-md text-sm transition ${theme === "light" ? "bg-card text-brand shadow-sm" : "text-muted hover:text-ink"}`}><span aria-hidden>☀</span></button>
       <button type="button" onClick={() => setTheme("dark")} aria-label={t("Dark theme")} aria-pressed={theme === "dark"} title={t("Dark theme")} className={`grid h-8 w-8 place-items-center rounded-md text-sm transition ${theme === "dark" ? "bg-card text-brand shadow-sm" : "text-muted hover:text-ink"}`}><span aria-hidden>☾</span></button>

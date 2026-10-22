@@ -55,6 +55,12 @@ authRouter.post("/auth/login", route(async req => {
 
 authRouter.get("/auth/me", route(async req => ({ user: await profile(sessionOf(req).uid) })));
 
+authRouter.put("/auth/profile", route(async req => {
+  const b = body(req, z.object({ name }));
+  await one("UPDATE users SET name = $1 WHERE id = $2", [b.name, sessionOf(req).uid]);
+  return { user: await profile(sessionOf(req).uid) };
+}));
+
 authRouter.put("/auth/language", route(async req => {
   const b = body(req, z.object({ language: z.enum(["en", "my"]) }));
   await one("UPDATE users SET language = $1 WHERE id = $2", [b.language, sessionOf(req).uid]);

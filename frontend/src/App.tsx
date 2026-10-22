@@ -31,6 +31,7 @@ import Compare from "@/pages/student/Compare";
 import Mentors from "@/pages/student/Mentors";
 import Plan from "@/pages/student/Plan";
 import Pro from "@/pages/student/Pro";
+import StudentAccount from "@/pages/student/Account";
 
 import MentorDashboard from "@/pages/mentor/Dashboard";
 import MentorRequests from "@/pages/mentor/Requests";
@@ -85,6 +86,7 @@ function StudentProRoute() {
   return <Pro />;
 }
 const G_Pro = StudentProRoute;
+const G_StudentAccount = S(StudentAccount);
 const G_MentorDashboard = M(MentorDashboard);
 const G_MentorRequests = M(MentorRequests);
 const G_MentorAvailability = M(MentorAvailability);
@@ -122,6 +124,7 @@ export default function App() {
         <Route path="/student/mentors" component={G_Mentors} />
         <Route path="/student/plan" component={G_Plan} />
         <Route path="/student/pro" component={G_Pro} />
+        <Route path="/student/profile" component={G_StudentAccount} />
 
         <Route path="/mentor" component={G_MentorDashboard} />
         <Route path="/mentor/requests" component={G_MentorRequests} />
