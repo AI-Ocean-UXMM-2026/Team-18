@@ -28,7 +28,11 @@ export const DEMO_STUDENT = { email: "student@careernet.local", name: "Demo Stud
 
 async function upsertUser(email: string, name: string, role: string, adminRole: string | null) {
   const found = await one<{ id: number }>("SELECT id FROM users WHERE email = $1", [email]);
-  if (found) return found.id;
+  if (found) {
+    await one("UPDATE users SET password_hash = $1, name = $2, role = $3, admin_role = $4, active = TRUE WHERE id = $5",
+      [hashPassword(ENV.seedPassword), name, role, adminRole, found.id]);
+    return found.id;
+  }
   const row = await one<{ id: number }>(
     "INSERT INTO users (email, password_hash, name, role, admin_role) VALUES ($1, $2, $3, $4, $5) RETURNING id",
     [email, hashPassword(ENV.seedPassword), name, role, adminRole]);
