@@ -28,8 +28,8 @@ const RETIRED_DEMO_MENTORS = [
 export const DEMO_STUDENT = { email: "student@careernet.local", name: "Demo Student (Normal)", isPro: false };
 export const DEMO_PRO_STUDENT = { email: "pro@careernet.local", name: "Demo Student (Pro)", isPro: true };
 
-// A complete starter profile makes Results, the AI coach, and the Pro PDF
-// available immediately after signing in. Keep existing demo progress intact.
+// Sample quiz and career choices enable Results and AI demos immediately.
+// University comparison must be completed before the Pro PDF. Retain saved progress.
 const DEMO_JOURNEY = {
   level: "g12",
   answers: { "0": 5, "1": 3, "2": 3, "3": 3, "4": 4, "5": 5, "6": 5, "7": 3, "8": 3, "9": 3, "10": 5, "11": 5, "12": 4, "13": 3, "14": 3, "15": 4, "16": 3, "17": 5, "18": 3, "19": 5 },

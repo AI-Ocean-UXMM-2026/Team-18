@@ -7,7 +7,7 @@ import { AdvisorChat } from "@/components/AdvisorChat";
 import { Actions, ErrorNote, PageHead, Spinner } from "@/components/ui";
 
 export default function Results() {
-  const { j, ready } = useJourney(); const { t } = usePrefs();
+  const { j, ready, set } = useJourney(); const { t } = usePrefs();
   const { data, loading, error, refresh } = useScore(j);
   if (!ready || loading) return <Spinner label="Analyzing your answers" />;
   if (error || !data) return <><ErrorNote message={error ?? "No data"} onRetry={refresh} /><Link href="/student/quiz" className="btn-ghost self-start">{t("Back to quiz")}</Link></>;
@@ -30,7 +30,7 @@ export default function Results() {
         </aside>
       </div>
       <AdvisorChat title="AI career coach" subtitle="Ask why a career fits you, or what the jobs are really like." endpoint="/ai/career" payload={{ answers: j.answers, level: j.level ?? "g12" }} suggestions={["Explain my results in simple words", "Which of my 3 matches suits me best, and why?"]} />
-      <Actions><Link href="/student/movies" className="btn-primary">{t("Next: short movies (optional)")}</Link></Actions>
+      <Actions><Link href="/student/movies" className="btn-primary" onClick={() => set({ resultsReviewed: true })}>{t("Next: short movies (optional)")}</Link></Actions>
     </>
   );
 }

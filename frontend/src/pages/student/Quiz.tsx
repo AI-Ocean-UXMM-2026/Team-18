@@ -16,7 +16,7 @@ export default function Quiz() {
   if (!ready || !content) return <Spinner />;
   if (!j.level) return <Redirect to="/student" />;
   const qs = content.questions; const q = qs[index];
-  const missing = qs.filter(x => !j.answers[x.id]);
+  const missing = qs.filter(x => !Number.isInteger(j.answers[x.id]) || j.answers[x.id] < 1 || j.answers[x.id] > 5);
 
   function answer(v: number) {
     set(prev => ({ answers: { ...prev.answers, [q.id]: v } }));
@@ -56,7 +56,7 @@ export default function Quiz() {
         <button className="btn-ghost" disabled={index === 0} onClick={() => setIndex(i => i - 1)}>{t("Previous")}</button>
         <span className="mr-auto text-sm text-muted">{qs.length - missing.length} / {qs.length}</span>
         {index < qs.length - 1 && <button className="btn-ghost" onClick={() => setIndex(i => i + 1)}>{t("Skip / Next")}</button>}
-        <button className="btn-primary" onClick={() => (missing.length ? setShowMissing(true) : go("/student/results"))}>{t("Finish quiz")}</button>
+        <button className="btn-primary" onClick={() => { if (missing.length) { setShowMissing(true); return; } set({ quizCompleted: true }); go("/student/results"); }}>{t("Finish quiz")}</button>
       </div>
     </section>
   );

@@ -18,6 +18,8 @@ CareerNet is a career guidance app for Grade 12, GED, and IGCSE students in Myan
 
 Guest sessions can use the career exploration flow, but progress is temporary. Guests cannot use the AI coach, save progress to an account, submit Pro payments, book mentors, or download the Pro report. Register or sign in as a student to save the journey. Signed-in student progress is saved automatically.
 
+Student navigation uses one left drawer opened by the menu button. Later steps remain disabled until their prerequisites are complete: choose an education level → answer every quiz question and finish → review results → choose a career → select and confirm majors → select at least two universities to compare → save the comparison → view the plan or optionally book a mentor with Pro. The same rules guard direct URLs. Editing an earlier choice locks dependent steps again. Profile/settings and Pro account information remain accessible throughout. Existing saved progress is retained.
+
 ## AI, Pro, and payments
 
 - Signed-in normal students have the configured free AI allowance (`FREE_AI_LIMIT`, default 5). Pro students have unlimited AI career coach and university advisor usage.
@@ -38,7 +40,7 @@ The sign-in pages include buttons to fill in the demo credentials. All seeded de
 | Role | Email | Notes |
 | --- | --- | --- |
 | Student | `student@careernet.local` | Normal account with the configured free AI allowance |
-| Student | `pro@careernet.local` | Pro account with a sample completed career profile for AI and PDF demos |
+| Student | `pro@careernet.local` | Pro with a sample completed quiz and career; confirm a university comparison to open the plan and PDF |
 | Mentor | `hnin@mentor.careernet.local` | Active demo mentor with availability |
 | Admin | `super@careernet.local` | Full admin access |
 

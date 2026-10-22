@@ -67,6 +67,7 @@ export const MYANMAR: Record<string, string> = {
   "In progress": "လုပ်ဆောင်ဆဲ",
   "Ready": "အသင့်ဖြစ်ပါပြီ",
   "Locked": "မရရှိနိုင်သေးပါ",
+  "Complete the previous step to unlock.": "အသုံးပြုနိုင်ရန် ယခင်အဆင့်ကို အရင်ပြီးအောင် လုပ်ပါ။",
   "Question": "မေးခွန်း",
   "CareerNet · guided student pathway": "CareerNet · ကျောင်းသားများအတွက် လမ်းညွှန်ခရီးစဉ်",
   "Loading results": "ရလဒ်များကို ဖွင့်နေပါသည်",

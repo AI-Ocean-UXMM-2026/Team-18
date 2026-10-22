@@ -36,6 +36,7 @@ studentRouter.put("/me/journey", student, route(async req => {
     careerId: z.string().max(40).nullable().optional(), majors: z.array(z.string().max(80)).max(2).optional(),
     shortlist: z.array(z.string().max(40)).max(30).optional(), compare: z.array(z.string().max(40)).max(3).optional(),
     videoChoice: z.enum(["watch", "skip"]).nullable().optional(), watched: z.record(z.string(), z.boolean()).optional(),
+    quizCompleted: z.boolean().optional(), resultsReviewed: z.boolean().optional(), majorsConfirmed: z.boolean().optional(), comparisonCompleted: z.boolean().optional(),
   }));
   await query(`INSERT INTO journeys (student_id, data, updated_at) VALUES ($1, $2, now())
     ON CONFLICT (student_id) DO UPDATE SET data = journeys.data || EXCLUDED.data, updated_at = now()`, [sessionOf(req).uid, JSON.stringify(data)]);

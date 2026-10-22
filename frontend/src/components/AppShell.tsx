@@ -4,20 +4,19 @@ import { Link, useLocation } from "wouter";
 import { useAuth } from "@/lib/auth";
 import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
+import { JOURNEY_PATHS, studentProgress, studentRouteRedirect } from "@/lib/studentFlow";
 
-const STUDENT_STEPS: [RegExp, number][] = [[/^\/student(\/(start|quiz|results|movies|career|majors))?$/, 1], [/^\/student\/(explorer|compare)/, 2], [/^\/student\/mentors/, 3]];
-const STEPS = ["Career & major", "University / College", "Mentor (optional)"];
 const STUDENT_NAV = [
   ["/student", "Home / Dashboard", "⌂"],
   ["/student/quiz", "Career quiz", "?"],
   ["/student/results", "Career results", "✦"],
+  ["/student/movies", "Career videos (optional)", "▷"],
   ["/student/career", "Choose a career", "↗"],
   ["/student/majors", "Majors", "▤"],
   ["/student/explorer", "University explorer", "⌕"],
   ["/student/compare", "Compare universities", "⇄"],
-  ["/student/movies", "Career videos (optional)", "▷"],
-  ["/student/mentors", "Meet a mentor · Pro", "◷"],
   ["/student/plan", "My plan", "✓"],
+  ["/student/mentors", "Meet a mentor · Pro", "◷"],
   ["/student/profile", "Profile & settings", "⚙"],
 ] as const;
 const NAV: Record<string, [string, string][]> = {
@@ -34,15 +33,14 @@ export const adminCan = (adminRole: string | null | undefined, path: string) => 
 export function AppShell({ children }: { children: ReactNode }) {
   const [location] = useLocation();
   const { user, isGuest, logout } = useAuth();
-  const { j } = useJourney();
+  const { j, ready, content } = useJourney();
   const { lang, setLang, theme, setTheme, t } = usePrefs();
   const [navOpen, setNavOpen] = useState(false);
-  const step = user?.role === "student" || isGuest ? STUDENT_STEPS.find(([re]) => re.test(location))?.[1] ?? 0 : 0;
   const nav = user && user.role !== "student" ? NAV[user.role].filter(([p]) => user.role !== "admin" || adminCan(user.adminRole, p)) : [];
   const studentWorkspace = location.startsWith("/student/") || location === "/student";
-  const answered = Object.keys(j.answers).length;
-  const quizDone = answered >= 20;
-  const progress = Math.min(100, Math.round((answered / 20) * 100));
+  const flow = studentProgress(j, content);
+  const { answered, quizDone } = flow;
+  const progress = flow.total ? Math.round((answered / flow.total) * 100) : 0;
 
   useEffect(() => { setNavOpen(false); }, [location]);
   useEffect(() => {
@@ -52,24 +50,30 @@ export function AppShell({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [navOpen]);
 
-  const studentNav = (mobile = false) => <>
+  const studentNav = () => <>
     <div className="flex items-center justify-between px-4 pb-3 pt-4 lg:px-3">
       <p className="text-[11px] font-bold uppercase tracking-wider text-muted">{t("Your pathway")}</p>
-      {mobile && <button type="button" className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-soft" onClick={() => setNavOpen(false)} aria-label={t("Close navigation")}>×</button>}
+      <button type="button" className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-soft" onClick={() => setNavOpen(false)} aria-label={t("Close navigation")}>×</button>
     </div>
     <nav aria-label={t("Student pathway")} className="flex flex-col gap-1 px-2">
       {STUDENT_NAV.map(([path, label, glyph], index) => {
         const active = path === "/student" ? location === path : location === path || location.startsWith(`${path}/`);
-        const badge = path === "/student/quiz" ? (quizDone ? "Done" : answered ? "In progress" : null)
+        const needsPro = path === "/student/mentors" && flow.comparisonDone && !user?.isPro;
+        const locked = JOURNEY_PATHS.includes(path) && (!ready || !content || !!studentRouteRedirect(path, flow, j.level, user?.isPro));
+        const badge = needsPro ? "Pro" : locked ? "Locked" : path === "/student/quiz" ? (quizDone ? "Done" : answered ? "In progress" : null)
           : path === "/student/results" || path === "/student/career" ? (quizDone ? "Ready" : "Locked")
           : path === "/student/compare" && j.compare.length ? `${j.compare.length} selected`
           : path === "/student/mentors" ? "Pro" : null;
         const badgeTone = badge === "Done" || badge === "Ready" ? "bg-ok-soft text-ok" : badge === "In progress" ? "bg-warn-soft text-warn" : badge === "Locked" ? "border border-line bg-soft text-muted" : "bg-brand-soft text-brand";
-        return <Link key={path} href={path} title={t(label)} aria-current={active ? "page" : undefined} className={`student-sidebar-link flex min-h-11 items-center justify-between gap-2 rounded-lg border border-transparent px-2.5 py-2 text-sm font-semibold ${active ? "" : "text-ink hover:bg-soft"}`} onClick={() => mobile && setNavOpen(false)}>
+        const contents = <>
           <span className="flex min-w-0 items-center gap-2.5"><span aria-hidden="true" className={`grid h-7 w-7 shrink-0 place-items-center rounded-md text-sm ${active ? "bg-brand text-white" : "bg-soft text-muted"}`}>{glyph}</span><span className="truncate">{t(label)}</span></span>
           {badge && <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide ${badgeTone}`}>{t(badge)}</span>}
           {!badge && index === 0 && <span className="sr-only">{t("Current student portal")}</span>}
-        </Link>;
+        </>;
+        const className = `student-sidebar-link flex min-h-11 w-full items-center justify-between gap-2 rounded-lg border border-transparent px-2.5 py-2 text-left text-sm font-semibold ${locked ? "cursor-not-allowed text-muted opacity-50" : active ? "" : "text-ink hover:bg-soft"}`;
+        return locked
+          ? <button key={path} type="button" disabled aria-disabled="true" title={t(needsPro ? "Mentor sessions are part of CareerNet Pro." : "Complete the previous step to unlock.")} className={className}>{contents}</button>
+          : <Link key={path} href={path} title={t(label)} aria-current={active ? "page" : undefined} className={className} onClick={() => setNavOpen(false)}>{contents}</Link>;
       })}
     </nav>
     <div className="mt-auto p-3">
@@ -78,7 +82,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-line"><div className="h-full rounded-full bg-brand transition-all" style={{ width: `${progress}%` }} /></div>
         <p className="mt-2 text-[11px] leading-4 text-muted">{t(answered ? "Your answers are ready when you are." : "Start with the career quiz when you are ready.")}</p>
       </div>
-      {mobile && (isGuest || user) && <button className="btn-ghost mt-3 w-full" onClick={logout}>{t(isGuest ? "End guest session" : "Sign out")}</button>}
+      {(isGuest || user) && <button className="btn-ghost mt-3 w-full" onClick={logout}>{t(isGuest ? "End guest session" : "Sign out")}</button>}
     </div>
   </>;
 
@@ -109,11 +113,6 @@ export function AppShell({ children }: { children: ReactNode }) {
           </nav>}
           <Link href="/guide" aria-current={location === "/guide" ? "page" : undefined} className="btn-ghost btn-sm">{t("Guide")}</Link>
           {controls}
-          {step > 0 && (
-            <ol className="order-3 flex w-full flex-wrap gap-1 border-t border-line pt-2 lg:hidden">
-              {STEPS.map((s, i) => <li key={s} className={`flex items-center gap-1.5 rounded-full px-2 py-1 text-[11px] sm:text-xs ${step === i + 1 ? "bg-brand-soft font-semibold text-brand" : "text-muted"}`}><span className={`grid h-5 w-5 place-items-center rounded-full text-[11px] font-bold ${step > i + 1 ? "bg-ok text-white" : step === i + 1 ? "bg-brand text-white" : "border border-line"}`}>{i + 1}</span>{t(s)}</li>)}
-            </ol>
-          )}
         </div>
         {nav.length > 0 && <nav aria-label={t("Portal navigation")} className="mx-auto flex max-w-[1440px] gap-1 overflow-x-auto px-4 sm:px-6">{nav.map(([p, l]) => <Link key={p} href={p} className={`tab ${location === p ? "tab-on" : ""}`}>{t(l)}</Link>)}</nav>}
       </header>
@@ -121,11 +120,10 @@ export function AppShell({ children }: { children: ReactNode }) {
       {studentWorkspace ? <div className="mx-auto flex min-h-[calc(100dvh-4rem)] max-w-[1440px]">
         {navOpen && <div className="fixed inset-0 z-40" role="presentation">
           <button type="button" className="absolute inset-0 bg-[#142B63]/40 backdrop-blur-[2px]" onClick={() => setNavOpen(false)} aria-label={t("Close navigation")} />
-          <aside id="student-navigation" role="dialog" aria-modal="true" className="creative-sidebar relative z-10 flex h-full w-[min(20rem,85vw)] flex-col overflow-y-auto border-r-2 border-line bg-card py-2 shadow-2xl" aria-label={t("Student navigation")}>{studentNav(true)}</aside>
+          <aside id="student-navigation" role="dialog" aria-modal="true" className="creative-sidebar relative z-10 flex h-full w-[min(20rem,85vw)] flex-col overflow-y-auto border-r-2 border-line bg-card py-2 shadow-2xl" aria-label={t("Student navigation")}>{studentNav()}</aside>
         </div>}
         <main className="mx-auto flex min-w-0 w-full max-w-5xl flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 sm:pt-8">
           {isGuest && <div className="rounded-xl border border-info bg-info-soft px-4 py-3 text-sm">{t("Guest progress is temporary and won't be saved until you create an account.")} <Link href="/register" className="ml-1 font-semibold text-brand">{t("Create account to save your progress")}</Link></div>}
-          {step > 0 && <ol className="hidden flex-wrap gap-2 lg:flex">{STEPS.map((s, i) => <li key={s} className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs ${step === i + 1 ? "border-brand/30 bg-brand-soft font-semibold text-brand" : "border-line bg-card text-muted"}`}><span className={`grid h-5 w-5 place-items-center rounded-full text-[11px] font-bold ${step > i + 1 ? "bg-ok text-white" : step === i + 1 ? "bg-brand text-white" : "border border-line"}`}>{step > i + 1 ? "✓" : i + 1}</span>{t(s)}</li>)}</ol>}
           {children}
         </main>
       </div> : <main className="mx-auto flex max-w-6xl flex-col gap-6 px-4 pb-16 pt-8">{children}</main>}

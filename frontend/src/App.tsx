@@ -8,10 +8,12 @@
 import type { ComponentType } from "react";
 import { Link, Redirect, Route, Switch } from "wouter";
 import { AppShell, adminCan } from "@/components/AppShell";
-import { Spinner, Toaster } from "@/components/ui";
+import { ErrorNote, Spinner, Toaster } from "@/components/ui";
 import { homeFor, useAuth } from "@/lib/auth";
 import { usePrefs } from "@/lib/prefs";
 import type { Role } from "@/lib/api";
+import { useJourney } from "@/lib/journey";
+import { JOURNEY_PATHS, studentProgress, studentRouteRedirect } from "@/lib/studentFlow";
 
 import Landing from "@/pages/Landing";
 import Guide from "@/pages/Guide";
@@ -51,31 +53,37 @@ import AdminAdmins from "@/pages/admin/Admins";
 function guard(role: Role, Page: ComponentType, path?: string) {
   return function Guarded() {
     const { user, loading, isGuest } = useAuth();
+    const { j, ready, content, contentLoading } = useJourney();
     if (loading) return <Spinner />;
-    if (!user) {
-      if (role === "student" && isGuest) return <Page />;
+    if (!user && !(role === "student" && isGuest)) {
       return <Redirect to={role === "student" ? "/login" : `/${role}/login`} />;
     }
-    if (user.role !== role) return <Redirect to={homeFor(user.role)} />;
-    if (role === "admin" && path && !adminCan(user.adminRole, path)) return <Redirect to="/admin" />;
+    if (user && user.role !== role) return <Redirect to={homeFor(user.role)} />;
+    if (role === "admin" && path && !adminCan(user?.adminRole, path)) return <Redirect to="/admin" />;
+    if (role === "student" && path && JOURNEY_PATHS.includes(path)) {
+      if (!ready || contentLoading) return <Spinner />;
+      if (!content) return <ErrorNote message="Could not load the career quiz. Please reload to continue." onRetry={() => window.location.reload()} />;
+      const redirect = studentRouteRedirect(path, studentProgress(j, content), j.level, user?.isPro);
+      if (redirect) return <Redirect to={redirect} />;
+    }
     return <Page />;
   };
 }
-const S = (p: ComponentType) => guard("student", p);
+const S = (p: ComponentType, path: string) => guard("student", p, path);
 const M = (p: ComponentType) => guard("mentor", p);
 const A = (p: ComponentType, path: string) => guard("admin", p, path);
 
 // created once, at module load
-const G_Start = S(Start);
-const G_Quiz = S(Quiz);
-const G_Results = S(Results);
-const G_Movies = S(Movies);
-const G_ChooseCareer = S(ChooseCareer);
-const G_Majors = S(Majors);
-const G_Explorer = S(Explorer);
-const G_Compare = S(Compare);
-const G_Mentors = S(Mentors);
-const G_Plan = S(Plan);
+const G_Start = S(Start, "/student");
+const G_Quiz = S(Quiz, "/student/quiz");
+const G_Results = S(Results, "/student/results");
+const G_Movies = S(Movies, "/student/movies");
+const G_ChooseCareer = S(ChooseCareer, "/student/career");
+const G_Majors = S(Majors, "/student/majors");
+const G_Explorer = S(Explorer, "/student/explorer");
+const G_Compare = S(Compare, "/student/compare");
+const G_Mentors = S(Mentors, "/student/mentors");
+const G_Plan = S(Plan, "/student/plan");
 function StudentProRoute() {
   const { user, loading, isGuest } = useAuth();
   const { t } = usePrefs();
@@ -86,7 +94,7 @@ function StudentProRoute() {
   return <Pro />;
 }
 const G_Pro = StudentProRoute;
-const G_StudentAccount = S(StudentAccount);
+const G_StudentAccount = S(StudentAccount, "/student/profile");
 const G_MentorDashboard = M(MentorDashboard);
 const G_MentorRequests = M(MentorRequests);
 const G_MentorAvailability = M(MentorAvailability);

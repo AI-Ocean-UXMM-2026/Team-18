@@ -1,6 +1,6 @@
 // Step 2: university / college explorer (information only; scholarships are a filter, not a rule).
 import { useMemo, useState } from "react";
-import { Link, Redirect } from "wouter";
+import { Redirect, useLocation } from "wouter";
 import { itemName } from "@/lib/api";
 import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
@@ -11,6 +11,7 @@ import { CardGridSkeleton, ErrorNote, Note, PageHead, Spinner, toast } from "@/c
 
 export default function Explorer() {
   const { j, set, ready } = useJourney(); const { t } = usePrefs();
+  const [, go] = useLocation();
   const [query, setQuery] = useState(""); const [scholarship, setScholarship] = useState(false); const [allFields, setAllFields] = useState(false);
   const { data, loading, error, refresh } = useUniversities(scholarship, allFields);
   const g12 = j.level === "g12";
@@ -40,7 +41,7 @@ export default function Explorer() {
       {!loading && !items.length && <div className="card text-center text-muted">{t("No universities found. Try “Show all fields”.")}</div>}
       <div className="sticky bottom-0 -mx-4 flex flex-wrap items-center gap-3 border-t border-line bg-bg px-4 py-3">
         <span className="mr-auto text-sm text-muted">{j.compare.length} / 3 {t("selected to compare")}{j.compare.length ? ` · ${items.filter(i => j.compare.includes(i.key)).map(itemName).join(", ")}` : ""}</span>
-        <Link href="/student/compare" className="btn-primary">{t("Compare universities")}</Link>
+        <button className="btn-primary" disabled={j.compare.length < 2} onClick={() => go("/student/compare")}>{t("Compare universities")}</button>
       </div>
     </>
   );

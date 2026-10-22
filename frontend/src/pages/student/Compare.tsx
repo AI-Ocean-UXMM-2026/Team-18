@@ -1,6 +1,6 @@
 // Side-by-side compare. No fees, no marks. Choices auto-save to the account.
 import type { ReactNode } from "react";
-import { Link, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { useAuth } from "@/lib/auth";
 import { itemCode, itemName, type G12Item, type IntlItem, type UniItem } from "@/lib/api";
 import { useJourney } from "@/lib/journey";
@@ -45,7 +45,7 @@ export default function Compare() {
         </table></div>
       )}
       {j.level !== "g12" && chosen.length > 0 && <AdvisorChat title="AI university advisor" subtitle="Ask about the options in this table." endpoint="/ai/advisor" payload={{ level: j.level, careerId: j.careerId, majors: j.majors, comparing: chosen.map(itemName) }} suggestions={["Compare these for me in plain words", "Which one is the safest choice?"]} />}
-      <Actions>{user?.isPro && <Link href="/student/mentors" className="btn-outline">{t("Meet a mentor")}</Link>}<button className="btn-primary" onClick={() => { if (!isGuest) toast(t("Saved")); go("/student/plan"); }}>{t(isGuest ? "Continue" : "Save & continue")}</button></Actions>
+      <Actions>{user?.isPro && <button className="btn-outline" disabled={chosen.length < 2} onClick={() => { set({ comparisonCompleted: true }); go("/student/mentors"); }}>{t("Meet a mentor")}</button>}<button className="btn-primary" disabled={chosen.length < 2} onClick={() => { set({ comparisonCompleted: true }); if (!isGuest) toast(t("Saved")); go("/student/plan"); }}>{t(isGuest ? "Continue" : "Save & continue")}</button></Actions>
     </>
   );
 }

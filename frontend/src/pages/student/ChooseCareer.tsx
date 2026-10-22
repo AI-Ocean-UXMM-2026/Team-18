@@ -9,7 +9,7 @@ export default function ChooseCareer() {
   const { data, loading } = useScore(j);
   if (loading || !data) return <Spinner />;
   const top = data.top;
-  const choose = (id: string) => set(p => (p.careerId === id ? {} : { careerId: id, majors: [top.find(x => x.career.id === id)!.career.majors[0].n], shortlist: [], compare: [] }));
+  const choose = (id: string) => set(p => (p.careerId === id ? {} : { careerId: id, majors: [], shortlist: [], compare: [] }));
   const row = (label: string, cell: (x: (typeof top)[number]) => React.ReactNode) => <tr><th>{t(label)}</th>{top.map(x => <td key={x.career.id}>{cell(x)}</td>)}</tr>;
   return (
     <>

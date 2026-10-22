@@ -23,7 +23,7 @@ export default function Majors() {
       </div>
       <h2 className="text-lg">{t("Choose up to 2 majors to explore")}</h2>
       <div className="grid gap-3 sm:grid-cols-3">{c.majors.map(m => <button key={m.n} className={`choice ${j.majors.includes(m.n) ? "choice-on" : ""}`} onClick={() => toggle(m.n)}><b>{m.n}</b><small className="text-muted">{content.fields[m.f]}</small></button>)}</div>
-      <Actions><button className="btn-primary" disabled={!j.majors.length} onClick={() => go("/student/explorer")}>{t("Continue to Step 2: University / College")}</button></Actions>
+      <Actions><button className="btn-primary" disabled={!j.majors.length} onClick={() => { set({ majorsConfirmed: true }); go("/student/explorer"); }}>{t("Continue to Step 2: University / College")}</button></Actions>
     </>
   );
 }
