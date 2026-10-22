@@ -99,7 +99,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="creative-shell min-h-dvh bg-bg">
       <header className="creative-header sticky top-0 z-30 bg-card/95 backdrop-blur">
         <div className="mx-auto flex max-w-[1440px] flex-wrap items-center gap-2 px-4 py-3 sm:gap-3 sm:px-6">
-          {studentWorkspace && <button type="button" className="grid h-10 w-10 place-items-center rounded-lg border border-line text-lg text-ink hover:bg-soft lg:hidden" onClick={() => setNavOpen(true)} aria-label={t("Open navigation")} aria-expanded={navOpen}>☰</button>}
+          {studentWorkspace && <button type="button" className="grid h-10 w-10 place-items-center rounded-lg border border-line text-lg text-ink hover:bg-soft" onClick={() => setNavOpen(true)} aria-label={t("Open navigation")} aria-expanded={navOpen} aria-controls="student-navigation">☰</button>}
           <Link href={user ? (user.role === "student" ? "/student" : `/${user.role}`) : isGuest ? "/student" : "/"} className="flex items-center gap-2.5 text-ink"><span className="creative-logo" aria-hidden="true">✦</span><span className="creative-brand">CareerNet<span className="text-brand">.</span></span></Link>
           {user && user.role !== "student" && <span className="hidden rounded-full bg-soft px-2.5 py-1 text-xs font-semibold text-muted sm:inline-flex">{t(user.role === "mentor" ? "Mentor portal" : "Admin portal")}</span>}
           {!user && !isGuest && <nav aria-label={t("Portals")} className="hidden items-center gap-1 sm:flex">
@@ -117,10 +117,9 @@ export function AppShell({ children }: { children: ReactNode }) {
       </header>
 
       {studentWorkspace ? <div className="mx-auto flex min-h-[calc(100dvh-4rem)] max-w-[1440px]">
-        <aside className="creative-sidebar sticky top-[4.1rem] hidden h-[calc(100dvh-4.1rem)] w-64 shrink-0 flex-col overflow-y-auto border-r-2 border-line bg-card py-2 lg:flex">{studentNav()}</aside>
-        {navOpen && <div className="fixed inset-0 z-40 lg:hidden" role="presentation">
+        {navOpen && <div className="fixed inset-0 z-40" role="presentation">
           <button type="button" className="absolute inset-0 bg-[#142B63]/40 backdrop-blur-[2px]" onClick={() => setNavOpen(false)} aria-label={t("Close navigation")} />
-          <aside className="creative-sidebar relative z-10 flex h-full w-[min(19rem,85vw)] flex-col overflow-y-auto border-r-2 border-line bg-card py-2 shadow-2xl" aria-label={t("Student navigation")}>{studentNav(true)}</aside>
+          <aside id="student-navigation" role="dialog" aria-modal="true" className="creative-sidebar relative z-10 flex h-full w-[min(20rem,85vw)] flex-col overflow-y-auto border-r-2 border-line bg-card py-2 shadow-2xl" aria-label={t("Student navigation")}>{studentNav(true)}</aside>
         </div>}
         <main className="mx-auto flex min-w-0 w-full max-w-5xl flex-col gap-6 px-4 pb-16 pt-6 sm:px-6 sm:pt-8">
           {isGuest && <div className="rounded-xl border border-info bg-info-soft px-4 py-3 text-sm">{t("Guest progress is temporary and won't be saved until you create an account.")} <Link href="/register" className="ml-1 font-semibold text-brand">{t("Create account to save your progress")}</Link></div>}
