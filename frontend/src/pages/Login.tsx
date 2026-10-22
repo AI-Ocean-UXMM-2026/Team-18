@@ -12,11 +12,7 @@ const DEMO_ACCOUNTS: Record<Role, { email: string; label: string }[]> = {
     { email: "pro@careernet.local", label: "Demo student · Pro (AI + PDF)" },
   ],
   mentor: [{ email: "hnin@mentor.careernet.local", label: "Demo mentor" }],
-  admin: [
-    { email: "super@careernet.local", label: "Super admin" },
-    { email: "ops@careernet.local", label: "Operations admin" },
-    { email: "content@careernet.local", label: "Content editor" },
-  ],
+  admin: [{ email: "super@careernet.local", label: "Super admin" }],
 };
 export default function Login({ portal }: { portal: Role }) {
   const { user, login, startGuest } = useAuth(); const { t } = usePrefs(); const [, go] = useLocation();

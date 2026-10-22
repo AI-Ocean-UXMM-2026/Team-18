@@ -11,9 +11,9 @@ import { closeDatabase, one, query } from "./db.js";
 
 const ADMINS = [
   { email: "super@careernet.local", name: "Super admin", adminRole: "super" },
-  { email: "ops@careernet.local", name: "Operations admin", adminRole: "ops" },
-  { email: "content@careernet.local", name: "Content editor", adminRole: "content" },
 ];
+// Retain these former demo accounts and their audit history, but disable them.
+const RETIRED_DEMO_ADMINS = ["ops@careernet.local", "content@careernet.local"];
 const MENTORS = [
   { email: "hnin@mentor.careernet.local", name: "Daw Hnin Ei Phyu", title: "Senior Software Engineer, fintech", years: 9, fields: [1] },
 ];
@@ -56,6 +56,7 @@ async function upsertUser(email: string, name: string, role: string, adminRole: 
 
 export async function seedDatabase() {
   for (const a of ADMINS) await upsertUser(a.email, a.name, "admin", a.adminRole);
+  await query("UPDATE users SET active = FALSE WHERE role = 'admin' AND email = ANY($1::text[])", [RETIRED_DEMO_ADMINS]);
   for (const student of [DEMO_STUDENT, DEMO_PRO_STUDENT]) {
     const id = await upsertUser(student.email, student.name, "student", null, student.isPro);
     await query("INSERT INTO journeys (student_id, data) VALUES ($1, $2) ON CONFLICT (student_id) DO NOTHING", [id, JSON.stringify(DEMO_JOURNEY)]);
