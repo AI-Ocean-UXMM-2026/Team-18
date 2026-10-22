@@ -50,7 +50,6 @@ export function FloatingAdvisor() {
         <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#e65100] text-xs font-extrabold text-[#142b63] shadow-sm">K</span>
         <span className="hidden text-left sm:block">
           <span className="block text-xs font-bold leading-none">{t("Chat with Kip")}</span>
-          <span className="mt-1 block text-[10px] leading-none text-blue-100">{t("Gemini Advisor")}</span>
         </span>
         <span aria-hidden="true" className="ml-0.5 text-sm text-[#ffd166] transition group-hover:rotate-12">✦</span>
       </button>
