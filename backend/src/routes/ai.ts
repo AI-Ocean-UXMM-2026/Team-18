@@ -35,7 +35,8 @@ aiRouter.post("/ai/question", requireRole("student"), route(async req => {
 aiRouter.post("/ai/career", requireRole("student"), route(async req => {
   const b = body(req, z.object({ answers: z.record(z.string(), z.number().int().min(1).max(5)), level: z.enum(["g12", "ged", "igcse"]).default("g12"), lang, messages }));
   await spend(req);
-  return { reply: await askAI(careerPrompt(b.answers, b.level, b.lang), last12(b.messages)) };
+  const reply = await askAI(careerPrompt(b.answers, b.level, b.lang), last12(b.messages));
+  return { reply: reply.replace(/^[ \t]*\d{1,2}[.)][ \t]+/gm, "") };
 }));
 
 aiRouter.post("/ai/advisor", requireRole("student"), route(async req => {
