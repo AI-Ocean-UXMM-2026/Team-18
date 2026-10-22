@@ -6,7 +6,7 @@
 //      cp .env.example .env     (DATABASE_URL, JWT_SECRET, GEMINI_API_KEY)
 //      npm run dev              (http://localhost:8000/health)
 //
-//  The database tables must exist first: run database/schema.sql.
+//  The database tables must exist first: run database/schema.sql and migrations.
 // ===========================================================================
 import express from "express";
 import cors from "cors";

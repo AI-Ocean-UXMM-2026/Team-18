@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "license": "MIT",
-  "description": "CareerNet REST API: Express + PostgreSQL + Google Sheets school data + AI (Gemini or Claude)",
+  "description": "CareerNet REST API: Express + PostgreSQL + admin-managed university data + AI (Gemini or Claude)",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",

@@ -1,13 +1,13 @@
 // ===========================================================================
-//  schools.ts — GED / IGCSE universities from your Google Sheet.
-//  The sheet IS the editing tool: change a row and within
-//  SCHOOLS_CACHE_SECONDS the site and the AI advisor use it.
+//  schools.ts — GED / IGCSE universities from Google Sheets or CSV,
+//  combined with university entries added directly by admins.
 // ===========================================================================
 import fs from "node:fs/promises";
 import path from "node:path";
 import Papa from "papaparse";
 import { ENV } from "./env.js";
 import { DATA_DIR } from "./data.js";
+import { query } from "./db.js";
 
 export type Accepts = "yes" | "no" | "confirm";
 export type School = {
@@ -39,7 +39,7 @@ export function parseSchoolsCsv(text: string) {
   return all.filter(s => s.id && s.name);
 }
 
-let cache: { at: number; schools: School[]; source: string } | null = null;
+let cache: { at: number; schools: School[]; source: string; adminCount: number } | null = null;
 export async function getSchools(): Promise<School[]> {
   if (cache && Date.now() - cache.at < ENV.schoolsCacheSeconds * 1000) return cache.schools;
   try {
@@ -49,11 +49,20 @@ export async function getSchools(): Promise<School[]> {
       if (!res.ok) throw new Error(`Google Sheet answered ${res.status}`);
       text = await res.text(); source = "google-sheet";
     } else { text = await fs.readFile(path.join(DATA_DIR, "schools.csv"), "utf8"); source = "local-csv"; }
-    cache = { at: Date.now(), schools: parseSchoolsCsv(text), source };
+    const imported = parseSchoolsCsv(text);
+    const added = await query<{ data: School }>("SELECT data FROM admin_universities ORDER BY created_at DESC");
+    const byId = new Map(imported.map(s => [s.id, s]));
+    for (const row of added) byId.set(row.data.id, row.data);
+    cache = { at: Date.now(), schools: [...byId.values()], source, adminCount: added.length };
     return cache.schools;
   } catch (e) {
     if (cache) { console.warn("[schools] reload failed, keeping last good copy:", (e as Error).message); return cache.schools; }
     throw e;
   }
 }
-export const schoolsSource = () => cache?.source ?? "not-loaded";
+export function addSchoolToCache(school: School) {
+  if (!cache) return;
+  cache = { ...cache, at: Date.now(), schools: [school, ...cache.schools], adminCount: cache.adminCount + 1 };
+}
+export const schoolsSource = () => cache ? `${cache.source}${cache.adminCount ? ` + ${cache.adminCount} admin-added` : ""}` : "not-loaded";
+export const adminSchoolsCount = () => cache?.adminCount ?? 0;

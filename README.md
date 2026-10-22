@@ -58,7 +58,7 @@ Requirements: Node.js 20 or later and PostgreSQL 16 or a compatible PostgreSQL s
 
    On Windows PowerShell, use `psql "postgresql://USER:PASSWORD@HOST:5432/careernet_db" -f database/schema.sql` with your database connection details.
 
-   For an existing database, apply new scripts in `database/migrations/` after the schema. The optional payment transaction ID migration allows Pro requests without a receipt ID.
+   For an existing database, apply every SQL script in `database/migrations/` after the schema, in filename order. These migrations include admin-managed university storage and optional payment transaction IDs.
 
 2. Configure the backend:
 
@@ -100,10 +100,10 @@ The backend also provides `npm test`, `npm run seed`, and `npm start`. The front
 
 ## Data and project layout
 
-- `database/schema.sql` — PostgreSQL schema.
+- `database/schema.sql` and `database/migrations/` — PostgreSQL schema and incremental database changes.
 - `backend/src/` — Express API, authentication, role checks, AI endpoints, and seed data.
 - `backend/data/g12.json` — Grade 12 university and major data.
-- `backend/data/schools.csv` — fallback GED/IGCSE school data. Set `SCHOOLS_SHEET_CSV_URL` to use a published Google Sheets CSV instead.
+- `backend/data/schools.csv` — fallback GED/IGCSE school data. Set `SCHOOLS_SHEET_CSV_URL` to use a published Google Sheets CSV instead. Admins can add university records directly in Admin → Universities; those records are stored in PostgreSQL and appear alongside imported entries.
 - `frontend/src/` — React app, role portals, translations, journey state, and client-side PDF generation.
 - `frontend/public/universities/` — university photos.
 - `deploy/README.md` — hosting, production environment, and AI failover details.

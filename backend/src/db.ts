@@ -54,12 +54,12 @@ export async function pingDatabase() {
   catch (e) { return { ok: false as const, error: e instanceof Error ? e.message : String(e) }; }
 }
 
-const REQUIRED_TABLES = ["users", "journeys", "mentors", "mentor_slots", "bookings", "payment_accounts", "payments", "audit_log"];
+const REQUIRED_TABLES = ["users", "journeys", "mentors", "mentor_slots", "bookings", "payment_accounts", "payments", "audit_log", "admin_universities"];
 export async function assertSchemaInstalled() {
   const rows = await query<{ table_name: string }>("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");
   const have = new Set(rows.map(r => r.table_name));
   const missing = REQUIRED_TABLES.filter(t => !have.has(t));
-  if (missing.length) throw new Error(`Database is missing tables: ${missing.join(", ")}. Run database/schema.sql first (see README section 3).`);
+  if (missing.length) throw new Error(`Database is missing tables: ${missing.join(", ")}. Run database/schema.sql and all scripts in database/migrations/ first (see README section 3).`);
 }
 
 export async function audit(actorId: number | null, action: string, target: string | null, details?: unknown) {

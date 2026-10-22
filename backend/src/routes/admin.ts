@@ -9,7 +9,7 @@ import { z } from "zod";
 import { ENV } from "../env.js";
 import { hashPassword } from "../auth.js";
 import { CAREERS, QUESTIONS, G12_UNIS, G12_PROGRAMS } from "../data.js";
-import { getSchools, schoolsSource } from "../schools.js";
+import { addSchoolToCache, adminSchoolsCount, getSchools, schoolsSource, type School } from "../schools.js";
 import { RETIRED_DEMO_MENTORS } from "../demoAccounts.js";
 import { audit, one, query, tx } from "../db.js";
 import { badRequest, body, conflict, notFound, requireAdmin, requireRole, route, sessionOf } from "../http.js";
@@ -121,16 +121,38 @@ adminRouter.delete("/admin/students/:id", superOnly, route(async req => {
   return { ok: true };
 }));
 
-// --- universities & content (read + checks; edit in the Sheet / data files) ---------------
+// --- universities & content -----------------------------------------------------------
 adminRouter.get("/admin/universities", content, route(async () => {
   const schools = await getSchools();
   const stale = (d: string) => !d || Date.now() - new Date(d).getTime() > 182 * 86_400_000;
   return {
-    source: schoolsSource(), sheetConnected: !!ENV.schoolsSheetUrl,
+    source: schoolsSource(), sheetConnected: !!ENV.schoolsSheetUrl, adminAdded: adminSchoolsCount(),
     g12: { universities: G12_UNIS.length, programs: G12_PROGRAMS.length },
     schools: schools.map(s => ({ id: s.id, code: s.code, name: s.name, country: s.country, hasScholarship: s.hasScholarship, ged: s.ged.ok, igcse: s.igcse.ok, lastChecked: s.lastChecked, source: s.source,
       needsCheck: stale(s.lastChecked) || s.ged.ok === "confirm" || s.igcse.ok === "confirm" })),
   };
+}));
+adminRouter.post("/admin/universities", content, route(async req => {
+  const b = body(req, z.object({
+    code: z.string().trim().min(2).max(20).regex(/^[A-Za-z0-9-]+$/, "Use letters, numbers, or hyphens for the code."),
+    name: z.string().trim().min(2).max(180), country: z.string().trim().min(2).max(100), city: z.string().trim().max(120).default(""),
+    type: z.string().trim().max(120).default("University"), mode: z.string().trim().max(80).default("On campus"), established: z.string().trim().max(20).default(""),
+    fields: z.array(z.number().int().positive().max(999)).max(30).default([]), description: z.string().trim().max(2000).default(""),
+    partner: z.string().trim().max(300).default(""), programs: z.array(z.string().trim().min(1).max(200)).max(100).default([]),
+    ged: z.object({ ok: z.enum(["yes", "no", "confirm"]), note: z.string().trim().max(2000).default(""), tests: z.string().trim().max(1000).default("") }),
+    igcse: z.object({ ok: z.enum(["yes", "no", "confirm"]), note: z.string().trim().max(2000).default("") }),
+    english: z.string().trim().max(500).default(""), admission: z.string().trim().max(2000).default(""), pathway: z.string().trim().max(1000).default(""),
+    duration: z.string().trim().max(100).default(""), intakes: z.string().trim().max(500).default(""), hasScholarship: z.boolean().default(false),
+    scholarship: z.string().trim().max(1000).default(""), website: z.string().trim().max(500).default(""), source: z.string().trim().max(500).default(""), photo: z.string().trim().max(500).default(""),
+  }));
+  const id = b.code.toLowerCase();
+  const schools = await getSchools();
+  if (schools.some(s => s.id.toLowerCase() === id || s.code.toLowerCase() === b.code.toLowerCase())) throw conflict("A university with this code already exists.");
+  const school: School = { ...b, id, lastChecked: new Date().toISOString().slice(0, 10), source: b.source || b.website };
+  const row = await one("INSERT INTO admin_universities (id, data, created_by) VALUES ($1, $2, $3) RETURNING id", [id, JSON.stringify(school), sessionOf(req).uid]);
+  await audit(sessionOf(req).uid, "university.create", `university:${id}`, { code: school.code, name: school.name });
+  addSchoolToCache(school);
+  return { ok: true, id: row!.id };
 }));
 adminRouter.get("/admin/content", content, route(() => ({
   careers: CAREERS.map(c => ({ id: c.id, title: c.t, majors: c.majors.map(m => m.n), videoLength: c.video.len, hasVideo: !!c.video.url })),

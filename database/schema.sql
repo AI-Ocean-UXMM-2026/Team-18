@@ -14,8 +14,8 @@
 --  You do NOT insert accounts by hand: the backend seeds demo admin and
 --  mentor accounts on first start (backend/src/seed.ts) when SEED_ON_START=true.
 --
---  School data for GED / IGCSE is NOT stored here: it lives in a Google Sheet
---  (or backend/data/schools.csv). Grade 12 data is in backend/data/g12.json.
+--  Base GED / IGCSE school data can come from a Google Sheet or CSV. Admin-added
+--  schools are stored in admin_universities. Grade 12 data is in backend/data/g12.json.
 -- ===========================================================================
 
 BEGIN;
@@ -125,6 +125,14 @@ CREATE TABLE IF NOT EXISTS audit_log (
   action      TEXT NOT NULL,                        -- e.g. payment.approve, mentor.approve
   target      TEXT,
   details     JSONB,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- Admin-added GED / IGCSE universities appear alongside Sheet/CSV imports.
+CREATE TABLE IF NOT EXISTS admin_universities (
+  id          VARCHAR(60) PRIMARY KEY,
+  data        JSONB NOT NULL CHECK (jsonb_typeof(data) = 'object'),
+  created_by  INTEGER REFERENCES users(id) ON DELETE SET NULL,
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
