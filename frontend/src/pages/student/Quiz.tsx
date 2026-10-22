@@ -35,15 +35,15 @@ export default function Quiz() {
     </section>
   );
   return (
-    <section className="mx-auto flex w-full max-w-2xl flex-col gap-4">
-      <div className="flex justify-between text-sm"><span className="eyebrow">{t(q.area)}</span><span className="font-mono">{index + 1} / {qs.length}</span></div>
+    <section className="mx-auto flex w-full max-w-4xl flex-col gap-4">
+      <div className="flex items-center justify-between rounded-lg border border-line bg-card px-4 py-3 text-sm"><span className="eyebrow">{t(q.area)}</span><span className="font-mono font-semibold text-ink">{t("Question")} {index + 1} / {qs.length}</span></div>
       <div className="h-2 overflow-hidden rounded-full bg-soft"><div className="h-full bg-brand transition-all" style={{ width: `${((index + 1) / qs.length) * 100}%` }} /></div>
-      <div className="card flex flex-col gap-4">
+      <div className="card quiz-sheet flex flex-col gap-5">
         <h1 className="min-h-[3.75em] text-xl leading-tight sm:text-2xl">{lang === "my" ? q.my : q.en}</h1>
         <div className="grid gap-2 sm:grid-cols-5" role="radiogroup">
           {LIKERT.map((label, k) => { const on = j.answers[q.id] === k + 1; return (
-            <button key={label} role="radio" aria-checked={on} onClick={() => answer(k + 1)} className={`flex items-center gap-2 rounded-xl border-2 p-3 text-sm font-semibold sm:flex-col ${on ? "border-brand bg-brand-soft" : "border-transparent bg-soft hover:border-brand"}`}>
-              <span className={`grid h-7 w-7 place-items-center rounded-full font-mono ${on ? "bg-brand text-white" : "border border-line bg-card"}`}>{k + 1}</span>{t(label)}
+            <button key={label} role="radio" aria-checked={on} onClick={() => answer(k + 1)} className={`quiz-option flex min-h-16 items-center justify-start gap-2 rounded-xl border-2 p-3 text-sm font-semibold sm:min-h-32 sm:justify-center sm:flex-col ${on ? "border-brand bg-brand-soft" : "border-line bg-card hover:border-brand"}`}>
+              <span className={`grid h-9 w-9 shrink-0 place-items-center rounded-full font-mono ${on ? "bg-brand text-white" : "border border-line bg-card"}`}>{k + 1}</span><span className="text-center">{t(label)}</span>
             </button>); })}
         </div>
         <div className="flex flex-col items-start gap-2">

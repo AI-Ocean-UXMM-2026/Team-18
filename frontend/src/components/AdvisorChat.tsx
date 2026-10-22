@@ -17,8 +17,8 @@ export function AdvisorChat({ title, subtitle, endpoint, payload, suggestions }:
   useEffect(() => { box.current?.scrollTo(0, box.current.scrollHeight); }, [messages, busy]);
 
   if (isGuest) return (
-    <section className="card flex flex-col gap-3 border-brand">
-      <h2 className="text-lg text-brand">✦ {t(title)}</h2>
+    <section className="card ai-surface flex flex-col gap-3">
+      <h2 className="ai-heading text-lg">✦ {t(title)}</h2>
       <p className="text-sm text-muted">{t("Create an account to use the AI coach and save your progress.")}</p>
       <Link href="/register" className="btn-primary btn-sm self-start">{t("Create an account")}</Link>
     </section>
@@ -37,13 +37,13 @@ export function AdvisorChat({ title, subtitle, endpoint, payload, suggestions }:
     } finally { setBusy(false); }
   }
   return (
-    <section className="card flex flex-col gap-3 border-brand">
-      <div className="flex items-center justify-between gap-2"><h2 className="text-lg text-brand">✦ {t(title)}</h2>{messages.length > 0 && <button className="text-xs font-semibold text-brand" onClick={() => setMessages([])}>{t("Clear")}</button>}</div>
+    <section className="card ai-surface flex flex-col gap-3">
+      <div className="flex items-center justify-between gap-2"><h2 className="ai-heading text-lg">✦ {t(title)}</h2>{messages.length > 0 && <button className="ai-heading text-xs font-semibold" onClick={() => setMessages([])}>{t("Clear")}</button>}</div>
       <p className="text-sm text-muted">{t(subtitle)}</p>
       {(messages.length > 0 || busy) && (
         <div ref={box} className="flex max-h-96 flex-col gap-2 overflow-y-auto">
-          {messages.map((m, i) => <div key={i} className={`max-w-[88%] whitespace-pre-wrap break-words rounded-xl px-3 py-2 text-sm ${m.role === "user" ? "self-end bg-brand text-white" : "self-start bg-soft"}`}>{m.content}</div>)}
-          {busy && <div className="self-start rounded-xl bg-soft px-3 py-2 text-sm text-muted">{t("Thinking…")}</div>}
+          {messages.map((m, i) => <div key={i} className={`max-w-[88%] whitespace-pre-wrap break-words rounded-xl px-3 py-2 text-sm ${m.role === "user" ? "self-end bg-brand text-white" : "ai-soft self-start"}`}>{m.content}</div>)}
+          {busy && <div className="ai-soft self-start rounded-xl px-3 py-2 text-sm text-muted">{t("Thinking…")}</div>}
         </div>
       )}
       {needPro && <Link href="/student/pro" className="btn-primary btn-sm self-start">{t("Go Pro")}</Link>}

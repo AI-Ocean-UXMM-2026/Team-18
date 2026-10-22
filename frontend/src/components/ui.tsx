@@ -63,7 +63,7 @@ export function ErrorNote({ message, onRetry }: { message: string; onRetry?: () 
 /** Page title. `back` puts a small "← Back" link at the top-left (never in the bottom buttons). */
 export function PageHead({ eyebrow, title, back, children }: { eyebrow?: string; title: string; back?: string; children?: ReactNode }) {
   const { t } = usePrefs();
-  return <div className="flex flex-col gap-2">{back && <Link href={back} className="mb-1 self-start text-sm font-semibold text-muted hover:text-brand">← {t("Back")}</Link>}{eyebrow && <p className="eyebrow">{t(eyebrow)}</p>}<h1 className="text-2xl sm:text-3xl">{t(title)}</h1>{children && <div className="max-w-3xl text-muted">{children}</div>}</div>;
+  return <div className="creative-pagehead flex flex-col gap-3">{back && <Link href={back} className="mb-1 self-start text-sm font-semibold text-muted hover:text-brand">← {t("Back")}</Link>}{eyebrow && <p className="eyebrow">{t(eyebrow)}</p>}<h1 className="text-3xl sm:text-4xl">{t(title)}</h1>{children && <div className="max-w-3xl text-muted">{children}</div>}</div>;
 }
 export const Actions = ({ children }: { children: ReactNode }) => <div className="mt-2 flex flex-wrap items-center justify-end gap-3">{children}</div>;
 export const Note = ({ children }: { children: ReactNode }) => <div className="rounded-xl bg-info-soft px-4 py-3 text-sm">{children}</div>;

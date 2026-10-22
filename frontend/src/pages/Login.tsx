@@ -24,8 +24,8 @@ export default function Login({ portal }: { portal: Role }) {
     try { const u = await login(portal, email, password); go(homeFor(u.role)); } catch (err) { setError(err instanceof Error ? err.message : "Could not sign in."); } finally { setBusy(false); }
   }
   return (
-    <section className="card mx-auto flex w-full max-w-md flex-col gap-4">
-      <p className="eyebrow">CareerNet</p><h1 className="text-2xl">{t(TITLES[portal])}</h1>
+    <section className="card login-sheet mx-auto mt-3 flex w-full max-w-md flex-col gap-5">
+      <p className="creative-sticker creative-sticker-pink">✦ CareerNet</p><h1 className="text-3xl">{t(TITLES[portal])}</h1>
       <form className="flex flex-col gap-3" onSubmit={submit} noValidate>
         <label className="label">{t("Email")}<input className="input" type="email" autoComplete="username" value={email} onChange={e => setEmail(e.target.value)} required /></label>
         <label className="label">{t("Password")}<input className="input" type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required /></label>
@@ -36,8 +36,8 @@ export default function Login({ portal }: { portal: Role }) {
         <p className="text-sm font-semibold">Demo accounts <span className="font-normal text-muted">(for testing)</span></p>
         <p className="mt-1 text-xs text-muted">Password: <code>careernet123</code></p>
         <div className="mt-2 flex flex-col gap-1">
-          {DEMO_ACCOUNTS[portal].map(account => <button key={account.email} type="button" className="flex items-center justify-between rounded-lg px-2 py-1.5 text-left text-sm hover:bg-card" onClick={() => { setEmail(account.email); setPassword("careernet123"); setError(null); }}>
-            <span>{account.label}</span><span className="text-xs text-brand">Use account</span>
+          {DEMO_ACCOUNTS[portal].map(account => <button key={account.email} type="button" className="flex items-center justify-between gap-3 rounded-lg px-2 py-2 text-left text-sm hover:bg-card" onClick={() => { setEmail(account.email); setPassword("careernet123"); setError(null); }}>
+            <span className="min-w-0 flex-1">{account.label}</span><span className="shrink-0 text-xs font-semibold text-brand">Use account</span>
           </button>)}
         </div>
       </aside>

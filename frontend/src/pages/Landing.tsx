@@ -26,29 +26,28 @@ export default function Landing() {
 
   return (
     <div className="-mt-2 flex flex-col gap-16 pb-4 sm:gap-20">
-      <section className="relative isolate overflow-hidden rounded-[2rem] bg-[#10183f] px-6 py-10 text-white shadow-xl shadow-indigo-950/10 sm:px-10 sm:py-14 lg:px-14 lg:py-16">
-        <div className="pointer-events-none absolute -right-24 -top-28 -z-10 h-96 w-96 rounded-full bg-indigo-500/30 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-40 left-1/3 -z-10 h-80 w-80 rounded-full bg-cyan-400/15 blur-3xl" />
+      <section className="creative-hero px-6 py-10 sm:px-10 sm:py-14 lg:px-14 lg:py-16">
+        <span className="pointer-events-none absolute right-6 top-2 text-7xl text-brand/20" aria-hidden="true">✳</span>
         <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
           <div className="flex flex-col items-start gap-5">
-            <p className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-indigo-100">{t("CareerNet · guided student pathway")}</p>
-            <h1 className="max-w-2xl text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">{t("Find a career path you will actually love.")}</h1>
-            <p className="max-w-xl text-base leading-7 text-indigo-100 sm:text-lg">{t("Take the career quiz, discover your top matches, then explore majors and universities that fit your education level.")}</p>
+            <p className="creative-sticker creative-sticker-pink">✦ {t("CareerNet · guided student pathway")}</p>
+            <h1 className="creative-display max-w-2xl">{t("Your future.")}<br /><span className="creative-highlight">{t("Make it yours.")}</span></h1>
+            <p className="max-w-xl text-base leading-7 text-muted sm:text-lg">{t("Take the career quiz, discover your top matches, then explore majors and universities that fit your education level.")}</p>
             <div className="flex w-full flex-col gap-3 pt-1 sm:w-auto sm:flex-row">
-              <button className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-[#2639ad] shadow-lg shadow-black/10 transition hover:bg-indigo-50" onClick={startGuestJourney}>{t("Start the career quiz")} <span aria-hidden>→</span></button>
-              <Link href="/register" className="inline-flex min-h-12 items-center justify-center rounded-xl border border-white/25 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/15">{t("Create a free account")}</Link>
+              <button className="btn-primary min-h-12 px-5" onClick={startGuestJourney}>{t("Start the career quiz")} <span aria-hidden>↗</span></button>
+              <Link href="/register" className="btn-outline min-h-12 px-5">{t("Create a free account")}</Link>
             </div>
-            <div className="flex flex-wrap gap-x-5 gap-y-2 pt-2 text-xs font-semibold text-indigo-100 sm:text-sm">
+            <div className="flex flex-wrap gap-x-5 gap-y-2 pt-2 text-xs font-semibold text-muted sm:text-sm">
               <span>✓ {t("Grade 12, GED and IGCSE")}</span><span>✓ {t("20-question assessment")}</span><span>✓ {t("Start as a guest")}</span>
             </div>
           </div>
 
           <div className="relative mx-auto w-full max-w-md">
-            <div className="absolute -inset-3 rotate-3 rounded-[2rem] border border-white/10 bg-white/5" />
-            <div className="relative rounded-[1.6rem] border border-white/15 bg-card p-5 text-ink shadow-2xl shadow-black/20 sm:p-6">
+            <div className="absolute -inset-3 -rotate-3 rounded-[1.6rem] border-2 border-outline bg-pink" />
+            <div className="landing-path-card relative rounded-[1.6rem] bg-card p-5 text-ink sm:p-6">
               <div className="flex items-center justify-between gap-3 border-b border-line pb-4">
                 <div><p className="eyebrow">{t("Your pathway")}</p><h2 className="mt-1 text-xl">{t("A clear next step")}</h2></div>
-                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-brand text-xl text-white" aria-hidden>✦</div>
+                <div className="creative-logo" aria-hidden>✦</div>
               </div>
               <div className="relative mt-5 flex flex-col gap-3 before:absolute before:bottom-7 before:left-[19px] before:top-7 before:w-px before:bg-line">
                 {pathway.map((item, index) => <div key={item.number} className={`relative flex gap-3 rounded-2xl p-3 ${index === 0 ? "bg-brand-soft" : ""}`}>
@@ -56,11 +55,13 @@ export default function Landing() {
                   <div className="min-w-0 pt-0.5"><div className="flex flex-wrap items-center gap-2"><h3 className="font-bold">{t(item.title)}</h3><span className="font-mono text-[10px] text-muted">{item.number}</span></div><p className="mt-0.5 text-xs leading-5 text-muted">{t(item.detail)}</p></div>
                 </div>)}
               </div>
-              <button onClick={startGuestJourney} className="mt-4 flex w-full items-center justify-between rounded-xl bg-[#10183f] px-4 py-3 text-left text-sm font-semibold text-white transition hover:bg-brand"><span>{t("Build my career plan")}</span><span aria-hidden>→</span></button>
+              <button onClick={startGuestJourney} className="btn-primary mt-4 w-full justify-between"><span>{t("Build my career plan")}</span><span aria-hidden>↗</span></button>
             </div>
           </div>
         </div>
       </section>
+
+      <div className="landing-ribbon -my-6 rounded-lg"><span>✳ {t("Discover your strengths")}</span><span>↗ {t("Explore your options")}</span><span>✦ {t("Your next steps")}</span></div>
 
       <section id="career-preview" className="scroll-mt-24">
         <div className="mx-auto mb-7 max-w-2xl text-center">
