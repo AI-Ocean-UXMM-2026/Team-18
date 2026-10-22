@@ -23,21 +23,29 @@ export default function Quiz() {
   const missing = qs.filter(x => !Number.isInteger(j.answers[x.id]) || j.answers[x.id] < 1 || j.answers[x.id] > 5);
 
   function answer(v: number) {
+    setShowMissing(false);
     set(prev => ({ answers: { ...prev.answers, [q.id]: v } }));
     if (index < qs.length - 1) setTimeout(() => setIndex(i => Math.min(i + 1, qs.length - 1)), 220);
+  }
+  function goNext() {
+    if (index < qs.length - 1) {
+      setShowMissing(false);
+      setIndex(i => i + 1);
+      return;
+    }
+    if (missing.length) {
+      setShowMissing(true);
+      setIndex(qs.indexOf(missing[0]));
+      return;
+    }
+    set({ quizCompleted: true });
+    go("/student/results");
   }
   async function explain() {
     setHelp(h => ({ ...h, [q.id]: t("Thinking…") }));
     try { const { reply } = await api.post<{ reply: string }>("/ai/question", { questionId: q.id, lang }); setHelp(h => ({ ...h, [q.id]: reply })); }
     catch (e) { setHelp(h => ({ ...h, [q.id]: (e as Error).message })); }
   }
-  if (showMissing && missing.length) return (
-    <section className="card mx-auto flex w-full max-w-2xl flex-col gap-3 border-bad">
-      <h1 className="text-xl">{missing.length} {t("question(s) still need an answer")}</h1>
-      <ol className="list-decimal pl-5">{missing.map(m => <li key={m.id}><button className="text-left text-brand" onClick={() => { setIndex(qs.indexOf(m)); setShowMissing(false); }}>{lang === "my" ? m.my : m.en}</button></li>)}</ol>
-      <button className="btn-primary self-end" onClick={() => { setIndex(qs.indexOf(missing[0])); setShowMissing(false); }}>{t("Review & complete")}</button>
-    </section>
-  );
   return (
     <section className="mx-auto flex w-full max-w-3xl flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3"><Link href="/student" className="text-sm font-semibold text-muted">← {t("Back to dashboard")}</Link><span className="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">{qs.length - missing.length} / {qs.length} {t("Answered")}</span></div>
@@ -57,11 +65,10 @@ export default function Quiz() {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
-        <button className="btn-ghost" disabled={index === 0} onClick={() => setIndex(i => i - 1)}>{t("Previous")}</button>
-        <span className="mr-auto text-sm text-muted">{qs.length - missing.length} / {qs.length}</span>
-        {index < qs.length - 1 && <button className="btn-ghost" onClick={() => setIndex(i => i + 1)}>{t("Skip / Next")}</button>}
-        <button className="btn-primary" onClick={() => { if (missing.length) { setShowMissing(true); return; } set({ quizCompleted: true }); go("/student/results"); }}>{t("Finish quiz")}</button>
+      {showMissing && missing.length > 0 && <p role="alert" className="text-sm text-bad">{t("Answer every question before finishing the quiz.")}</p>}
+      <div className="flex items-center justify-between gap-3">
+        <button className="btn-ghost" disabled={index === 0} onClick={() => { setShowMissing(false); setIndex(i => i - 1); }}>{t("Previous")}</button>
+        <button className="btn-primary" onClick={goNext}>{t("Next")}</button>
       </div>
     </section>
   );
