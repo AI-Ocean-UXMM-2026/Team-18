@@ -27,7 +27,7 @@ authRouter.post("/auth/register", route(async req => {
 }));
 
 authRouter.post("/auth/mentor-apply", route(async req => {
-  const b = body(req, z.object({ email, password, name, title: z.string().trim().min(2).max(160), years: z.number().int().min(0).max(60), fields: z.array(z.number().int().min(1).max(11)).min(1).max(5), languages: z.string().trim().max(120).optional(), bio: z.string().trim().max(1000).optional() }));
+  const b = body(req, z.object({ email, password, name, title: z.string().trim().min(2).max(160), years: z.number().int().min(1, "Experience must be at least 1 year.").max(50, "Experience cannot exceed 50 years."), fields: z.array(z.number().int().min(1).max(11)).min(1).max(5), languages: z.string().trim().max(120).optional(), bio: z.string().trim().max(1000).optional() }));
   if (await one("SELECT 1 FROM users WHERE email = $1", [b.email])) throw conflict("An account with this email already exists.");
   await tx(async c => {
     const u = (await c.query("INSERT INTO users (email, password_hash, name, role) VALUES ($1, $2, $3, 'mentor') RETURNING id", [b.email, hashPassword(b.password), b.name])).rows[0];

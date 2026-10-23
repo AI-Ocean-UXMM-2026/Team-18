@@ -9,10 +9,13 @@ import BrandLogo from "@/components/BrandLogo";
 
 export default function MentorApply() {
   const { t } = usePrefs(); const { content } = useJourney();
-  const [f, setF] = useState({ name: "", email: "", password: "", title: "", years: 5, field: 1, languages: "Myanmar · English", bio: "" });
+  const [f, setF] = useState({ name: "", email: "", password: "", title: "", years: "5", field: 1, languages: "Myanmar · English", bio: "" });
   const [error, setError] = useState<string | null>(null); const [done, setDone] = useState(false); const [busy, setBusy] = useState(false);
   async function submit(e: React.FormEvent) {
-    e.preventDefault(); setError(null); setBusy(true);
+    e.preventDefault(); setError(null);
+    const years = Number(f.years);
+    if (!f.years || !Number.isInteger(years) || years < 1 || years > 50) { setError(t("Enter a whole number from 1 to 50 for years of experience.")); return; }
+    setBusy(true);
     try { await api.post("/auth/mentor-apply", { name: f.name, email: f.email, password: f.password, title: f.title, years: Number(f.years), fields: [Number(f.field)], languages: f.languages, bio: f.bio }); setDone(true); }
     catch (err) { setError(err instanceof Error ? err.message : "Could not send."); } finally { setBusy(false); }
   }
@@ -25,7 +28,10 @@ export default function MentorApply() {
       <form className="flex flex-col gap-3" onSubmit={submit} noValidate>
         {inp("name", "Full name")}{inp("email", "Email", "email")}{inp("password", "Password (min 8 characters)", "password")}
         {inp("title", "Job title (e.g. Civil Engineer, construction)")}
-        <div className="grid grid-cols-2 gap-3">{inp("years", "Years of experience", "number")}
+        <div className="grid grid-cols-2 gap-3"><label className="label">{t("Years of experience")}<input className="input" type="number" inputMode="numeric" min={1} max={50} step={1} required value={f.years}
+          onKeyDown={event => { if (["-", "+", "e", "E", ".", ","].includes(event.key)) event.preventDefault(); }}
+          onChange={event => { const value = event.target.value; if (value === "" || (/^\d+$/.test(value) && Number(value) >= 1 && Number(value) <= 50)) setF({ ...f, years: value }); }} />
+          <small className="text-muted">{t("1–50 years, whole numbers only.")}</small></label>
           <label className="label">{t("Career field")}<select className="input" value={f.field} onChange={e => setF({ ...f, field: Number(e.target.value) })}>{Object.entries(content?.fields ?? {}).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></label></div>
         {inp("languages", "Languages")}
         <label className="label">{t("Short bio (optional)")}<textarea className="input" rows={3} value={f.bio} onChange={e => setF({ ...f, bio: e.target.value })} /></label>

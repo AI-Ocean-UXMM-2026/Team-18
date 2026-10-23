@@ -247,6 +247,8 @@ export const MYANMAR: Record<string, string> = {
   "Close": "ပိတ်ရန်",
   "Show password": "စကားဝှက်ကို ပြရန်",
   "Hide password": "စကားဝှက်ကို ဖျောက်ရန်",
+  "Enter a whole number from 1 to 50 for years of experience.": "လုပ်ငန်းအတွေ့အကြုံအတွက် ၁ မှ ၅၀ အတွင်း ကိန်းပြည့်ကို ထည့်ပါ။",
+  "1–50 years, whole numbers only.": "၁ မှ ၅၀ နှစ်အတွင်း ကိန်းပြည့်သာ။",
   "Close, one gap": "နီးပါး၊ လိုအပ်ချက် တစ်ခုကျန်",
   "Compare & choose a career": "နှိုင်းယှဉ်ပြီး ရွေးချယ်ရန်",
   "Compare side by side · AI advisor": "ဘေးချင်းယှဉ် နှိုင်းယှဉ်ခြင်း · AI အကြံပေး",
