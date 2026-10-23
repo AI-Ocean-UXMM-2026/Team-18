@@ -6,6 +6,7 @@ import { LEVELS } from "@/lib/format";
 type Input = { name: string; level: string; score: ScoreResult; career: Career; majors: string[]; shortlist: UniItem[]; comparing: UniItem[]; videoChoice: "watch" | "skip" | null; watched: Record<string, boolean>; nextSteps: string[]; session?: string | null };
 type Color = [number, number, number];
 const INK: Color = [43, 33, 58], MUTED: Color = [104, 91, 120], VIOLET: Color = [112, 61, 224];
+const BRAND: Color = [30, 95, 191], WHITE: Color = [255, 255, 255];
 const CREAM: Color = [250, 247, 239], LIME: Color = [225, 250, 119], PINK: Color = [250, 182, 214], LILAC: Color = [237, 228, 255], BLUE: Color = [204, 228, 255];
 const clean = (value: unknown) => String(value ?? "").replace(/[–—]/g, "-").replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/→/g, "->").replace(/…/g, "...").replace(/[^\x20-\xFF\n]/g, "");
 
@@ -24,10 +25,21 @@ export function buildReport(o: Input) {
     doc.setFillColor(...INK); doc.roundedRect(x + 1.3, top + 1.5, width, height, 3, 3, "F");
     doc.setFillColor(...color); doc.setDrawColor(...INK); doc.setLineWidth(0.4); doc.roundedRect(x, top, width, height, 3, 3, "FD");
   };
+  const logo = (x: number, top: number) => {
+    const size = 8, cx = x + size / 2, cy = top + size / 2, arm = 2.7, half = 0.75;
+    doc.setFillColor(...BRAND); doc.roundedRect(x, top, size, size, 1.8, 1.8, "F");
+    doc.setFillColor(...WHITE);
+    doc.triangle(cx, cy - arm, cx - half, cy, cx + half, cy, "F");
+    doc.triangle(cx + arm, cy, cx, cy - half, cx, cy + half, "F");
+    doc.triangle(cx, cy + arm, cx - half, cy, cx + half, cy, "F");
+    doc.triangle(cx - arm, cy, cx, cy - half, cx, cy + half, "F");
+    label("CareerNest", x + 10.5, top + 5.8, 12, INK, true);
+    label(".", x + 10.5 + doc.getTextWidth("CareerNest"), top + 5.8, 12, BRAND, true);
+  };
   const newPage = () => {
     if (pageStarted) doc.addPage(); pageStarted = true;
     doc.setFillColor(...CREAM); doc.rect(0, 0, 210, 297, "F");
-    label("CareerNest.", M, 14, 12, INK, true); label("YOUR FUTURE, YOUR WAY", 133, 14, 8, MUTED, true);
+    logo(M, 7); label("YOUR FUTURE, YOUR WAY", 133, 14, 8, MUTED, true);
     doc.setDrawColor(...INK); doc.setLineWidth(0.4); doc.line(M, 19, 193, 19);
     label(section, M, 27, 8, VIOLET, true); y = 35;
   };

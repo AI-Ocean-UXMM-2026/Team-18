@@ -4,6 +4,7 @@ import { Link } from "wouter";
 import { api } from "@/lib/api";
 import { usePrefs } from "@/lib/prefs";
 import { useJourney } from "@/lib/journey";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function MentorApply() {
   const { t } = usePrefs(); const { content } = useJourney();
@@ -14,11 +15,11 @@ export default function MentorApply() {
     try { await api.post("/auth/mentor-apply", { name: f.name, email: f.email, password: f.password, title: f.title, years: Number(f.years), fields: [Number(f.field)], languages: f.languages, bio: f.bio }); setDone(true); }
     catch (err) { setError(err instanceof Error ? err.message : "Could not send."); } finally { setBusy(false); }
   }
-  if (done) return <section className="card mx-auto flex max-w-md flex-col gap-3 text-center"><h1 className="text-2xl">{t("Application sent")}</h1><p className="text-muted">{t("The CareerNest team will review it. You can sign in after it is approved.")}</p><Link href="/mentor/login" className="btn-primary">{t("Mentor sign in")}</Link></section>;
+  if (done) return <section className="card mx-auto flex max-w-md flex-col items-center gap-3 text-center"><BrandLogo /><h1 className="text-2xl">{t("Application sent")}</h1><p className="text-muted">{t("The CareerNest team will review it. You can sign in after it is approved.")}</p><Link href="/mentor/login" className="btn-primary">{t("Mentor sign in")}</Link></section>;
   const inp = (k: keyof typeof f, label: string, type = "text") => <label className="label">{t(label)}<input className="input" type={type} value={f[k] as string | number} onChange={e => setF({ ...f, [k]: e.target.value })} /></label>;
   return (
     <section className="card mx-auto flex w-full max-w-lg flex-col gap-4">
-      <p className="eyebrow">{t("Mentor portal")}</p><h1 className="text-2xl">{t("Apply to become a mentor")}</h1>
+      <BrandLogo /><p className="eyebrow">{t("Mentor portal")}</p><h1 className="text-2xl">{t("Apply to become a mentor")}</h1>
       <p className="text-sm text-muted">{t("Mentors give 1-hour online sessions about their career: job market, positions, skills, majors and universities.")}</p>
       <form className="flex flex-col gap-3" onSubmit={submit} noValidate>
         {inp("name", "Full name")}{inp("email", "Email", "email")}{inp("password", "Password (min 8 characters)", "password")}

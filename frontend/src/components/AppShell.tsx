@@ -6,6 +6,7 @@ import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
 import { JOURNEY_PATHS, studentProgress, studentRouteRedirect } from "@/lib/studentFlow";
 import { FloatingAdvisor } from "@/components/FloatingAdvisor";
+import BrandLogo from "@/components/BrandLogo";
 
 const STUDENT_NAV = [
   ["/student", "Home / Dashboard", "⌂"],
@@ -139,7 +140,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       <header className="creative-header bg-card">
         <div className="mx-auto flex min-w-0 max-w-[1440px] flex-wrap items-center gap-2 px-3 py-3 sm:gap-3 sm:px-6">
           {studentWorkspace && <button ref={menuButtonRef} type="button" className="grid h-11 w-11 place-items-center rounded-lg border border-line text-lg text-ink hover:bg-soft" onClick={() => setNavOpen(true)} aria-label={t("Open navigation")} aria-haspopup="dialog" aria-expanded={navOpen} aria-controls="student-navigation">☰</button>}
-          <Link href={user ? (user.role === "student" ? "/student" : `/${user.role}`) : isGuest ? "/student" : "/"} className="flex shrink-0 items-center gap-2.5 text-ink" aria-label="CareerNest home"><span className="creative-logo grid h-9 w-9 shrink-0 place-items-center rounded-xl text-lg" aria-hidden="true">✦</span><span className="creative-brand">CareerNest<span className="text-brand">.</span></span></Link>
+          <Link href={user ? (user.role === "student" ? "/student" : `/${user.role}`) : isGuest ? "/student" : "/"} aria-label="CareerNest home"><BrandLogo /></Link>
           {studentWorkspace && <div role="status" className={`ml-auto hidden items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold xl:inline-flex ${quizDone ? "border-ok/20 bg-ok-soft text-ok" : answered ? "border-warn/20 bg-warn-soft text-warn" : "border-line bg-soft text-muted"}`}><span className={`h-2 w-2 rounded-full ${quizDone ? "bg-ok" : answered ? "bg-warn" : "bg-muted"}`} aria-hidden="true" />{t(quizDone ? "Career results ready" : answered ? "Quiz in progress" : "Career quiz")}</div>}
           {user && user.role !== "student" && <span className="hidden rounded-full bg-soft px-2.5 py-1 text-xs font-semibold text-muted sm:inline-flex">{t(user.role === "mentor" ? "Mentor portal" : "Admin portal")}</span>}
           {!user && !isGuest && <nav aria-label={t("Portals")} className="hidden items-center gap-1 sm:flex">

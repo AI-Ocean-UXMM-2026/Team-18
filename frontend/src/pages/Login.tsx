@@ -5,6 +5,7 @@ import type { Role } from "@/lib/api";
 import { homeFor, useAuth } from "@/lib/auth";
 import { usePrefs } from "@/lib/prefs";
 import AuthLayout from "@/components/AuthLayout";
+import BrandLogo from "@/components/BrandLogo";
 
 const TITLES: Record<Role, string> = { student: "Student sign in", mentor: "Mentor sign in", admin: "Admin sign in" };
 const DEMO_ACCOUNTS: Record<Role, { email: string; label: string }[]> = {
@@ -27,7 +28,7 @@ export default function Login({ portal }: { portal: Role }) {
   return (
     <AuthLayout>
     <section className="card login-sheet mx-auto flex w-full max-w-md flex-col gap-5 lg:max-w-none">
-      <p className="creative-sticker creative-sticker-pink">✦ CareerNest</p><h1 className="text-3xl">{t(TITLES[portal])}</h1>
+      <BrandLogo /><h1 className="text-3xl">{t(TITLES[portal])}</h1>
       <form className="flex flex-col gap-3" onSubmit={submit} noValidate>
         <label className="label">{t("Email")}<input className="input" type="email" autoComplete="username" value={email} onChange={e => setEmail(e.target.value)} required /></label>
         <label className="label">{t("Password")}<input className="input" type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required /></label>
