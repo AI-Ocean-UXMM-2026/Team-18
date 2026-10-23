@@ -22,8 +22,8 @@ export default function Start() {
       <section className="creative-hero grid items-center gap-2 p-6 sm:p-8 md:grid-cols-[1.3fr_0.7fr]">
         <div className="flex min-w-0 flex-col items-start gap-5">
           <p className="creative-sticker px-3 py-1 text-xs font-semibold">✦ {t("Career quiz")}</p>
-          <h1 className="creative-display">{t("Find your")}<br /><span className="text-[#8ec5ff]">{t("next move.")}</span></h1>
-          <p className="max-w-md text-base leading-7 text-blue-100">{content?.questions.length ?? 0} {t("questions · about 15 minutes. There are no right or wrong answers.")}</p>
+          <h1 className="creative-display">{t("Find your")}<br /><span className="text-hero-muted">{t("next move.")}</span></h1>
+          <p className="max-w-md text-base leading-7 text-white/85">{content?.questions.length ?? 0} {t("questions · about 15 minutes. There are no right or wrong answers.")}</p>
           <span className="rounded-full border border-line bg-card px-3 py-1.5 font-mono text-xs font-semibold text-ink">{answered} / {flow.total} · {t("Quiz progress")}</span>
         </div>
         <div className="block"><KipGuide /></div>

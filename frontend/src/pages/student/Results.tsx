@@ -18,9 +18,9 @@ export default function Results() {
       <div className="flex flex-col gap-6">
         <div className="grid gap-5 lg:grid-cols-3">
           {data.top.map(({ career, pct, reasons, priority }) => (
-            <article key={career.id} className="overflow-hidden rounded-xl border border-line bg-card shadow-sm">
+            <article key={career.id} className="card card-flush flex h-full flex-col overflow-hidden">
               <div className="border-b border-line bg-gradient-to-b from-soft to-card p-5">
-                <div className="mb-3 flex items-center justify-between"><span className="grid h-8 w-8 place-items-center rounded-full bg-[#142b63] text-xs font-bold text-white">#{priority}</span><span className="rounded-full border border-ok/20 bg-ok-soft px-3 py-1 text-xs font-bold text-ok">✦ {pct}% {t("match")}</span></div>
+                <div className="mb-3 flex items-center justify-between"><span className="grid h-8 w-8 place-items-center rounded-full bg-brand-deep text-xs font-bold text-white">#{priority}</span><span className="rounded-full border border-ok/20 bg-ok-soft px-3 py-1 text-xs font-bold text-ok">✦ {pct}% {t("match")}</span></div>
                 <h2 className="text-lg">{career.t}</h2><p className="mt-2 text-sm leading-6 text-muted">{career.blurb}</p>
               </div>
               <div className="space-y-5 p-5">

@@ -295,5 +295,5 @@ export default function Content() {
 }
 
 function ErrorList({ title, errors }: { title: string; errors: string[] }) {
-  return <div className="rounded-xl border border-bad/30 bg-bad/5 p-3 text-sm text-bad" role="alert"><b>{title}</b><ul className="mt-1 list-disc pl-5">{errors.slice(0, 8).map((message, index) => <li key={index}>{message}</li>)}</ul></div>;
+  return <div className="rounded-xl border border-bad/30 bg-bad-soft p-3 text-sm text-bad" role="alert"><b>{title}</b><ul className="mt-1 list-disc pl-5">{errors.slice(0, 8).map((message, index) => <li key={index}>{message}</li>)}</ul></div>;
 }

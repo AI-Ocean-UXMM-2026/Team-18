@@ -40,7 +40,7 @@ export default function Guide() {
         {contentLoading ? <div className="mx-auto max-w-5xl" role="status" aria-label={t("Loading career examples")}>
           <div className="flex justify-center gap-2"><Skeleton className="h-9 w-28 rounded-full" /><Skeleton className="h-9 w-32 rounded-full" /><Skeleton className="h-9 w-24 rounded-full" /></div>
           <div className="mt-4 grid overflow-hidden rounded-3xl border border-line bg-card shadow-sm md:grid-cols-[0.8fr_1.2fr]">
-            <div className="bg-gradient-to-br from-brand to-[#18215a] p-6 sm:p-8"><Skeleton className="h-3 w-28 bg-white/20" /><Skeleton className="mt-4 h-8 w-3/4 bg-white/20" /><Skeleton className="mt-4 h-3 w-full bg-white/20" /><Skeleton className="mt-2 h-3 w-4/5 bg-white/20" /><Skeleton className="mt-8 h-3 w-1/2 bg-white/20" /></div>
+            <div className="bg-gradient-to-br from-brand to-brand-mid p-6 sm:p-8"><Skeleton className="h-3 w-28 bg-white/20" /><Skeleton className="mt-4 h-8 w-3/4 bg-white/20" /><Skeleton className="mt-4 h-3 w-full bg-white/20" /><Skeleton className="mt-2 h-3 w-4/5 bg-white/20" /><Skeleton className="mt-8 h-3 w-1/2 bg-white/20" /></div>
             <div className="p-6 sm:p-8"><Skeleton className="h-3 w-32" /><Skeleton className="mt-3 h-5 w-4/5" /><Skeleton className="mt-7 h-3 w-36" /><Skeleton className="mt-3 h-5 w-2/3" /><Skeleton className="mt-7 h-11 w-44 rounded-xl" /></div>
           </div>
           <span className="sr-only">{t("Loading career examples")}</span>
@@ -49,9 +49,9 @@ export default function Guide() {
             {careers.map(career => <button key={career.id} role="tab" aria-selected={activeCareer?.id === career.id} onClick={() => setSelectedCareer(career.id)} className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${activeCareer?.id === career.id ? "border-brand bg-brand text-on-brand" : "border-line bg-card text-muted hover:border-brand hover:text-brand"}`}>{t(career.t)}</button>)}
           </div>
           {activeCareer && <div className="mt-4 grid overflow-hidden rounded-3xl border border-line bg-card shadow-sm md:grid-cols-[0.8fr_1.2fr]">
-            <div className="flex min-h-56 flex-col justify-between bg-gradient-to-br from-[#142b63] to-[#18215a] p-6 text-white sm:p-8">
-              <div><p className="text-xs font-bold uppercase tracking-[0.15em] text-indigo-100">{t("Career preview")}</p><h3 className="mt-3 text-3xl font-bold">{t(activeCareer.t)}</h3><p className="mt-3 max-w-sm text-sm leading-6 text-indigo-100">{t(activeCareer.blurb)}</p></div>
-              <p className="mt-6 text-xs font-semibold text-indigo-100">{t("Career outlook")}: {t(activeCareer.demand)}</p>
+            <div className="flex min-h-56 flex-col justify-between bg-gradient-to-br from-brand-deep to-brand-mid p-6 text-white sm:p-8">
+              <div><p className="text-xs font-bold uppercase tracking-[0.15em] text-white/80">{t("Career preview")}</p><h3 className="mt-3 text-3xl font-bold">{t(activeCareer.t)}</h3><p className="mt-3 max-w-sm text-sm leading-6 text-white/80">{t(activeCareer.blurb)}</p></div>
+              <p className="mt-6 text-xs font-semibold text-white/80">{t("Career outlook")}: {t(activeCareer.demand)}</p>
             </div>
             <div className="flex flex-col justify-center gap-5 p-6 sm:p-8">
               <div><p className="text-xs font-bold uppercase tracking-wider text-muted">{t("Related majors")}</p><p className="mt-1 font-semibold">{activeCareer.majors.slice(0, 3).map(major => t(major.n)).join(" · ") || "–"}</p></div>
@@ -61,7 +61,7 @@ export default function Guide() {
         </div> : <div className="mx-auto max-w-3xl rounded-2xl border border-line bg-card p-6 text-center text-sm text-muted">{t("Start the quiz to explore career paths matched to you.")}</div>}
       </section>
 
-      <section id="journey" className="scroll-mt-24 rounded-3xl border border-line bg-card p-6 shadow-sm sm:p-9">
+      <section id="journey" className="guide-section scroll-mt-24 rounded-3xl border border-line bg-card shadow-sm">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div className="max-w-2xl"><p className="eyebrow">{t("The CareerNest pathway")}</p><h2 className="mt-2 text-3xl sm:text-4xl">{t("From self-discovery to a plan you can act on")}</h2></div>
           <p className="max-w-sm text-sm leading-6 text-muted">{t("Move through each step at your own pace. Your account keeps your progress ready for next time.")}</p>

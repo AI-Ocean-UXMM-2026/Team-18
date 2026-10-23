@@ -126,7 +126,7 @@ export default function Universities() {
           </tr>)}</tbody>
         </table>
       </div>
-      {rowErrors.length > 0 && <div className="rounded-xl border border-bad/30 bg-bad/5 p-3 text-sm text-bad" role="alert"><b>{t("Fix these rows before saving")}</b><ul className="mt-1 list-disc pl-5">{rowErrors.slice(0, 12).map((issue, index) => <li key={index}>{issue}</li>)}</ul></div>}
+      {rowErrors.length > 0 && <div className="rounded-xl border border-bad/30 bg-bad-soft p-3 text-sm text-bad" role="alert"><b>{t("Fix these rows before saving")}</b><ul className="mt-1 list-disc pl-5">{rowErrors.slice(0, 12).map((issue, index) => <li key={index}>{issue}</li>)}</ul></div>}
       <div className="flex flex-wrap gap-2"><button type="button" className="btn-outline btn-sm" disabled={rows.length >= 100} onClick={() => setRows(previous => [...previous, blankRow()])}>{t("Add row")}</button><button type="button" className="btn-primary btn-sm" disabled={saving} onClick={saveRows}>{saving ? t("Saving…") : t("Save universities")}</button><span className="self-center text-xs text-muted">{t("Paste multiple rows and columns from Excel with Ctrl+V.")}</span></div>
     </section>
 

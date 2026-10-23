@@ -21,7 +21,7 @@ export default function Movies() {
       {j.videoChoice === "watch" && <div className="grid items-start gap-6 lg:grid-cols-3">
         <div className="flex flex-col gap-5 lg:col-span-2">
           <article className="overflow-hidden rounded-xl border border-line bg-card">
-            <div className="relative grid aspect-video place-items-center bg-[#142b63] text-white">
+            <div className="relative grid aspect-video place-items-center bg-brand-deep text-white">
               {current.video.url ? <video key={current.id} src={current.video.url} controls preload="metadata" playsInline onEnded={() => set(p => ({ watched: { ...p.watched, [current.id]: true } }))} className="h-full w-full object-contain" aria-label={`${current.t} career video`} /> : <div className="text-center"><span className="mb-3 block text-4xl" aria-hidden="true">▷</span><p>{t("Video coming soon")}</p></div>}
             </div>
             <div className="p-5"><span className="text-xs font-semibold text-brand">{t("Career spotlight")} · {current.video.len}</span><h2 className="mt-2 text-xl">{current.t}</h2><p className="mt-2 text-sm text-muted">{current.blurb}</p></div>

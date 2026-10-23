@@ -105,8 +105,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const controls = <div className="app-header-controls ml-auto flex min-w-0 flex-wrap items-center justify-end gap-1 sm:gap-2">
     {user?.role === "student" && <Link href={user.isPro ? "/student/profile" : "/student/pro"} aria-label={user.isPro ? t("Pro plan") : t("Upgrade to Pro")} className={user.isPro ? "btn btn-sm border border-ok bg-ok-soft text-ok" : "btn-primary btn-sm"}>{user.isPro ? "Pro ✓" : t("Upgrade to Pro")}</Link>}
     {isGuest && <><Link href="/login" className="btn-ghost btn-sm">{t("Sign in")}</Link><Link href="/register" className="btn-outline btn-sm">{t("Create account")}</Link></>}
-    {user?.role === "student" && <Link href="/student/profile" className="grid h-8 w-8 place-items-center rounded-full bg-[#142B63] text-xs font-bold text-white hover:ring-2 hover:ring-brand" title={t("Profile & settings")} aria-label={t("Profile & settings")}>{user.name.trim().charAt(0).toUpperCase()}</Link>}
-    {user && user.role !== "student" && <span className="hidden h-8 w-8 place-items-center rounded-full bg-[#142B63] text-xs font-bold text-white sm:grid" title={user.name}>{user.name.trim().charAt(0).toUpperCase()}</span>}
+    {user?.role === "student" && <Link href="/student/profile" className="grid h-8 w-8 place-items-center rounded-full bg-brand-deep text-xs font-bold text-white hover:ring-2 hover:ring-brand" title={t("Profile & settings")} aria-label={t("Profile & settings")}>{user.name.trim().charAt(0).toUpperCase()}</Link>}
+    {user && user.role !== "student" && <span className="hidden h-8 w-8 place-items-center rounded-full bg-brand-deep text-xs font-bold text-white sm:grid" title={user.name}>{user.name.trim().charAt(0).toUpperCase()}</span>}
     <div role="group" aria-label={t("Color theme")} className="flex items-center rounded-lg border border-line bg-soft p-0.5">
       <button type="button" onClick={() => setTheme("light")} aria-label={t("Light theme")} aria-pressed={theme === "light"} title={t("Light theme")} className={`grid h-8 w-8 place-items-center rounded-md text-sm transition ${theme === "light" ? "bg-card text-brand shadow-sm" : "text-muted hover:text-ink"}`}><span aria-hidden>☀</span></button>
       <button type="button" onClick={() => setTheme("dark")} aria-label={t("Dark theme")} aria-pressed={theme === "dark"} title={t("Dark theme")} className={`grid h-8 w-8 place-items-center rounded-md text-sm transition ${theme === "dark" ? "bg-card text-brand shadow-sm" : "text-muted hover:text-ink"}`}><span aria-hidden>☾</span></button>
@@ -136,7 +136,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       {studentWorkspace ? <div className="mx-auto flex min-h-[calc(100dvh-4rem)] min-w-0 max-w-[1440px]">
         {navOpen && <div className="fixed inset-0 z-40" role="presentation">
-          <button type="button" className="absolute inset-0 bg-[#142B63]/40 backdrop-blur-[2px]" onClick={() => setNavOpen(false)} aria-label={t("Close navigation")} />
+          <button type="button" className="absolute inset-0 bg-brand-deep/40 backdrop-blur-[2px]" onClick={() => setNavOpen(false)} aria-label={t("Close navigation")} />
           <aside id="student-navigation" role="dialog" aria-modal="true" className="creative-sidebar relative z-10 flex h-full w-[min(20rem,85vw)] flex-col overflow-y-auto border-r-2 border-line bg-card py-2 shadow-2xl" aria-label={t("Student navigation")}>{studentNav()}</aside>
         </div>}
         <main className="mx-auto flex min-w-0 w-full max-w-7xl flex-col gap-6 px-3 pb-16 pt-5 sm:gap-6 sm:px-6 sm:pt-8">
