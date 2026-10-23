@@ -589,6 +589,7 @@ export const MYANMAR: Record<string, string> = {
   "Shortlisted": "စာရင်းတိုထဲရှိ",
   "Shortlisted universities": "စာရင်းတိုထဲရှိ တက္ကသိုလ်များ",
   "Show all fields": "နယ်ပယ်အားလုံး ပြရန်",
+  "By default, results match your selected majors. Turn this on to include universities from every field.": "ပုံမှန်အားဖြင့် ရလဒ်များတွင် သင်ရွေးထားသော အဓိကဘာသာရပ်များနှင့် ကိုက်ညီသည့် တက္ကသိုလ်များကို ပြပါသည်။ နယ်ပယ်အားလုံးမှ တက္ကသိုလ်များကို ထည့်ရန် ဤရွေးချယ်မှုကို ဖွင့်ပါ။",
   "Side by side": "ဘေးချင်းယှဉ်",
   "Side-by-side university compare": "တက္ကသိုလ်များ ဘေးချင်းယှဉ် နှိုင်းယှဉ်ခြင်း",
   "Sign in": "အကောင့်ဝင်မည်",
