@@ -18,6 +18,7 @@ export const forbidden = (m = "You do not have access to this.") => new HttpErro
 export const notFound = (m = "Not found.") => new HttpError(404, m);
 export const conflict = (m: string) => new HttpError(409, m);
 export const tooMany = (m = "Too many requests. Please try again later.") => new HttpError(429, m);
+export const unavailable = (m = "This service is temporarily unavailable.") => new HttpError(503, m);
 
 export function route(handler: (req: Request, res: Response) => unknown | Promise<unknown>): RequestHandler {
   return async (req, res, next) => {
@@ -39,8 +40,8 @@ export const attachSession: RequestHandler = (req, _res, next) => {
     if (h?.startsWith("Bearer ")) {
       const session = await readToken(h.slice(7));
       if (session) {
-        const user = await one<{ active: boolean; role: Role; adminRole: AdminRole | null; mentorStatus: string | null }>(
-          `SELECT u.active, u.role, u.admin_role AS "adminRole", m.status AS "mentorStatus"
+        const user = await one<{ active: boolean; role: Role; adminRole: AdminRole | null; mentorStatus: string | null; sessionVersion: number }>(
+          `SELECT u.active, u.role, u.admin_role AS "adminRole", u.session_version AS "sessionVersion", m.status AS "mentorStatus"
            FROM users u LEFT JOIN mentors m ON m.user_id = u.id WHERE u.id = $1`,
           [session.uid],
         );

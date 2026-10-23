@@ -3,15 +3,34 @@
 // ===========================================================================
 import { Router } from "express";
 import { z } from "zod";
+import { createHash, randomBytes } from "node:crypto";
 import { ENV } from "../env.js";
 import { allow, createToken, hashPassword, verifyPassword } from "../auth.js";
-import { audit, one, tx } from "../db.js";
-import { badRequest, body, conflict, route, sessionOf, tooMany, unauthorized } from "../http.js";
+import { audit, one, query, tx } from "../db.js";
+import { badRequest, body, conflict, route, sessionOf, tooMany, unauthorized, unavailable } from "../http.js";
 
 export const authRouter = Router();
 const email = z.string().trim().toLowerCase().email().max(320);
 const password = z.string().min(8, "Password needs at least 8 characters.").max(200);
 const name = z.string().trim().min(1).max(120);
+const resetTokenHash = (token: string) => createHash("sha256").update(token).digest("hex");
+const genericResetMessage = "If an active account uses that email, we’ll send a password reset link shortly.";
+
+async function sendPasswordResetEmail(to: string, resetUrl: string) {
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${ENV.resendApiKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      from: ENV.emailFrom,
+      to: [to],
+      subject: "Reset your CareerNest password",
+      text: `Use this one-time link to reset your CareerNest password. It expires in 30 minutes: ${resetUrl}\n\nIf you did not request this, you can ignore this email.`,
+      html: `<p>Use this one-time link to reset your CareerNest password. It expires in 30 minutes.</p><p><a href="${resetUrl}">Reset my password</a></p><p>If you did not request this, you can ignore this email.</p>`,
+    }),
+    signal: AbortSignal.timeout(10_000),
+  });
+  if (!response.ok) throw new Error(`Email provider returned ${response.status}`);
+}
 
 async function profile(uid: number) {
   return one(`SELECT u.id, u.email, u.name, u.role, u.admin_role AS "adminRole", u.language, (u.is_pro AND COALESCE(u.pro_expires_at > now(), false)) AS "isPro", u.pro_expires_at AS "proExpiresAt", u.ai_used AS "aiUsed",
@@ -21,8 +40,8 @@ async function profile(uid: number) {
 authRouter.post("/auth/register", route(async req => {
   const b = body(req, z.object({ email, password, name }));
   if (await one("SELECT 1 FROM users WHERE email = $1", [b.email])) throw conflict("An account with this email already exists. Sign in instead.");
-  const u = await one<{ id: number }>("INSERT INTO users (email, password_hash, name, role) VALUES ($1, $2, $3, 'student') RETURNING id", [b.email, hashPassword(b.password), b.name]);
-  const token = await createToken({ uid: u!.id, role: "student", adminRole: null });
+  const u = await one<{ id: number; session_version: number }>("INSERT INTO users (email, password_hash, name, role) VALUES ($1, $2, $3, 'student') RETURNING id, session_version", [b.email, hashPassword(b.password), b.name]);
+  const token = await createToken({ uid: u!.id, role: "student", adminRole: null, sessionVersion: u!.session_version });
   return { token, user: await profile(u!.id) };
 }));
 
@@ -40,7 +59,7 @@ authRouter.post("/auth/login", route(async req => {
   const ip = req.ip || "local";
   if (!allow("login:" + ip, ENV.loginRateLimit, ENV.loginRateWindowSeconds * 1000)) throw tooMany("Too many sign-in attempts. Wait a minute and try again.");
   const b = body(req, z.object({ email, password: z.string().min(1), portal: z.enum(["student", "mentor", "admin"]) }));
-  const u = await one<{ id: number; password_hash: string; role: "student" | "mentor" | "admin"; admin_role: any; active: boolean }>("SELECT id, password_hash, role, admin_role, active FROM users WHERE email = $1", [b.email]);
+  const u = await one<{ id: number; password_hash: string; role: "student" | "mentor" | "admin"; admin_role: any; active: boolean; session_version: number }>("SELECT id, password_hash, role, admin_role, active, session_version FROM users WHERE email = $1", [b.email]);
   if (!u || !verifyPassword(b.password, u.password_hash)) throw unauthorized("Email or password is not correct.");
   if (!u.active) throw unauthorized("This account is switched off. Contact CareerNest.");
   if (u.role !== b.portal) throw unauthorized(`This is not a ${b.portal} account. Use the ${u.role} sign-in page.`);
@@ -60,7 +79,53 @@ authRouter.post("/auth/login", route(async req => {
     ), updated_at = now() WHERE student_id = $1`, [u.id]);
   }
   await audit(u.id, "auth.login", b.portal);
-  return { token: await createToken({ uid: u.id, role: u.role, adminRole: u.admin_role }), user: await profile(u.id) };
+  return { token: await createToken({ uid: u.id, role: u.role, adminRole: u.admin_role, sessionVersion: u.session_version }), user: await profile(u.id) };
+}));
+
+authRouter.post("/auth/password/forgot", route(async req => {
+  const b = body(req, z.object({ email }));
+  const ip = req.ip || "local";
+  if (!allow("password-reset:" + ip, 5, 60 * 60 * 1000)) throw tooMany("Too many recovery requests. Please try again later.");
+  if (!ENV.resendApiKey || !ENV.emailFrom || !ENV.publicAppUrl) {
+    throw unavailable("Password recovery email is not configured yet. Please contact the site administrator.");
+  }
+
+  await query("DELETE FROM password_reset_tokens WHERE expires_at <= now()");
+  const user = await one<{ id: number }>("SELECT id FROM users WHERE email = $1 AND active = true", [b.email]);
+  if (!user) return { ok: true, message: genericResetMessage };
+
+  const token = randomBytes(32).toString("base64url");
+  const tokenHash = resetTokenHash(token);
+  await tx(async client => {
+    await client.query("DELETE FROM password_reset_tokens WHERE user_id = $1", [user.id]);
+    await client.query("INSERT INTO password_reset_tokens (user_id, token_hash, expires_at) VALUES ($1, $2, now() + INTERVAL '30 minutes')", [user.id, tokenHash]);
+  });
+
+  const resetUrl = new URL("/reset-password", ENV.publicAppUrl);
+  resetUrl.hash = new URLSearchParams({ token }).toString();
+  try {
+    await sendPasswordResetEmail(b.email, resetUrl.toString());
+  } catch {
+    await query("DELETE FROM password_reset_tokens WHERE token_hash = $1", [tokenHash]);
+    throw unavailable("We could not send the recovery email right now. Please try again later.");
+  }
+  return { ok: true, message: genericResetMessage };
+}));
+
+authRouter.post("/auth/password/reset", route(async req => {
+  const b = body(req, z.object({ token: z.string().min(20).max(200), password }));
+  const tokenHash = resetTokenHash(b.token);
+  await tx(async client => {
+    const reset = await client.query<{ id: number; user_id: number }>(
+      "SELECT id, user_id FROM password_reset_tokens WHERE token_hash = $1 AND expires_at > now() FOR UPDATE",
+      [tokenHash],
+    );
+    const record = reset.rows[0];
+    if (!record) throw badRequest("This password reset link is invalid or has expired. Request a new one.");
+    await client.query("UPDATE users SET password_hash = $1, session_version = session_version + 1 WHERE id = $2", [hashPassword(b.password), record.user_id]);
+    await client.query("DELETE FROM password_reset_tokens WHERE user_id = $1", [record.user_id]);
+  });
+  return { ok: true };
 }));
 
 authRouter.get("/auth/me", route(async req => ({ user: await profile(sessionOf(req).uid) })));
@@ -81,6 +146,7 @@ authRouter.put("/auth/password", route(async req => {
   const b = body(req, z.object({ current: z.string().min(1), next: password }));
   const u = await one<{ password_hash: string }>("SELECT password_hash FROM users WHERE id = $1", [sessionOf(req).uid]);
   if (!u || !verifyPassword(b.current, u.password_hash)) throw badRequest("Your current password is not correct.");
-  await one("UPDATE users SET password_hash = $1 WHERE id = $2", [hashPassword(b.next), sessionOf(req).uid]);
-  return { ok: true };
+  const current = sessionOf(req);
+  await one("UPDATE users SET password_hash = $1, session_version = session_version + 1 WHERE id = $2", [hashPassword(b.next), current.uid]);
+  return { ok: true, token: await createToken({ ...current, sessionVersion: current.sessionVersion + 1 }) };
 }));

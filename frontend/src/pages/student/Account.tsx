@@ -4,7 +4,7 @@ import { Link } from "wouter";
 import { ErrorNote, PageHead, Pill, Spinner, toast } from "@/components/ui";
 import { useApiData } from "@/hooks/useApiData";
 import { useAuth } from "@/lib/auth";
-import { api } from "@/lib/api";
+import { api, tokenStore } from "@/lib/api";
 import { usePrefs } from "@/lib/prefs";
 
 type PlanInfo = { isPro: boolean; aiUsed: number; freeAiLimit: number };
@@ -36,7 +36,8 @@ export default function StudentAccount() {
     event.preventDefault(); setBusy(true); setMessage("");
     if (newPassword !== confirmPassword) { setMessage(t("The new passwords do not match.")); setBusy(false); return; }
     try {
-      await api.put("/auth/password", { current: currentPassword, next: newPassword });
+      const result = await api.put<{ token: string }>("/auth/password", { current: currentPassword, next: newPassword });
+      tokenStore.set(result.token);
       setCurrentPassword(""); setNewPassword(""); setConfirmPassword("");
       toast(t("Password changed"));
     } catch (error) { setMessage(error instanceof Error ? error.message : t("Could not change password.")); }

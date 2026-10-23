@@ -54,7 +54,7 @@ export async function pingDatabase() {
   catch (e) { return { ok: false as const, error: e instanceof Error ? e.message : String(e) }; }
 }
 
-const REQUIRED_TABLES = ["users", "journeys", "mentors", "mentor_slots", "bookings", "payment_accounts", "payments", "audit_log", "admin_universities"];
+const REQUIRED_TABLES = ["users", "journeys", "mentors", "mentor_slots", "bookings", "payment_accounts", "payments", "audit_log", "admin_universities", "password_reset_tokens"];
 export async function assertSchemaInstalled() {
   const rows = await query<{ table_name: string }>("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");
   const have = new Set(rows.map(r => r.table_name));

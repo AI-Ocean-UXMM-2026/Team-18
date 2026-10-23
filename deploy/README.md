@@ -10,6 +10,7 @@
 - `CORS_ORIGIN` = your site only; `CORS_ORIGIN_REGEX` empty.
 - Real receiving accounts in Admin → Payment accounts.
 - AI keys set in the backend host environment (for example, Render → backend service → Environment). Never commit `.env`.
+- Password reset emails use Resend. Set `RESEND_API_KEY`, a verified `EMAIL_FROM` address, and `PUBLIC_APP_URL` (the deployed frontend URL) in the backend host environment. Apply `database/migrations/20261023_password_recovery.sql` to the production database before deploying the backend.
 - Direct career video uploads use Supabase Storage. Set `SUPABASE_URL` and the backend-only `SUPABASE_SERVICE_ROLE_KEY` on the backend host, then apply `database/migrations/20261022_admin_career_videos.sql`. The first admin upload creates a public `career-videos` bucket automatically. Videos must be MP4 (H.264 video and AAC audio recommended), no longer than 4 minutes, and at most 300 MB. Set the Supabase Storage global file size limit to at least 300 MB. Supabase Free projects cap individual uploads at 50 MB, so larger files require a paid Supabase plan. Existing bucket limits are raised automatically when a larger upload is requested.
 
 ## AI provider failover
