@@ -126,6 +126,7 @@ export const MYANMAR: Record<string, string> = {
   "Watch this short welcome video to learn what you can do here.": "CareerNest တွင် ဘာလုပ်နိုင်သည်ကို သိရှိရန် မိတ်ဆက်ဗီဒီယိုတိုကို ကြည့်ပါ။",
   "Close introduction": "မိတ်ဆက်ကို ပိတ်ရန်",
   "Skip intro": "မိတ်ဆက်ကို ကျော်ရန်",
+  "Play introduction": "မိတ်ဆက်ဗီဒီယိုကို ဖွင့်ရန်",
   "CareerNest introduction video": "CareerNest မိတ်ဆက်ဗီဒီယို",
   "Continue to CareerNest": "CareerNest သို့ ဆက်သွားမည်",
   "Career videos are optional": "အသက်မွေးဝမ်းကျောင်း ဗီဒီယိုများသည် ရွေးချယ်နိုင်သည်",
