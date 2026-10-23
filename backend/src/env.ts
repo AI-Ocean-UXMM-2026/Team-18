@@ -39,7 +39,7 @@ export const ENV = {
   aiProvider: (text("AI_PROVIDER", "gemini").toLowerCase() === "claude" ? "claude" : "gemini") as "gemini" | "claude",
   geminiKey: text("GEMINI_API_KEY"),
   geminiFallbackKey: text("GEMINI_FALLBACK_API_KEY"),
-  geminiModel: text("GEMINI_MODEL", "gemini-2.5-flash"),
+  geminiModel: text("GEMINI_MODEL", "gemini-3.8-flash"),
   openrouterKey: text("OPENROUTER_API_KEY"),
   openrouterModel: text("OPENROUTER_MODEL", "nvidia/nemotron-3.5-lightning:free"),
   openrouterReferer: text("OPENROUTER_REFERER", "https://careernest-bn5l.onrender.com"),
