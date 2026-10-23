@@ -178,6 +178,63 @@
   }
  },
  {
+  "id": "mechanical",
+  "t": "Mechanical Engineering",
+  "codes": "RIC",
+  "f": [
+   2
+  ],
+  "demand": "Varies by industry and location",
+  "study": "Bachelor's degree (programme length varies)",
+  "blurb": "Designs, tests and improves machines, mechanical equipment and thermal systems, including heating, ventilation and air-conditioning.",
+  "positions": [
+   "Mechanical Design Engineer",
+   "HVAC / ACMV Engineer",
+   "Manufacturing Engineer",
+   "Maintenance Engineer",
+   "Building Services Engineer"
+  ],
+  "skills": [
+   "Mechanics and thermodynamics",
+   "CAD and engineering drawings",
+   "Problem solving and testing",
+   "HVAC / ACMV system knowledge",
+   "Project costing and communication"
+  ],
+  "quals": [
+   "Bachelor's degree in mechanical engineering or a related engineering programme",
+   "Relevant industrial training or internship",
+   "Professional registration where required by the country and role"
+  ],
+  "outlook": "Mechanical engineers work across manufacturing, engineering services, energy and building systems. Opportunities depend on the local industry and employer; practical experience, CAD and technical communication are useful.",
+  "subjects": [
+   "Mathematics",
+   "Physics",
+   "English"
+  ],
+  "majors": [
+   {
+    "n": "Mechanical Engineering",
+    "f": 2
+   },
+   {
+    "n": "Mechatronics Engineering",
+    "f": 2
+   },
+   {
+    "n": "Manufacturing Engineering",
+    "f": 2
+   }
+  ],
+  "video": {
+   "len": "3:04",
+   "ch": [
+    "ACMV quantity surveying: a mechanical building-services example"
+   ],
+   "url": "https://ioacljmwtnqwxxmdgibk.supabase.co/storage/v1/object/public/career-videos/mechanical-engineering-acmv.mp4"
+  }
+ },
+ {
   "id": "arch",
   "t": "Architect",
   "codes": "ARI",

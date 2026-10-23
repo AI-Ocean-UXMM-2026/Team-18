@@ -1,7 +1,7 @@
 // ===========================================================================
 //  data.ts — static content shipped with the app.
 //    questions.json  20 quiz questions (EN + MY)
-//    careers.json    14 careers, majors, 3-minute short-movie info
+//    careers.json    15 careers, majors and short career videos
 //    g12.json        Grade 12: 26 Myanmar universities + 154 programmes (UniAdvisor)
 // ===========================================================================
 import fs from "node:fs";

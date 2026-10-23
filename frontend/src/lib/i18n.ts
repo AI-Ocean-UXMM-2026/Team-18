@@ -9,6 +9,9 @@
 export type Language = "en" | "my";
 
 export const MYANMAR: Record<string, string> = {
+  "Mechanical Engineering": "စက်မှုအင်ဂျင်နီယာပညာ",
+  "Mechatronics Engineering": "မက်ခါထရောနစ် အင်ဂျင်နီယာပညာ",
+  "Manufacturing Engineering": "ကုန်ထုတ်လုပ်မှု အင်ဂျင်နီယာပညာ",
   "Video files must be 300 MB or smaller.": "ဗီဒီယိုဖိုင်သည် ၃၀၀ MB သို့မဟုတ် ထိုထက်ငယ်ရပါမည်။",
   "Video must be 4 minutes or shorter.": "ဗီဒီယိုသည် ၄ မိနစ် သို့မဟုတ် ထိုထက်တိုရပါမည်။",
   "Guide": "အသုံးပြုလမ်းညွှန်",
