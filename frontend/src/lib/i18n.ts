@@ -9,6 +9,12 @@
 export type Language = "en" | "my";
 
 export const MYANMAR: Record<string, string> = {
+  "Comparison highlights": "နှိုင်းယှဉ်မှု အနှစ်ချုပ်",
+  "Countries": "နိုင်ငံများ",
+  "Your selected universities": "သင်ရွေးချယ်ထားသော တက္ကသိုလ်များ",
+  "Across your selected universities": "သင်ရွေးချယ်ထားသော တက္ကသိုလ်များရှိ သင်တန်းများ",
+  "Build your comparison": "သင်၏ နှိုင်းယှဉ်မှုကို စတင်ပါ",
+  "Choose up to three universities to explore their differences together.": "ကွာခြားချက်များကို နှိုင်းယှဉ်လေ့လာရန် တက္ကသိုလ် သုံးခုအထိ ရွေးချယ်ပါ။",
   "Mechanical Engineering": "စက်မှုအင်ဂျင်နီယာပညာ",
   "Mechatronics Engineering": "မက်ခါထရောနစ် အင်ဂျင်နီယာပညာ",
   "Manufacturing Engineering": "ကုန်ထုတ်လုပ်မှု အင်ဂျင်နီယာပညာ",
