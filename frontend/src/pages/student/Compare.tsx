@@ -22,13 +22,6 @@ export default function Compare() {
   if (loading || !data) return <Spinner />;
   const find = (k: string) => data.items.find(i => i.key === k);
   const chosen = j.compare.map(find).filter(Boolean) as UniItem[];
-  const countries = new Set(chosen.map(item => item.kind === "g12" ? "Myanmar" : item.school.country).filter(Boolean));
-  const programmes = new Set(chosen.flatMap(item => item.kind === "g12" ? item.programs : item.school.programs).map(name => name.trim().toLowerCase()).filter(Boolean));
-  const highlights = [
-    { label: "Universities", value: `${chosen.length} / 3`, icon: "M3 10 12 4l9 6M5 10v10m7-10v10m7-10v10M3 20h18", detail: "Your selected universities" },
-    { label: "Countries", value: countries.size, icon: "M3 12h18M12 3c5 5 5 13 0 18-5-5-5-13 0-18M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18", detail: [...countries].join(" · ") || "Explore your options" },
-    { label: "Programmes", value: programmes.size, icon: "M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-3-1-6-1-9 1Zm0 0v14", detail: "Across your selected universities" },
-  ];
   function addUniversity(item: UniItem) {
     set(previous => {
       if (previous.compare.includes(item.key) || previous.compare.length >= 3) return {};
@@ -72,7 +65,7 @@ export default function Compare() {
   const visibleRows = showAllInfo ? rows : collapsedRows;
   return (
     <>
-      <div className="compare-hero compare-enter flex flex-col gap-4 rounded-2xl border border-brand/20 p-5 sm:p-7 xl:flex-row xl:items-start xl:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <PageHead back="/student/explorer" eyebrow="Step 2 · Side by side" title="Compare Universities">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -81,7 +74,7 @@ export default function Compare() {
             </div>
           </PageHead>
         </div>
-        <div className="flex shrink-0 flex-wrap gap-2 xl:pt-8">
+        <div className="flex shrink-0 flex-wrap gap-2 sm:pt-8">
           <button type="button" className="btn-outline" onClick={() => setPickerOpen(true)} disabled={saving}>
             <span aria-hidden="true" className="mr-1 text-lg leading-none">+</span>{t("Add University")}
           </button>
@@ -90,23 +83,12 @@ export default function Compare() {
           </button>
         </div>
       </div>
-      <div className="grid gap-3 sm:grid-cols-3" aria-label={t("Comparison highlights")}>
-        {highlights.map((highlight, index) => <div key={highlight.label} className="compare-highlight compare-enter flex items-center gap-4 rounded-xl border border-line bg-card p-4" style={{ animationDelay: `${80 * (index + 1)}ms` }}>
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand"><svg aria-hidden="true" viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={highlight.icon} /></svg></span>
-          <div className="min-w-0"><p className="flex flex-wrap items-baseline gap-x-2"><strong className="text-2xl tabular-nums text-ink">{highlight.value}</strong><span className="text-sm font-semibold text-muted">{t(highlight.label)}</span></p><p className="mt-1 text-xs leading-5 text-muted">{t(highlight.detail)}</p></div>
-        </div>)}
-      </div>
-      {chosen.length === 0 && <div className="compare-enter flex flex-col items-center gap-3 rounded-2xl border border-dashed border-brand/40 bg-brand-soft/40 px-5 py-8 text-center">
-        <span aria-hidden="true" className="grid h-14 w-14 place-items-center rounded-full bg-card text-3xl text-brand">+</span>
-        <h2 className="text-lg">{t("Build your comparison")}</h2><p className="max-w-md text-sm text-muted">{t("Choose up to three universities to explore their differences together.")}</p>
-        <button type="button" className="btn-primary" onClick={() => setPickerOpen(true)} disabled={saving}>{t("Add University")}</button>
-      </div>}
       {chosen.length < 2 && <Note>{t("Pick at least 2 to compare.")}</Note>}
       {saveError && <Note>{saveError}</Note>}
       {chosen.length > 0 && (
         <div>
           <p className="px-1 pb-2 text-xs text-muted sm:hidden">{t("Swipe horizontally to compare universities")}</p>
-          <div className="compare-table compare-enter table-wrap max-w-full overflow-x-auto overscroll-x-contain" role="region" aria-label={t("Compare universities")} tabIndex={0}>
+          <div className="table-wrap max-w-full overflow-x-auto overscroll-x-contain" role="region" aria-label={t("Compare universities")} tabIndex={0}>
             <table className="w-full table-fixed" style={{ minWidth: `calc(9rem + ${18 * chosen.length}rem)` }}>
           <colgroup>
             <col style={{ width: "9rem" }} />

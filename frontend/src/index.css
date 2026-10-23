@@ -218,24 +218,3 @@ img, video, canvas { max-width: 100%; }
 @media (min-width: 640px) and (max-width: 1023px) {
   .table-wrap { scrollbar-gutter: stable; }
 }
-
-/* Comparison overview: compact highlights and gentle, one-time entrances. */
-.compare-hero {
-  background: radial-gradient(ellipse at 95% 0%, var(--color-brand-soft), transparent 65%), var(--color-card);
-  box-shadow: 0 8px 28px color-mix(in srgb, var(--color-brand) 7%, transparent);
-}
-.compare-highlight { border-top: 3px solid color-mix(in srgb, var(--color-brand) 35%, var(--color-line)); }
-.compare-highlight:nth-child(2) { border-top-color: var(--color-ok); }
-.compare-highlight:nth-child(3) { border-top-color: var(--color-brand); }
-.compare-table thead { background: linear-gradient(135deg, var(--color-brand-soft), var(--color-card)); }
-.compare-table tbody tr { transition: background-color 160ms ease; }
-.compare-table tbody tr:hover, .compare-table tbody tr:focus-within { background-color: var(--color-brand-soft); }
-.compare-enter { animation: compare-appear 450ms ease-out both; }
-@keyframes compare-appear {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .compare-enter { animation: none; }
-  .compare-table tbody tr { transition: none; }
-}
