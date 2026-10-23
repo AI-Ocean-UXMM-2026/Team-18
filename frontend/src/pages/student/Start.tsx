@@ -1,4 +1,4 @@
-// Step 1 start: education level + quiz intro (about 15 minutes).
+// Step 1 start: education level + quiz intro.
 import { useLocation } from "wouter";
 import type { Level } from "@/lib/api";
 import { useJourney } from "@/lib/journey";
@@ -23,7 +23,7 @@ export default function Start() {
         <div className="flex min-w-0 flex-col items-start gap-5">
           <p className="creative-sticker px-3 py-1 text-xs font-semibold">✦ {t("Career quiz")}</p>
           <h1 className="creative-display">{t("Find your")}<br /><span className="text-hero-muted">{t("next move.")}</span></h1>
-          <p className="max-w-md text-base leading-7 text-white/85">{content?.questions.length ?? 0} {t("questions · about 15 minutes. There are no right or wrong answers.")}</p>
+          <p className="max-w-md text-base leading-7 text-white/85">{content?.questions.length ?? 0} {t("questions. There are no right or wrong answers.")}</p>
           <span className="rounded-full border border-line bg-card px-3 py-1.5 font-mono text-xs font-semibold text-ink">{answered} / {flow.total} · {t("Quiz progress")}</span>
         </div>
         <div className="block"><KipGuide /></div>

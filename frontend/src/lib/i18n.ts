@@ -136,7 +136,7 @@ export const MYANMAR: Record<string, string> = {
   "Could not read the image. Please try another screenshot.": "ပုံကို ဖတ်၍မရပါ။ အခြား screenshot ကို စမ်းပါ။",
   "100% free for students": "ကျောင်းသားများအတွက် လုံးဝအခမဲ့",
   "12,400+ students guided": "ကျောင်းသား ၁၂,၄၀၀+ ကို လမ်းညွှန်ပြီး",
-  "20 questions · about 15 minutes. There are no right or wrong answers.": "မေးခွန်း ၂၀ · ၁၅ မိနစ်ခန့်။ မှန်သည် မှားသည် မရှိပါ။",
+  "questions. There are no right or wrong answers.": "မေးခွန်း။ မှန်သည် မှားသည် မရှိပါ။",
   "20 questions · about 16 minutes. There are no right or wrong answers.": "မေးခွန်း ၂၀ · ၁၆ မိနစ်ခန့်။ မှန်သည် မှားသည် မရှိပါ။",
   "3 movies, about 3 minutes each": "ရုပ်ရှင် ၃ ကား၊ တစ်ကားလျှင် ၃ မိနစ်ခန့်",
   "A 1-hour session with a professional in your career": "သင့်အသက်မွေးဝမ်းကျောင်းမှ ကျွမ်းကျင်သူနှင့် ၁ နာရီ ချိန်းဆိုမှု",
