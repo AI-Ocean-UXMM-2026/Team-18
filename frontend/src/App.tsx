@@ -15,6 +15,7 @@ import type { Role } from "@/lib/api";
 import { useJourney } from "@/lib/journey";
 import { JOURNEY_PATHS, studentProgress, studentRouteRedirect } from "@/lib/studentFlow";
 
+const SiteInfo = lazy(() => import("@/pages/SiteInfo"));
 const Landing = lazy(() => import("@/pages/Landing"));
 const Guide = lazy(() => import("@/pages/Guide"));
 const Login = lazy(() => import("@/pages/Login"));
@@ -116,6 +117,9 @@ export default function App() {
       <Switch>
         <Route path="/" component={Landing} />
         <Route path="/guide" component={Guide} />
+        <Route path="/about">{() => <SiteInfo page="about" />}</Route>
+        <Route path="/contact">{() => <SiteInfo page="contact" />}</Route>
+        <Route path="/privacy">{() => <SiteInfo page="privacy" />}</Route>
         <Route path="/login">{() => <Login portal="student" />}</Route>
         <Route path="/register" component={Register} />
         <Route path="/mentor/login">{() => <Login portal="mentor" />}</Route>

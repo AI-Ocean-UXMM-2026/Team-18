@@ -1,3 +1,4 @@
+import SiteFooter from "@/components/SiteFooter";
 // Shared shell: creative student workspace, portal navigation and settings.
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
@@ -137,7 +138,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   </div>;
 
   return (
-    <div className="creative-shell min-h-dvh bg-bg">
+    <div className="creative-shell flex min-h-dvh flex-col bg-bg">
       <header className="creative-header bg-card">
         <div className="mx-auto flex min-w-0 max-w-[1440px] flex-wrap items-center gap-2 px-3 py-3 sm:gap-3 sm:px-6">
           {studentWorkspace && <button ref={menuButtonRef} type="button" className="grid h-11 w-11 place-items-center rounded-lg border border-line text-lg text-ink hover:bg-soft" onClick={() => setNavOpen(true)} aria-label={t("Open navigation")} aria-haspopup="dialog" aria-expanded={navOpen} aria-controls="student-navigation">☰</button>}
@@ -153,7 +154,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         {nav.length > 0 && <nav aria-label={t("Portal navigation")} className="mx-auto flex max-w-[1440px] gap-1 overflow-x-auto px-4 sm:px-6">{nav.map(([p, l]) => <Link key={p} href={p} aria-current={location === p ? "page" : undefined} className={`tab min-h-11 ${location === p ? "tab-on" : ""}`}>{t(l)}</Link>)}</nav>}
       </header>
 
-      {studentWorkspace ? <div className="mx-auto flex min-h-[calc(100dvh-4rem)] min-w-0 max-w-[1440px]">
+      {studentWorkspace ? <div className="mx-auto flex w-full flex-1 min-w-0 max-w-[1440px]">
         {navOpen && <div className="fixed inset-0 z-40" role="presentation">
           <button type="button" className="absolute inset-0 bg-brand-deep/40 backdrop-blur-[2px]" onClick={() => setNavOpen(false)} aria-label={t("Close navigation")} />
           <aside ref={navPanelRef} id="student-navigation" role="dialog" aria-modal="true" aria-labelledby="student-navigation-title" className="creative-sidebar relative z-10 flex h-full w-[min(20rem,85vw)] flex-col overflow-y-auto border-r-2 border-line bg-card py-2 shadow-2xl" aria-label={t("Student navigation")}>{studentNav()}</aside>
@@ -162,7 +163,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           {isGuest && <div className="rounded-xl border border-info bg-info-soft px-4 py-3 text-sm">{t("Guest progress is temporary and won't be saved until you create an account.")} <Link href="/register" className="ml-1 font-semibold text-brand">{t("Create account to save your progress")}</Link></div>}
           {children}
         </main>
-      </div> : <main className="mx-auto flex min-w-0 w-full max-w-[1440px] flex-col gap-6 px-3 pb-16 pt-6 sm:px-6 sm:pt-8 lg:px-8">{children}</main>}
+      </div> : <main className="mx-auto flex flex-1 min-w-0 w-full max-w-[1440px] flex-col gap-6 px-3 pb-16 pt-6 sm:px-6 sm:pt-8 lg:px-8">{children}</main>}
+      <SiteFooter />
       {studentWorkspace && <FloatingAdvisor />}
       <HomeIntro />
     </div>

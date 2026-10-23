@@ -33,10 +33,7 @@ export default function Landing() {
         </div>
       </section>
 
-      <footer className="flex flex-col items-center justify-between gap-3 border-t border-line pt-5 text-sm text-muted sm:flex-row">
-        <span>CareerNest · {t("Career guidance for students in Myanmar")}</span>
-        <div className="flex flex-wrap justify-center gap-4"><Link href="/guide" className="hover:text-brand">{t("Guide")}</Link><Link href="/mentor/login" className="hover:text-brand">{t("Mentor sign in")}</Link><Link href="/mentor/apply" className="hover:text-brand">{t("Apply to become a mentor")}</Link><Link href="/admin/login" className="hover:text-brand">{t("Admin sign in")}</Link></div>
-      </footer>
+
 
     </div>
   );
