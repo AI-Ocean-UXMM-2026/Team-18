@@ -11,7 +11,7 @@ const TITLES: Record<Role, string> = { student: "Student sign in", mentor: "Ment
 const DEMO_ACCOUNTS: Record<Role, { email: string; label: string }[]> = {
   student: [
     { email: "student@careernet.local", label: "Demo student · Normal (limited AI)" },
-    { email: "pro@careernet.local", label: "Demo student · Pro (AI + PDF)" },
+    { email: "pro@careernet.local", label: "Demo student · Pro (AI + PDF + mentor sessions)" },
   ],
   mentor: [{ email: "hnin@mentor.careernet.local", label: "Demo mentor" }],
   admin: [{ email: "super@careernet.local", label: "Super admin" }],
