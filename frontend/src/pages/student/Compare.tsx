@@ -1,4 +1,4 @@
-// Side-by-side compare. No fees, no marks. Choices auto-save to the account.
+// Side-by-side university overview, tuition, scholarships and entry information.
 import { useState, type ReactNode } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/lib/auth";
@@ -25,7 +25,9 @@ export default function Compare() {
     ["Website", i => <a className="text-brand" href={i.university.website} target="_blank" rel="noreferrer">{i.university.website.replace(/^https?:\/\//, "")}</a>],
   ];
   const intlRows: [string, (i: IntlItem) => ReactNode][] = [
-    ["Scholarships", i => <span className={i.school.hasScholarship ? "" : "text-muted"}>{i.school.scholarship}</span>],
+    ["Annual Average Tuition", i => <div><p className="text-base font-bold text-brand">{i.school.annualTuition || t("Confirm with university")}</p>{!i.school.annualTuition && <a className="mt-1 inline-block text-xs text-brand underline" href={i.school.website} target="_blank" rel="noreferrer">{t("Official university website")}</a>}</div>],
+    ["Scholarship Grants", i => <div className="space-y-2"><span className={`inline-block rounded-full px-2.5 py-1 text-xs font-semibold ${i.school.hasScholarship ? "bg-ok-soft text-ok" : "bg-soft text-muted"}`}>{t(i.school.hasScholarship ? "Scholarship available" : "Confirm scholarship availability")}</span><p className="text-sm leading-6">{i.school.scholarship || t("Confirm with university")}</p></div>],
+    ["Accepted Credentials", i => <div className="flex flex-wrap gap-2">{([ ["GED", i.school.ged.ok], ["IGCSE", i.school.igcse.ok] ] as const).map(([label, status]) => <span key={label} className={`rounded-md px-2 py-1 text-xs font-semibold ${status === "yes" ? "bg-brand-soft text-brand" : "bg-soft text-muted"}`}>{label} · {t(status === "yes" ? "Accepted" : status === "no" ? "Not direct" : "Confirm")}</span>)}</div>],
     ["Entry requirements", i => <>{i.school[lv].note}{lv === "ged" && i.school.ged.tests && <p className="text-xs text-muted">{i.school.ged.tests}</p>}</>],
     ["English requirement", i => i.school.english], ["Programmes", i => i.school.programs.join(" · ")], ["Degree / partner", i => i.school.partner],
     ["Admission process", i => i.school.admission], ["Pathway", i => i.school.pathway], ["Duration", i => i.school.duration], ["Intakes", i => i.school.intakes],
@@ -51,7 +53,7 @@ export default function Compare() {
             <col style={{ width: "9rem" }} />
             {chosen.map(i => <col key={i.key} style={{ width: `calc(${100 / chosen.length}% - ${9 / chosen.length}rem)` }} />)}
           </colgroup>
-          <thead><tr><th />{chosen.map(i => <th key={i.key}><UniPhoto item={i} small /><span className="font-mono text-xs text-brand">{itemCode(i)}</span> <span className="text-sm text-ink">{itemName(i)}</span><button className="mt-1 block min-h-11 border-0 bg-transparent p-0 text-sm font-semibold text-brand transition-colors hover:text-bad focus-visible:text-bad" onClick={() => set(p => ({ compare: p.compare.filter(k => k !== i.key) }))}>{t("Remove")}</button></th>)}</tr></thead>
+          <thead><tr><th>{t("University overview")}</th>{chosen.map(i => <th key={i.key}><div className="[&>img]:h-28 [&>img]:aspect-auto [&>div]:h-28 [&>div]:aspect-auto"><UniPhoto item={i} small /></div><p className="mb-1 text-xs font-semibold uppercase text-brand">{i.kind === "g12" ? i.university.type : i.school.type}</p><span className="font-mono text-xs text-brand">{itemCode(i)}</span> <span className="text-sm text-ink">{itemName(i)}</span><p className="mt-1 text-xs font-normal text-muted">{i.kind === "g12" ? i.university.location : `${i.school.city}, ${i.school.country}`}</p><button className="mt-1 block min-h-11 border-0 bg-transparent p-0 text-sm font-semibold text-brand transition-colors hover:text-bad focus-visible:text-bad" onClick={() => set(p => ({ compare: p.compare.filter(k => k !== i.key) }))}>{t("Remove")}</button></th>)}</tr></thead>
           <tbody>{visibleRows.map(([label, cell]) => <tr key={label}><th>{t(label)}</th>{chosen.map(i => <td key={i.key}>{cell(i)}</td>)}</tr>)}</tbody>
             </table>
           </div>

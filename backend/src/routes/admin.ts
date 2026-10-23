@@ -19,6 +19,7 @@ export const adminRouter = Router();
 adminRouter.use("/admin", requireRole("admin"));
 const ops = requireAdmin("ops"), content = requireAdmin("content"), superOnly = requireAdmin();
 const adminUniversitySchema = z.object({
+  annualTuition: z.string().trim().max(300).default(""),
   code: z.string().trim().min(2).max(20).regex(/^[A-Za-z0-9-]+$/, "Use letters, numbers, or hyphens for the code."),
   name: z.string().trim().min(2).max(180), country: z.string().trim().min(2).max(100), city: z.string().trim().max(120).default(""),
   type: z.string().trim().max(120).default("University"), mode: z.string().trim().max(80).default("On campus"), established: z.string().trim().max(20).default(""),

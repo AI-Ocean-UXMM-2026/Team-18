@@ -14,7 +14,7 @@ export type School = {
   id: string; code: string; name: string; country: string; city: string; type: string; mode: string; established: string;
   fields: number[]; description: string; partner: string; programs: string[];
   ged: { ok: Accepts; note: string; tests: string }; igcse: { ok: Accepts; note: string };
-  english: string; admission: string; pathway: string; duration: string; intakes: string;
+  english: string; admission: string; pathway: string; duration: string; intakes: string; annualTuition?: string;
   hasScholarship: boolean; scholarship: string; website: string; source: string; photo: string; lastChecked: string;
 };
 const list = (v?: string) => String(v ?? "").split(";").map(s => s.trim()).filter(Boolean);
@@ -28,7 +28,7 @@ export function rowToSchool(r: Record<string, string>): School {
     ged: { ok: acc(r.ged_ok), note: r.ged_note ?? "", tests: r.ged_tests ?? "" }, igcse: { ok: acc(r.igcse_ok), note: r.igcse_note ?? "" },
     english: r.english ?? "", admission: r.admission ?? "", pathway: r.pathway ?? "", duration: r.duration ?? "", intakes: r.intakes ?? "",
     hasScholarship: (r.has_scholarship ?? "").trim().toLowerCase() === "yes", scholarship: r.scholarship ?? "",
-    website: r.website ?? "", source: r.source ?? "", photo: r.photo ?? "", lastChecked: r.last_checked ?? "",
+    website: r.website ?? "", source: r.source ?? "", photo: r.photo ?? "", lastChecked: r.last_checked ?? "", annualTuition: r.annual_tuition ?? "",
   };
 }
 export function parseSchoolsCsv(text: string) {

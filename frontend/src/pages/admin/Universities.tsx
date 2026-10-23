@@ -8,13 +8,14 @@ type Accepts = "yes" | "no" | "confirm";
 type Row = { id: string; code: string; name: string; country: string; hasScholarship: boolean; ged: Accepts; igcse: Accepts; lastChecked: string; source: string; needsCheck: boolean };
 type D = { source: string; sheetConnected: boolean; adminAdded: number; g12: { universities: number; programs: number }; schools: Row[] };
 type ImportUniversity = {
+  annualTuition: string;
   code: string; name: string; country: string; city: string; type: string; mode: string; established: string; fields: number[];
   ged: { ok: Accepts; note: string; tests: string }; igcse: { ok: Accepts; note: string };
   hasScholarship: boolean; scholarship: string; programs: string[]; partner: string; english: string; duration: string;
   intakes: string; website: string; source: string; description: string; admission: string; pathway: string; photo: string;
 };
 
-const COLUMNS = ["Code", "University", "Country", "City", "GED acceptance", "GED requirements", "GED tests", "IGCSE acceptance", "IGCSE requirements", "Scholarship available", "Scholarship details", "Programmes", "University type", "Study mode", "Established", "Degree / partner", "English requirement", "Duration", "Intakes", "Website", "Source link", "Description", "Admission process", "Pathway"];
+const COLUMNS = ["Code", "University", "Country", "City", "GED acceptance", "GED requirements", "GED tests", "IGCSE acceptance", "IGCSE requirements", "Scholarship available", "Scholarship details", "Programmes", "University type", "Study mode", "Established", "Degree / partner", "English requirement", "Duration", "Intakes", "Website", "Source link", "Description", "Admission process", "Pathway", "Annual tuition (amount, currency, per year)"];
 const blankRow = () => Array.from({ length: COLUMNS.length }, () => "");
 const hasText = (row: string[]) => row.some(cell => cell.trim());
 const list = (value: string) => value.split(";").map(item => item.trim()).filter(Boolean);
@@ -36,7 +37,7 @@ function toUniversity(row: string[]): ImportUniversity {
     type: (row[12] ?? "").trim() || "University", mode: (row[13] ?? "").trim() || "On campus", established: (row[14] ?? "").trim(),
     partner: (row[15] ?? "").trim(), english: (row[16] ?? "").trim(), duration: (row[17] ?? "").trim(), intakes: (row[18] ?? "").trim(),
     website: (row[19] ?? "").trim(), source: (row[20] ?? "").trim(), description: (row[21] ?? "").trim(),
-    admission: (row[22] ?? "").trim(), pathway: (row[23] ?? "").trim(), photo: "", fields: [],
+    admission: (row[22] ?? "").trim(), pathway: (row[23] ?? "").trim(), photo: "", fields: [], annualTuition: (row[24] ?? "").trim(),
   };
 }
 
