@@ -41,7 +41,8 @@ export default function Compare() {
   const lv = j.level === "igcse" ? "igcse" : "ged";
   const g12Rows: [string, (i: G12Item) => ReactNode][] = [
     ["Highlights", i => i.university.description],
-    ["Programmes", i => i.programs.join(" · ")], ["Admission", i => i.university.admission], ["Type", i => i.university.type],
+    ["Annual Average Tuition", i => <div><p className="text-base font-bold text-brand">{t("Confirm with university")}</p><a className="mt-1 inline-block text-xs text-brand underline" href={i.university.website} target="_blank" rel="noreferrer">{t("Official university website")}</a></div>],
+    ["Popular Degree Programs", i => i.programs.join(" · ")], ["Admission", i => i.university.admission], ["Type", i => i.university.type],
     ["Location", i => i.university.location], ["Established", i => i.university.established],
     ["Website", i => <a className="text-brand" href={i.university.website} target="_blank" rel="noreferrer">{i.university.website.replace(/^https?:\/\//, "")}</a>],
   ];
@@ -50,9 +51,10 @@ export default function Compare() {
     ["Annual Average Tuition", i => <div><p className="text-base font-bold text-brand">{i.school.annualTuition || t("Confirm with university")}</p>{!i.school.annualTuition && <a className="mt-1 inline-block text-xs text-brand underline" href={i.school.website} target="_blank" rel="noreferrer">{t("Official university website")}</a>}</div>],
     ["Scholarship Grants", i => <div className="space-y-2"><span className={`inline-block rounded-full px-2.5 py-1 text-xs font-semibold ${i.school.hasScholarship ? "bg-ok-soft text-ok" : "bg-soft text-muted"}`}>{t(i.school.hasScholarship ? "Scholarship available" : "Confirm scholarship availability")}</span><p className="text-sm leading-6">{i.school.scholarship || t("Confirm with university")}</p></div>],
     ["Accepted Credentials", i => <div className="flex flex-wrap gap-2">{([ ["GED", i.school.ged.ok], ["IGCSE", i.school.igcse.ok] ] as const).map(([label, status]) => <span key={label} className={`rounded-md px-2 py-1 text-xs font-semibold ${status === "yes" ? "bg-brand-soft text-brand" : "bg-soft text-muted"}`}>{label} · {t(status === "yes" ? "Accepted" : status === "no" ? "Not direct" : "Confirm")}</span>)}</div>],
+    ["Popular Degree Programs", i => i.school.programs.join(" · ")], ["Intakes & deadlines", i => i.school.intakes || t("Confirm with university")],
     ["Entry requirements", i => <>{i.school[lv].note}{lv === "ged" && i.school.ged.tests && <p className="text-xs text-muted">{i.school.ged.tests}</p>}</>],
-    ["English requirement", i => i.school.english], ["Programmes", i => i.school.programs.join(" · ")], ["Degree / partner", i => i.school.partner],
-    ["Admission process", i => i.school.admission], ["Pathway", i => i.school.pathway], ["Duration", i => i.school.duration], ["Intakes", i => i.school.intakes],
+    ["English requirement", i => i.school.english], ["Degree / partner", i => i.school.partner],
+    ["Admission process", i => i.school.admission], ["Pathway", i => i.school.pathway], ["Duration", i => i.school.duration],
     ["Location", i => `${i.school.city}, ${i.school.country}`], ["Study mode", i => i.school.mode], ["Established", i => i.school.established || "–"],
     ["Website", i => <a className="text-brand" href={i.school.website} target="_blank" rel="noreferrer">{i.school.website.replace(/^https?:\/\//, "")}</a>],
     ["Source", i => <a className="text-brand" href={i.school.source} target="_blank" rel="noreferrer">{t("Entry info")} · {i.school.lastChecked}</a>],
@@ -63,8 +65,26 @@ export default function Compare() {
   const visibleRows = showAllInfo ? rows : collapsedRows;
   return (
     <>
-      <PageHead back="/student/explorer" eyebrow="Step 2 · Compare universities" title="Side by side" />
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <PageHead back="/student/explorer" eyebrow="Step 2 · Side by side" title="Compare Universities">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+              <span className="rounded-full bg-brand-soft px-2.5 py-1 text-xs font-semibold text-brand" aria-live="polite">{chosen.length} / 3 {t("selected to compare")}</span>
+              <span>{t("Directly compare tuition, scholarships, accepted credentials, and university highlights.")}</span>
+            </div>
+          </PageHead>
+        </div>
+        <div className="flex shrink-0 flex-wrap gap-2 sm:pt-8">
+          <button type="button" className="btn-outline" onClick={() => setPickerOpen(true)} disabled={saving}>
+            <span aria-hidden="true" className="mr-1 text-lg leading-none">+</span>{t("Add University")}
+          </button>
+          <button type="button" className="btn-primary" disabled={chosen.length < 2 || saving} onClick={() => void completeComparison()}>
+            {t(saving ? "Saving…" : "Go to My Plan")}
+          </button>
+        </div>
+      </div>
       {chosen.length < 2 && <Note>{t("Pick at least 2 to compare.")}</Note>}
+      {saveError && <Note>{saveError}</Note>}
       {chosen.length > 0 && (
         <div>
           <p className="px-1 pb-2 text-xs text-muted sm:hidden">{t("Swipe horizontally to compare universities")}</p>
@@ -101,7 +121,8 @@ export default function Compare() {
         </div>
       )}
       {j.level !== "g12" && chosen.length > 0 && <AdvisorChat title="AI university advisor" subtitle="Ask about the options in this table." endpoint="/ai/advisor" payload={{ level: j.level, careerId: j.careerId, majors: j.majors, comparing: chosen.map(itemName) }} suggestions={["Compare these for me in plain words", "Which one is the safest choice?"]} />}
-      <Actions>{user?.isPro && <button className="btn-outline" disabled={chosen.length < 2 || saving} onClick={() => void completeComparison("/student/mentors")}>{t("Meet a mentor")}</button>}<button className="btn-primary" disabled={chosen.length < 2 || saving} onClick={() => void completeComparison()}>{t(saving ? "Saving�" : isGuest ? "Continue" : "Save & continue")}</button></Actions>
+      <Actions>{user?.isPro && <button className="btn-outline" disabled={chosen.length < 2 || saving} onClick={() => void completeComparison("/student/mentors")}>{t("Meet a mentor")}</button>}<button className="btn-primary" disabled={chosen.length < 2 || saving} onClick={() => void completeComparison()}>{t(saving ? "Saving…" : isGuest ? "Continue" : "Save & continue")}</button></Actions>
+      {pickerOpen && <CompareUniversityPicker items={data.items} selected={j.compare} onAdd={addUniversity} onClose={closePicker} />}
     </>
   );
 }
