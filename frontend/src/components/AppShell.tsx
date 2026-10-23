@@ -7,6 +7,7 @@ import { usePrefs } from "@/lib/prefs";
 import { JOURNEY_PATHS, studentProgress, studentRouteRedirect } from "@/lib/studentFlow";
 import { FloatingAdvisor } from "@/components/FloatingAdvisor";
 import BrandLogo from "@/components/BrandLogo";
+import HomeIntro from "@/components/HomeIntro";
 
 const STUDENT_NAV = [
   ["/student", "Home / Dashboard", "⌂"],
@@ -163,6 +164,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </main>
       </div> : <main className="mx-auto flex min-w-0 w-full max-w-[1440px] flex-col gap-6 px-3 pb-16 pt-6 sm:px-6 sm:pt-8 lg:px-8">{children}</main>}
       {studentWorkspace && <FloatingAdvisor />}
+      <HomeIntro />
     </div>
   );
 }
