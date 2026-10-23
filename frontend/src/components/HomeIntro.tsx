@@ -6,6 +6,7 @@ export default function HomeIntro() {
   const [showIntro, setShowIntro] = useState(true);
   const introRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const playbackPosition = useRef(0);
   const [needsPlay, setNeedsPlay] = useState(false);
   const playIntro = () => { videoRef.current?.play().then(() => setNeedsPlay(false)).catch(() => setNeedsPlay(true)); };
@@ -15,11 +16,11 @@ export default function HomeIntro() {
     if (!showIntro) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    introRef.current?.focus();
+    closeButtonRef.current?.focus();
     playIntro();
     const focusable = () => Array.from(introRef.current?.querySelectorAll<HTMLElement>("button:not(:disabled), video[controls], a[href], [tabindex]:not([tabindex='-1'])") ?? []);
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") { event.preventDefault(); return; }
+      if (event.key === "Escape") { event.preventDefault(); closeIntro(); return; }
       if (event.key !== "Tab") return;
       const items = focusable();
       const first = items[0]; const last = items[items.length - 1];
@@ -44,6 +45,7 @@ export default function HomeIntro() {
           onPlaying={() => setNeedsPlay(false)}
           onEnded={closeIntro} onError={() => setShowIntro(false)} aria-label={t("CareerNest introduction video")} />
         {needsPlay && <div className="absolute inset-0 grid place-items-center bg-black/30"><button type="button" className="btn-primary" onClick={playIntro}>{t("Play introduction")}</button></div>}
+        <button ref={closeButtonRef} type="button" onClick={closeIntro} aria-label={t("Close introduction")} className="absolute right-2 top-2 z-10 grid h-11 w-11 place-items-center rounded-full border border-white/50 bg-black/70 text-2xl text-white transition hover:bg-black/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-3 sm:top-3"><span aria-hidden="true">×</span></button>
       </div>
     </section>
   );
