@@ -157,7 +157,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <button type="button" className="absolute inset-0 bg-brand-deep/40 backdrop-blur-[2px]" onClick={() => setNavOpen(false)} aria-label={t("Close navigation")} />
           <aside ref={navPanelRef} id="student-navigation" role="dialog" aria-modal="true" aria-labelledby="student-navigation-title" className="creative-sidebar relative z-10 flex h-full w-[min(20rem,85vw)] flex-col overflow-y-auto border-r-2 border-line bg-card py-2 shadow-2xl" aria-label={t("Student navigation")}>{studentNav()}</aside>
         </div>}
-        <main className="mx-auto flex min-w-0 w-full max-w-7xl flex-col gap-6 px-3 pb-16 pt-5 sm:gap-6 sm:px-6 sm:pt-8">
+        <main className="mx-auto flex min-w-0 w-full max-w-7xl flex-col gap-6 px-3 pb-24 pt-5 sm:gap-6 sm:px-6 sm:pt-8">
           {isGuest && <div className="rounded-xl border border-info bg-info-soft px-4 py-3 text-sm">{t("Guest progress is temporary and won't be saved until you create an account.")} <Link href="/register" className="ml-1 font-semibold text-brand">{t("Create account to save your progress")}</Link></div>}
           {children}
         </main>
