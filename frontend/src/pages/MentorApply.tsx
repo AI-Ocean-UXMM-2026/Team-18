@@ -1,3 +1,4 @@
+import PasswordInput from "@/components/PasswordInput";
 // Mentor application: reviewed by an admin before the mentor can sign in.
 import { useState } from "react";
 import { Link } from "wouter";
@@ -16,7 +17,7 @@ export default function MentorApply() {
     catch (err) { setError(err instanceof Error ? err.message : "Could not send."); } finally { setBusy(false); }
   }
   if (done) return <section className="card mx-auto flex max-w-md flex-col items-center gap-3 text-center"><BrandLogo /><h1 className="text-2xl">{t("Application sent")}</h1><p className="text-muted">{t("The CareerNest team will review it. You can sign in after it is approved.")}</p><Link href="/mentor/login" className="btn-primary">{t("Mentor sign in")}</Link></section>;
-  const inp = (k: keyof typeof f, label: string, type = "text") => <label className="label">{t(label)}<input className="input" type={type} value={f[k] as string | number} onChange={e => setF({ ...f, [k]: e.target.value })} /></label>;
+  const inp = (k: keyof typeof f, label: string, type = "text") => <label className="label">{t(label)}{type === "password" ? <PasswordInput className="input" value={f[k] as string | number} onChange={e => setF({ ...f, [k]: e.target.value })} /> : <input className="input" type={type} value={f[k] as string | number} onChange={e => setF({ ...f, [k]: e.target.value })} />}</label>;
   return (
     <section className="card mx-auto flex w-full max-w-lg flex-col gap-4">
       <BrandLogo /><p className="eyebrow">{t("Mentor portal")}</p><h1 className="text-2xl">{t("Apply to become a mentor")}</h1>

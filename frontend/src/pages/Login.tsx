@@ -1,3 +1,4 @@
+import PasswordInput from "@/components/PasswordInput";
 // One sign-in page per portal: /login, /mentor/login, /admin/login
 import { useState } from "react";
 import { Link, Redirect, useLocation } from "wouter";
@@ -31,7 +32,7 @@ export default function Login({ portal }: { portal: Role }) {
       <BrandLogo /><h1 className="text-3xl">{t(TITLES[portal])}</h1>
       <form className="flex flex-col gap-3" onSubmit={submit} noValidate>
         <label className="label">{t("Email")}<input className="input" type="email" autoComplete="username" value={email} onChange={e => setEmail(e.target.value)} required /></label>
-        <label className="label">{t("Password")}<input className="input" type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required /></label>
+        <label className="label">{t("Password")}<PasswordInput className="input" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required /></label>
         {error && <p className="text-sm font-semibold text-bad">{error}</p>}
         <button className="btn-primary" disabled={busy}>{t("Sign in")}</button>
       </form>

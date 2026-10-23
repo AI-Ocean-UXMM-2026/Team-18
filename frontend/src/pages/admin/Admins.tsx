@@ -1,3 +1,4 @@
+import PasswordInput from "@/components/PasswordInput";
 // Super admin: create admin accounts and read the activity log.
 import { useState } from "react";
 import { api } from "@/lib/api";
@@ -20,7 +21,7 @@ export default function Admins() {
       <form className="card grid gap-3 md:grid-cols-5 md:items-end" onSubmit={create}>
         <label className="label">{t("Name")}<input className="input" value={f.name} onChange={e => setF({ ...f, name: e.target.value })} /></label>
         <label className="label">{t("Email")}<input className="input" type="email" value={f.email} onChange={e => setF({ ...f, email: e.target.value })} /></label>
-        <label className="label">{t("Password")}<input className="input" type="password" value={f.password} onChange={e => setF({ ...f, password: e.target.value })} /></label>
+        <label className="label">{t("Password")}<PasswordInput className="input" value={f.password} onChange={e => setF({ ...f, password: e.target.value })} /></label>
         <label className="label">{t("Role")}<select className="input" value={f.adminRole} onChange={e => setF({ ...f, adminRole: e.target.value })}><option value="ops">Operations</option><option value="content">Content editor</option><option value="super">Super admin</option></select></label>
         <button className="btn-primary">{t("Create admin")}</button>
       </form>

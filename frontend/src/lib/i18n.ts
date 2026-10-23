@@ -245,6 +245,8 @@ export const MYANMAR: Record<string, string> = {
   "Pick the career that feels right to you.": "သင့်နှင့် အဆင်ပြေမည့် အသက်မွေးဝမ်းကျောင်းကို ရွေးပါ။",
   "Clear": "ရှင်းမည်",
   "Close": "ပိတ်ရန်",
+  "Show password": "စကားဝှက်ကို ပြရန်",
+  "Hide password": "စကားဝှက်ကို ဖျောက်ရန်",
   "Close, one gap": "နီးပါး၊ လိုအပ်ချက် တစ်ခုကျန်",
   "Compare & choose a career": "နှိုင်းယှဉ်ပြီး ရွေးချယ်ရန်",
   "Compare side by side · AI advisor": "ဘေးချင်းယှဉ် နှိုင်းယှဉ်ခြင်း · AI အကြံပေး",

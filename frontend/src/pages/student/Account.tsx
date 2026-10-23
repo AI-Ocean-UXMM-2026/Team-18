@@ -1,3 +1,4 @@
+import PasswordInput from "@/components/PasswordInput";
 import { useEffect, useState, type FormEvent } from "react";
 import { Link } from "wouter";
 import { ErrorNote, PageHead, Pill, Spinner, toast } from "@/components/ui";
@@ -91,9 +92,9 @@ export default function StudentAccount() {
     <section className="card">
       <h2 className="text-lg">{t("Change password")}</h2>
       <form className="mt-4 grid gap-3 sm:grid-cols-2" onSubmit={changePassword}>
-        <label className="label sm:col-span-2">{t("Current password")}<input className="input" type="password" autoComplete="current-password" value={currentPassword} onChange={event => setCurrentPassword(event.target.value)} required /></label>
-        <label className="label">{t("New password")}<input className="input" type="password" autoComplete="new-password" minLength={8} value={newPassword} onChange={event => setNewPassword(event.target.value)} required /></label>
-        <label className="label">{t("Confirm new password")}<input className="input" type="password" autoComplete="new-password" minLength={8} value={confirmPassword} onChange={event => setConfirmPassword(event.target.value)} required /></label>
+        <label className="label sm:col-span-2">{t("Current password")}<PasswordInput className="input" autoComplete="current-password" value={currentPassword} onChange={event => setCurrentPassword(event.target.value)} required /></label>
+        <label className="label">{t("New password")}<PasswordInput className="input" autoComplete="new-password" minLength={8} value={newPassword} onChange={event => setNewPassword(event.target.value)} required /></label>
+        <label className="label">{t("Confirm new password")}<PasswordInput className="input" autoComplete="new-password" minLength={8} value={confirmPassword} onChange={event => setConfirmPassword(event.target.value)} required /></label>
         <div className="flex flex-col items-start gap-2 sm:col-span-2"><button className="btn-outline" disabled={busy}>{t("Update password")}</button>{message && <p className="text-sm text-bad" role="alert">{message}</p>}</div>
       </form>
     </section>

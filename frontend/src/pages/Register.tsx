@@ -1,3 +1,4 @@
+import PasswordInput from "@/components/PasswordInput";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/lib/auth";
@@ -17,7 +18,7 @@ export default function Register() {
     setBusy(true);
     try { await register(f.name.trim(), f.email.trim(), f.password); go("/student"); } catch (err) { setError(err instanceof Error ? err.message : "Could not create the account."); } finally { setBusy(false); }
   }
-  const field = (k: keyof typeof f, label: string, type = "text", ac = "") => <label className="label">{t(label)}<input className="input" type={type} autoComplete={ac} value={f[k]} onChange={e => setF({ ...f, [k]: e.target.value })} /></label>;
+  const field = (k: keyof typeof f, label: string, type = "text", ac = "") => <label className="label">{t(label)}{type === "password" ? <PasswordInput className="input" autoComplete={ac} value={f[k]} onChange={e => setF({ ...f, [k]: e.target.value })} /> : <input className="input" type={type} autoComplete={ac} value={f[k]} onChange={e => setF({ ...f, [k]: e.target.value })} />}</label>;
   return (
     <AuthLayout>
     <section className="card mx-auto flex w-full max-w-md flex-col gap-4 lg:max-w-none">
