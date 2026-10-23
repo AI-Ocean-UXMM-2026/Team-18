@@ -47,7 +47,7 @@ const questionImportSchema = z.object({
 const videoUploadSchema = z.object({
   careerId: z.string().trim().min(1).max(40),
   fileName: z.string().trim().min(1).max(180),
-  contentType: z.enum(["video/mp4", "video/webm", "video/quicktime"]),
+  contentType: z.literal("video/mp4"),
   size: z.number().int().positive().max(50 * 1024 * 1024),
 });
 const videoCompleteSchema = z.object({
@@ -239,7 +239,7 @@ adminRouter.post("/admin/content/videos/sign", content, route(async req => {
   const bucket = encodeURIComponent(ENV.supabaseVideoBucket);
   const bucketResponse = await storageRequest("/bucket", {
     method: "POST",
-    body: JSON.stringify({ id: ENV.supabaseVideoBucket, name: ENV.supabaseVideoBucket, public: true, file_size_limit: 50 * 1024 * 1024, allowed_mime_types: ["video/mp4", "video/webm", "video/quicktime"] }),
+    body: JSON.stringify({ id: ENV.supabaseVideoBucket, name: ENV.supabaseVideoBucket, public: true, file_size_limit: 50 * 1024 * 1024, allowed_mime_types: ["video/mp4"] }),
   });
   if (!bucketResponse.ok) {
     const existingBucket = await storageRequest(`/bucket/${bucket}`);

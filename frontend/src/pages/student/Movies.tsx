@@ -10,6 +10,7 @@ export default function Movies() {
   const { j, set } = useJourney(); const { t } = usePrefs();
   const { data, loading } = useScore(j);
   const [selected, setSelected] = useState(0);
+  const [unplayableVideo, setUnplayableVideo] = useState<string | null>(null);
   if (loading || !data) return <Spinner />;
   const current = data.top[selected]?.career ?? data.top[0].career;
   return (
@@ -22,7 +23,12 @@ export default function Movies() {
         <div className="flex flex-col gap-5 lg:col-span-2">
           <article className="overflow-hidden rounded-xl border border-line bg-card">
             <div className="relative grid aspect-video place-items-center bg-brand-deep text-white">
-              {current.video.url ? <video key={current.id} src={current.video.url} controls preload="metadata" playsInline onEnded={() => set(p => ({ watched: { ...p.watched, [current.id]: true } }))} className="h-full w-full object-contain" aria-label={`${current.t} career video`} /> : <div className="text-center"><span className="mb-3 block text-4xl" aria-hidden="true">▷</span><p>{t("Video coming soon")}</p></div>}
+              {current.video.url ? unplayableVideo === current.id ? (
+                <div className="flex h-full flex-col items-center justify-center gap-3 p-4 text-center" role="alert">
+                  <p className="text-sm">{t("This video could not play on this device. Try opening it in a new tab.")}</p>
+                  <a className="btn-outline bg-card text-ink" href={current.video.url} target="_blank" rel="noreferrer">{t("Open video in a new tab")}</a>
+                </div>
+              ) : <video key={current.id} src={current.video.url} controls preload="metadata" playsInline webkit-playsinline="true" onError={() => setUnplayableVideo(current.id)} onCanPlay={() => setUnplayableVideo(null)} onEnded={() => set(p => ({ watched: { ...p.watched, [current.id]: true } }))} className="h-full w-full object-contain" aria-label={`${current.t} career video`} /> : <div className="text-center"><span className="mb-3 block text-4xl" aria-hidden="true">▷</span><p>{t("Video coming soon")}</p></div>}
             </div>
             <div className="p-5"><span className="text-xs font-semibold text-brand">{t("Career spotlight")} · {current.video.len}</span><h2 className="mt-2 text-xl">{current.t}</h2><p className="mt-2 text-sm text-muted">{current.blurb}</p></div>
           </article>

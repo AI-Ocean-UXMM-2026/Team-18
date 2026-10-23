@@ -128,13 +128,13 @@ export default function Content() {
 
   async function uploadCareerVideo(careerId: string, file: File) {
     if (!data?.videoUploadReady) return;
-    if (!["video/mp4", "video/webm", "video/quicktime"].includes(file.type)) { toast(t("Choose an MP4, WebM, or MOV video.")); return; }
+    if (!/\.mp4$/i.test(file.name) || (file.type && file.type !== "video/mp4")) { toast(t("Choose an MP4 encoded with H.264 video and AAC audio for broad browser support.")); return; }
     if (file.size > 50 * 1024 * 1024) { toast(t("Video files must be 50 MB or smaller.")); return; }
     setVideoUploads(current => ({ ...current, [careerId]: 0 }));
     try {
       const durationSeconds = await readVideoDuration(file);
       if (!Number.isFinite(durationSeconds) || durationSeconds <= 0 || durationSeconds > 180) throw new Error(t("Video must be 3 minutes or shorter."));
-      const signed = await api.post<SignedVideoUpload>("/admin/content/videos/sign", { careerId, fileName: file.name, contentType: file.type, size: file.size });
+      const signed = await api.post<SignedVideoUpload>("/admin/content/videos/sign", { careerId, fileName: file.name, contentType: file.type || "video/mp4", size: file.size });
       await uploadResumableVideo(file, signed, progress => setVideoUploads(current => ({ ...current, [careerId]: progress })));
       await api.post("/admin/content/videos/complete", { careerId, objectPath: signed.objectPath, durationSeconds });
       toast(t("Career video uploaded."));
@@ -288,9 +288,10 @@ export default function Content() {
     </section>
 
     <div className="table-wrap"><table><thead><tr><th>{t("Career")}</th><th>{t("Majors")}</th><th>{t("Short movie")}</th><th>{t("Video file")}</th></tr></thead><tbody>{data.careers.map(c => <tr key={c.id}><td><b>{c.title}</b></td><td className="text-xs">{c.majors.join(", ")}</td><td>{c.hasVideo ? <Pill tone="ok">{t("Uploaded")}</Pill> : <Pill tone="warn">{t("Video needed")}</Pill>} <span className="font-mono text-xs">{c.videoLength}</span></td><td><label className={`btn-outline btn-sm inline-flex cursor-pointer items-center ${!data.videoUploadReady || videoUploads[c.id] !== undefined ? "pointer-events-none" : ""}`}>
-      <input className="sr-only" type="file" accept="video/mp4,video/webm,video/quicktime" disabled={!data.videoUploadReady || videoUploads[c.id] !== undefined} onChange={event => { const file = event.currentTarget.files?.[0]; if (file) void uploadCareerVideo(c.id, file); event.currentTarget.value = ""; }} />
+      <input className="sr-only" type="file" accept=".mp4,video/mp4" disabled={!data.videoUploadReady || videoUploads[c.id] !== undefined} onChange={event => { const file = event.currentTarget.files?.[0]; if (file) void uploadCareerVideo(c.id, file); event.currentTarget.value = ""; }} />
       {videoUploads[c.id] !== undefined ? `${t("Uploading")} ${videoUploads[c.id]}%` : t(c.hasVideo ? "Replace video" : "Upload video")}
     </label></td></tr>)}</tbody></table></div>
+    <p className="-mt-2 text-xs text-muted">{t("For reliable playback on phones and computers, upload an MP4 encoded with H.264 video and AAC audio. Maximum 3 minutes and 50 MB.")}</p>
   </>;
 }
 
