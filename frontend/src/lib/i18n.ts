@@ -57,6 +57,7 @@ export const MYANMAR: Record<string, string> = {
   "Could not change password.": "စကားဝှက် ပြောင်း၍မရပါ။",
   "Create an account to see profile settings.": "ကိုယ်ရေးအချက်အလက် ဆက်တင်များကြည့်ရန် အကောင့်ဖွင့်ပါ။",
   "Quiz progress": "မေးခွန်းလွှာ တိုးတက်မှု",
+  "Quiz questions": "မေးခွန်းလွှာ မေးခွန်းများ",
   "Your answers are ready when you are.": "သင်အဆင်သင့်ဖြစ်သည့်အခါ အဖြေများကို ဆက်လက်လုပ်ဆောင်နိုင်ပါသည်။",
   "Start with the career quiz when you are ready.": "အဆင်သင့်ဖြစ်သည့်အခါ အသက်မွေးဝမ်းကျောင်း မေးခွန်းလွှာမှ စတင်ပါ။",
   "Career results": "အသက်မွေးဝမ်းကျောင်း ရလဒ်များ",
