@@ -130,6 +130,8 @@ export const MYANMAR: Record<string, string> = {
   "CareerNest introduction video": "CareerNest မိတ်ဆက်ဗီဒီယို",
   "Continue to CareerNest": "CareerNest သို့ ဆက်သွားမည်",
   "Career videos are optional": "အသက်မွေးဝမ်းကျောင်း ဗီဒီယိုများသည် ရွေးချယ်နိုင်သည်",
+  "Watch career videos? (Optional)": "အသက်မွေးဝမ်းကျောင်း ဗီဒီယိုများ ကြည့်မလား။ (ရွေးချယ်နိုင်သည်)",
+  "Day-in-the-life career videos": "နေ့စဉ်အလုပ်ဘဝ မိတ်ဆက်ဗီဒီယိုများ",
   "Watch short career spotlights, or skip straight to choosing a career.": "အသက်မွေးဝမ်းကျောင်း ဗီဒီယိုတိုများကို ကြည့်နိုင်သလို ကျော်ပြီး အသက်မွေးဝမ်းကျောင်းကို တိုက်ရိုက်ရွေးနိုင်ပါသည်။",
   "Yes — watch career videos": "ဟုတ်ကဲ့ — အသက်မွေးဝမ်းကျောင်း ဗီဒီယိုများ ကြည့်မည်",
   "Watch short videos about your top career matches.": "သင့်နှင့်ကိုက်ညီသည့် ထိပ်တန်းအသက်မွေးဝမ်းကျောင်းများအကြောင်း ဗီဒီယိုတိုများ ကြည့်ပါ။",

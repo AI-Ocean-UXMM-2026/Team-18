@@ -1,6 +1,6 @@
 // Short movies (about 3 minutes each). Watch, or skip by choosing your career below.
-import { useState } from "react";
-import { Link } from "wouter";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "wouter";
 import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
 import { useScore } from "@/lib/top3";
@@ -11,24 +11,49 @@ export default function Movies() {
   const { data, loading } = useScore(j);
   const [selected, setSelected] = useState(0);
   const [unplayableVideo, setUnplayableVideo] = useState<string | null>(null);
+  const [showChoice, setShowChoice] = useState(true);
+  const [, go] = useLocation();
+  const choiceRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (!showChoice || loading || !data) return;
+    const previousOverflow = document.body.style.overflow;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    document.body.style.overflow = "hidden";
+    const buttons = () => Array.from(choiceRef.current?.querySelectorAll<HTMLButtonElement>("button") ?? []);
+    buttons()[0]?.focus();
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") { event.preventDefault(); go("/student/results"); return; }
+      if (event.key !== "Tab") return;
+      const items = buttons(); const first = items[0]; const last = items[items.length - 1];
+      if (!first || !last) return;
+      if (event.shiftKey && (document.activeElement === first || !choiceRef.current?.contains(document.activeElement))) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && (document.activeElement === last || !choiceRef.current?.contains(document.activeElement))) { event.preventDefault(); first.focus(); }
+    };
+    document.addEventListener("keydown", handleKey);
+    return () => { document.body.style.overflow = previousOverflow; document.removeEventListener("keydown", handleKey); previousFocus?.focus(); };
+  }, [showChoice, loading, data, go]);
   if (loading || !data) return <Spinner />;
   const current = data.top[selected]?.career ?? data.top[0].career;
   return (
     <>
       <PageHead back="/student/results" eyebrow="Step 1 · Short movies (optional)" title="See the real job before you choose">{t("About 3 minutes each: professionals show their real work, roles and daily life.")}</PageHead>
-      <section className="card">
-        <h2 className="text-lg">{t("Career videos are optional")}</h2>
-        <p className="mt-1 mb-4 text-sm text-muted">{t("Watch short career spotlights, or skip straight to choosing a career.")}</p>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <button type="button" aria-pressed={j.videoChoice === "watch"} className={`choice ${j.videoChoice === "watch" ? "choice-on" : ""}`} onClick={() => set({ videoChoice: "watch" })}>
-            <b>{t("Yes — watch career videos")}</b><small className="text-muted">{t("Watch short videos about your top career matches.")}</small>
-          </button>
-          <Link href="/student/career" className={`choice ${j.videoChoice === "skip" ? "choice-on" : ""}`} onClick={() => set({ videoChoice: "skip" })}>
-            <b>{t("Skip videos & choose my career")}</b><small className="text-muted">{t("Go directly to choosing your career.")}</small>
-          </Link>
-        </div>
-      </section>
-      {j.videoChoice === "watch" && <div className="grid items-start gap-6 lg:grid-cols-3">
+      {showChoice && <div className="fixed inset-0 z-50 grid place-items-center overflow-y-auto bg-black/50 p-4 backdrop-blur-sm">
+        <section ref={choiceRef} role="dialog" aria-modal="true" aria-labelledby="video-choice-title" aria-describedby="video-choice-description" className="relative my-auto w-full max-w-lg rounded-2xl border border-line bg-card p-5 shadow-2xl sm:p-6">
+          <div className="flex items-start justify-between gap-3">
+            <h2 id="video-choice-title" className="text-xl">{t("Watch career videos? (Optional)")}</h2>
+            <button type="button" className="grid h-11 w-11 shrink-0 place-items-center rounded-lg text-2xl text-muted hover:bg-soft hover:text-ink" onClick={() => go("/student/results")} aria-label={t("Close")}>×</button>
+          </div>
+          <div id="video-choice-description" className="my-4 rounded-xl border border-line bg-soft p-4">
+            <h3 className="font-semibold">{t("Day-in-the-life career videos")}</h3>
+            <p className="mt-1 text-sm leading-6 text-muted">{t("Watch short career spotlights, or skip straight to choosing a career.")}</p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <button type="button" className="btn-outline w-full" onClick={() => { set({ videoChoice: "skip" }); go("/student/career"); }}>{t("Skip videos & choose my career")}</button>
+            <button type="button" className="btn-primary w-full" onClick={() => { set({ videoChoice: "watch" }); setShowChoice(false); }}>{t("Yes — watch career videos")}</button>
+          </div>
+        </section>
+      </div>}
+      {(showChoice || j.videoChoice === "watch") && <div className="grid items-start gap-6 lg:grid-cols-3">
         <div className="flex flex-col gap-5 lg:col-span-2">
           <article className="overflow-hidden rounded-xl border border-line bg-card">
             <div className="relative grid aspect-video place-items-center bg-brand-deep text-white">
