@@ -11,9 +11,6 @@ export function FloatingAdvisor() {
   const { user, isGuest } = useAuth();
   const { t } = usePrefs();
   const [open, setOpen] = useState(false);
-  const [dock, setDock] = useState<"right" | "left">("right");
-  const [bottomOffset, setBottomOffset] = useState(24);
-  const rootRef = useRef<HTMLDivElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const wasOpen = useRef(false);
@@ -33,60 +30,10 @@ export function FloatingAdvisor() {
     }
     if (wasOpen.current) launcherRef.current?.focus();
     wasOpen.current = false;
-  }, [open, dock]);
-
-  useEffect(() => {
-    let frame = 0;
-    const checkPlacement = () => {
-      const root = rootRef.current;
-      const launcher = root?.querySelector<HTMLButtonElement>("[data-kip-launcher]");
-      if (!root || !launcher) return;
-      const current = launcher.getBoundingClientRect();
-      const obstacles = Array.from(document.querySelectorAll<HTMLElement>(
-        "main :is(button, a, input, select, textarea), main .page-actions, header nav :is(button, a), [data-kip-avoid]",
-      )).filter(element => !root.contains(element) && element.getClientRects().length > 0);
-      const edgeOffset = window.innerWidth < 640 ? 8 : 24;
-      const baseOffset = edgeOffset;
-      const right = Math.max(edgeOffset, window.innerWidth - current.width - edgeOffset);
-      const left = edgeOffset;
-      const maxOffset = Math.max(baseOffset, window.innerHeight - current.height - 8);
-      let best: { side: "right" | "left"; bottom: number; collisions: number } = { side: "right", bottom: baseOffset, collisions: Number.POSITIVE_INFINITY };
-      for (let bottom = baseOffset; bottom <= maxOffset; bottom += 16) {
-        for (const [side, x] of [["right", right], ["left", left]] as const) {
-          const top = window.innerHeight - bottom - current.height;
-          const collisions = obstacles.filter(element => {
-        const rect = element.getBoundingClientRect();
-            return rect.width > 0 && rect.height > 0
-              && x < rect.right + 8 && x + current.width > rect.left - 8
-              && top < rect.bottom + 8 && top + current.height > rect.top - 8;
-          }).length;
-          if (collisions < best.collisions) best = { side, bottom, collisions };
-          if (collisions === 0) break;
-        }
-        if (best.collisions === 0) break;
-      }
-      setDock(previous => previous === best.side ? previous : best.side);
-      setBottomOffset(previous => previous === best.bottom ? previous : best.bottom);
-    };
-    const scheduleCheck = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(checkPlacement);
-    };
-    const observer = new MutationObserver(scheduleCheck);
-    observer.observe(document.body, { childList: true, subtree: true });
-    window.addEventListener("scroll", scheduleCheck, { passive: true, capture: true });
-    window.addEventListener("resize", scheduleCheck);
-    scheduleCheck();
-    return () => {
-      cancelAnimationFrame(frame);
-      observer.disconnect();
-      window.removeEventListener("scroll", scheduleCheck, true);
-      window.removeEventListener("resize", scheduleCheck);
-    };
   }, [open]);
 
   return (
-    <div ref={rootRef} style={{ bottom: `calc(env(safe-area-inset-bottom, 0px) + ${bottomOffset}px)` }} className={`fixed z-40 flex flex-col ${dock === "left" ? "left-[max(0.5rem,env(safe-area-inset-left))] items-start sm:left-6" : "right-[max(0.5rem,env(safe-area-inset-right))] items-end sm:right-6"}`}>
+    <div className="fixed bottom-[max(0.5rem,env(safe-area-inset-bottom))] right-[max(0.5rem,env(safe-area-inset-right))] z-40 flex flex-col items-end sm:bottom-6 sm:right-6">
       <section id="kip-advisor-panel" role="dialog" aria-labelledby="kip-advisor-title" aria-describedby="kip-advisor-description" aria-modal="false" className={`${open ? "mb-2 flex sm:mb-3" : "hidden"} h-[min(75dvh,40rem)] max-h-[calc(100dvh_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom)_-_1rem)] w-[min(25rem,calc(100vw-1rem))] min-h-0 flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-2xl sm:w-[min(25rem,calc(100vw-2rem))]`}>
         <div className="hero-gradient flex shrink-0 items-center justify-between gap-3 border-b border-line px-4 py-3 text-white">
           <div className="flex min-w-0 items-center gap-2.5">
