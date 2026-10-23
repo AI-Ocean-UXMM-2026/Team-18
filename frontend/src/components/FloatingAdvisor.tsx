@@ -18,7 +18,7 @@ export function FloatingAdvisor() {
   return (
     <div className="fixed bottom-4 right-4 z-40 flex flex-col items-end sm:bottom-6 sm:right-6">
       <section id="kip-advisor-panel" role="dialog" aria-labelledby="kip-advisor-title" aria-modal="false" className={`${open ? "mb-3 flex" : "hidden"} max-h-[min(72dvh,40rem)] w-[min(25rem,calc(100vw-2rem))] flex-col overflow-y-auto rounded-2xl border border-line bg-card shadow-2xl`}>
-        <div className="flex items-center justify-between gap-3 border-b border-line bg-gradient-to-r from-brand-deep to-brand px-4 py-3 text-white">
+        <div className="hero-gradient flex items-center justify-between gap-3 border-b border-line px-4 py-3 text-white">
           <div className="flex min-w-0 items-center gap-2.5">
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-mascot text-sm font-extrabold text-brand-deep">K</span>
             <div className="min-w-0">
@@ -45,7 +45,7 @@ export function FloatingAdvisor() {
         aria-controls="kip-advisor-panel"
         aria-label={t("Chat with Kip")}
         onClick={() => setOpen(value => !value)}
-        className="group flex h-11 items-center gap-2 rounded-full border-2 border-white bg-gradient-to-r from-brand-deep to-brand px-3 text-white shadow-xl transition hover:scale-[1.03] hover:shadow-2xl active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/40 sm:h-12 sm:px-4"
+        className="hero-gradient group flex h-11 items-center gap-2 rounded-full border-2 border-white px-3 text-white shadow-xl transition hover:scale-[1.03] hover:shadow-2xl active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/40 sm:h-12 sm:px-4"
         title={t("Chat with Kip AI Advisor")}
       >
         <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-mascot text-xs font-extrabold text-brand-deep shadow-sm">K</span>

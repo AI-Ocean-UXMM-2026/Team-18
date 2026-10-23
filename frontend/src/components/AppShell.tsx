@@ -86,7 +86,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           {badge && <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide ${badgeTone}`}>{t(badge)}</span>}
           {!badge && index === 0 && <span className="sr-only">{t("Current student portal")}</span>}
         </>;
-        const className = `student-sidebar-link flex min-h-11 w-full items-center justify-between gap-2 rounded-lg border border-transparent px-2.5 py-2 text-left text-sm font-semibold ${locked ? "cursor-not-allowed text-muted opacity-50" : active ? "" : "text-ink hover:bg-soft"}`;
+        const className = `student-sidebar-link flex min-h-11 w-full items-center justify-between gap-2 rounded-lg border border-transparent px-2.5 py-2 text-left text-sm font-semibold ${locked ? "cursor-not-allowed text-muted" : active ? "" : "text-ink hover:bg-soft"}`;
         return locked
           ? <button key={path} type="button" disabled aria-disabled="true" title={t(needsPro ? "Mentor sessions are part of CareerNest Pro." : "Complete the previous step to unlock.")} className={className}>{contents}</button>
           : <Link key={path} href={path} title={t(label)} aria-current={active ? "page" : undefined} className={className} onClick={() => setNavOpen(false)}>{contents}</Link>;
