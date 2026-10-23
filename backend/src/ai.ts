@@ -30,8 +30,11 @@ export async function askAI(system: string, messages: ChatMessage[]): Promise<st
 
   for (let index = 0; index < geminiKeys.length; index++) {
     const key = geminiKeys[index];
+    // Reserve a full request window for the fallback, shared across Gemini keys.
+    const geminiBudget = remaining(deadline) - (openrouterEnabled() ? OPENROUTER_TIMEOUT_MS : 0);
+    if (geminiBudget <= 0) break;
     try {
-      return await gemini(system, messages, key, Math.min(GEMINI_TIMEOUT_MS, remaining(deadline)));
+      return await gemini(system, messages, key, Math.min(GEMINI_TIMEOUT_MS, geminiBudget));
     } catch (error) {
       lastFailure = asProviderFailure("Gemini", error);
       logFailure(lastFailure);
@@ -103,17 +106,21 @@ async function openrouter(system: string, messages: ChatMessage[], timeoutMs: nu
         model: ENV.openrouterModel,
         messages: [{ role: "system", content: system }, ...messages],
         temperature: 0.3,
-        max_tokens: 1024,
+        max_tokens: 2048,
+        // This is a concise chat reply. Optional reasoning can consume the
+        // entire token budget and leave message.content empty.
+        reasoning: { enabled: false },
       }),
       signal: controller.signal,
     });
     const data: any = await res.json().catch(() => ({}));
-    if (!res.ok) throw new ProviderFailure("OpenRouter", res.status, data?.error?.message ?? `HTTP ${res.status}`);
+    if (!res.ok || data?.error) throw new ProviderFailure("OpenRouter", res.status, data?.error?.message ?? `HTTP ${res.status}`);
     const content = data.choices?.[0]?.message?.content;
     const reply = typeof content === "string"
       ? content.trim()
       : Array.isArray(content) ? content.map((part: any) => typeof part?.text === "string" ? part.text : "").join("").trim() : "";
-    if (!reply) throw new ProviderFailure("OpenRouter", undefined, "empty response");
+    if (!reply) throw new ProviderFailure("OpenRouter", undefined,
+      `empty response (finish_reason=${data.choices?.[0]?.finish_reason ?? "unknown"}, completion_tokens=${data.usage?.completion_tokens ?? "unknown"})`);
     return reply;
   } catch (error) {
     if (error instanceof ProviderFailure) throw error;
