@@ -25,6 +25,7 @@ export default function Pro() {
   const [amount, setAmount] = useState("5000"); const [file, setFile] = useState<File | null>(null);
   const [err, setErr] = useState<string | null>(null); const [busy, setBusy] = useState(false);
   const [draft, setDraft] = useState<{ proof: string } | null>(null); // filled form waiting for "Confirm & send"
+  const paymentSectionId = "pro-payment-methods";
   useEffect(() => { if (data && data.isPro !== user?.isPro) refreshUser(); }, [data?.isPro, user?.isPro, refreshUser]);
   const requestKey = useMemo(() => crypto.randomUUID(), [data?.latest?.id]);
   if (loading) return <Spinner />;
@@ -62,12 +63,37 @@ export default function Pro() {
   return (
     <>
       <PageHead back="/student/plan" eyebrow="CareerNest Pro" title="Upgrade to Pro" />
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="card"><b>{t("Free")}</b><ul className="mt-2 list-disc pl-5 text-sm"><li>{t("Career quiz & top 3 careers")}</li><li>{t("Majors, university explorer & compare")}</li><li>{t("AI questions")}: {data.freeAiLimit} ({t("used")} {data.aiUsed})</li></ul></div>
-        <div className="card border-2 border-ai bg-ai-soft"><b>Pro · <span className="font-mono">{fmtKs(data.price)}</span> {t("for one month")}</b><ul className="mt-2 list-disc pl-5 text-sm"><li>{t("Full PDF report")}</li><li>{t("Unlimited AI career coach and university advisor")}</li><li>{t("1-hour sessions with professional mentors")}</li><li>{t("Pro badge on your account")}</li></ul></div>
-      </div>
+      <section className="relative mx-auto mb-6 w-full max-w-3xl overflow-hidden rounded-[1.75rem] border border-ai/30 bg-card shadow-2xl shadow-brand/10">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-gradient-to-br from-ai-soft via-brand-soft to-transparent opacity-80" />
+        <Link href="/student/plan" className="absolute right-4 top-4 z-10 grid h-10 w-10 place-items-center rounded-full border border-line bg-card/80 text-xl text-muted transition hover:bg-soft hover:text-ink" aria-label={t("Close")}>×</Link>
+        <div className="relative flex flex-col items-center px-5 pb-6 pt-9 text-center sm:px-10 sm:pt-11">
+          <div className="grid h-14 w-14 place-items-center rounded-full border border-ai/25 bg-ai-soft text-2xl text-ai shadow-sm" aria-hidden="true">✧</div>
+          <Pill tone="info">CareerNest Pro</Pill>
+          <h2 className="mt-4 max-w-2xl text-balance text-2xl font-extrabold leading-tight sm:text-3xl">{t("Unlock your full career potential with Pro")}</h2>
+          <p className="mt-3 max-w-xl text-sm leading-6 text-muted sm:text-base">{t("Get more support for your next step with CareerNest Pro.")}</p>
+
+          <ul className="mt-7 w-full space-y-4 rounded-2xl border border-line bg-card/90 p-4 text-left sm:p-6">
+            {[
+              ["Full PDF report", "Your career results and plan in a downloadable report."],
+              ["Unlimited AI career coach and university advisor", "Get career and university guidance from Kip."],
+              ["1-hour sessions with professional mentors", "Access professional mentor sessions."],
+              ["Pro badge on your account", "Show your active Pro membership on your account."],
+            ].map(([title, detail]) => <li key={title} className="flex gap-3">
+              <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-ok-soft text-sm font-bold text-ok" aria-hidden="true">✓</span>
+              <div><b className="text-sm sm:text-base">{t(title)}</b><p className="mt-0.5 text-sm leading-5 text-muted">{t(detail)}</p></div>
+            </li>)}
+          </ul>
+
+          <div className="mt-5 w-full rounded-2xl bg-gradient-to-r from-brand-deep to-brand p-5 text-left text-white shadow-lg sm:p-6">
+            <div className="text-xs font-bold uppercase tracking-[0.14em] text-white/75">{t("CareerNest Pro plan")}</div>
+            <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1"><strong className="text-3xl font-extrabold sm:text-4xl">{fmtKs(data.price)}</strong><span className="text-sm text-white/80">{t("for one month")}</span></div>
+            <p className="mt-1 text-sm text-white/75">{t("One month of Pro access. Payment is reviewed before Pro is activated.")}</p>
+          </div>
+          <a href={`#${paymentSectionId}`} className="btn-primary mt-5 w-full justify-center bg-gradient-to-r from-ai to-brand py-3 text-base shadow-md hover:brightness-105 sm:w-auto sm:min-w-80">{t("Choose a payment method")} <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
       {open ? (
-        <section className="card flex flex-col gap-3">
+        <section id={paymentSectionId} className="card flex scroll-mt-6 flex-col gap-3">
           <Pill tone={p!.status === "disputed" ? "warn" : "info"}>{t(p!.status === "disputed" ? "Re-review requested" : "Payment waiting for admin check")}</Pill>
           <dl className="grid gap-2 text-sm sm:grid-cols-[140px_1fr]"><dt className="font-semibold text-muted">{t("Paid to")}</dt><dd>{p!.accountName} · <span className="font-mono">{p!.accountNumber}</span></dd>
             <dt className="font-semibold text-muted">{t("Amount")}</dt><dd className="font-mono">{fmtKs(p!.amount)}</dd>
@@ -76,7 +102,7 @@ export default function Pro() {
           <p className="text-sm text-muted">{t("We check that the money arrived in our account, usually within 1 hour (9:00–21:00). Pro turns on automatically after approval.")}</p>
         </section>
       ) : draft && acc ? (
-        <section className="card flex flex-col gap-3">
+        <section id={paymentSectionId} className="card flex scroll-mt-6 flex-col gap-3">
           <h2 className="text-lg">{t("Confirm your payment")}</h2>
           <p className="text-sm text-muted">{t("Check the details. You cannot change them after sending.")}</p>
           <dl className="grid gap-2 text-sm sm:grid-cols-[140px_1fr]"><dt className="font-semibold text-muted">{t("Paid to")}</dt><dd>{acc.label} · {acc.accountName} · <span className="font-mono">{acc.accountNumber}</span></dd>
@@ -88,7 +114,7 @@ export default function Pro() {
         <>
           {p?.status === "rejected" && <section className="card flex flex-col gap-2 border-bad"><Pill tone="bad">{t("Payment rejected")}</Pill><p><b>{t("Reason")}:</b> {p.reason}</p>
             <div className="flex flex-wrap items-center gap-2">{!p.disputeUsed && p.proof && <button className="btn-outline btn-sm" onClick={dispute}>{t("I did pay. Ask for a re-review")}</button>}<span className="text-sm text-muted">{t("Or send a new payment below.")}</span></div></section>}
-          <section className="card flex flex-col gap-3">
+          <section id={paymentSectionId} className="card flex scroll-mt-6 flex-col gap-3">
             <h2 className="text-lg">1. {t("Choose how you pay")}</h2>
             <div className="flex flex-wrap gap-2">{data.accounts.map(a => <button key={a.provider} className={`choice flex-1 items-center ${provider === a.provider ? "choice-on" : ""}`} onClick={() => setProvider(a.provider)}><b>{a.label}</b></button>)}</div>
             {acc && <>
