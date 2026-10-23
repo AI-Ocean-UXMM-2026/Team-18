@@ -43,14 +43,19 @@ export default function Compare() {
       {chosen.length < 2 && <Note>{t("Pick at least 2 to compare.")}</Note>}
       {addable.length > 0 && chosen.length < 3 && <div className="flex flex-wrap gap-2">{addable.map(i => <button key={i.key} className="btn-outline btn-sm" onClick={() => set(p => ({ compare: [...p.compare, i.key].slice(0, 3) }))}>+ {itemCode(i)}</button>)}</div>}
       {chosen.length > 0 && (
-        <div className="table-wrap"><table className="w-full table-fixed">
+        <div>
+          <p className="px-1 pb-2 text-xs text-muted sm:hidden">{t("Swipe horizontally to compare universities")}</p>
+          <div className="table-wrap max-w-full overflow-x-auto overscroll-x-contain" role="region" aria-label={t("Compare universities")} tabIndex={0}>
+            <table className="w-full table-fixed" style={{ minWidth: `calc(9rem + ${18 * chosen.length}rem)` }}>
           <colgroup>
-            <col style={{ width: "10rem" }} />
-            {chosen.map(i => <col key={i.key} style={{ width: `calc(${100 / chosen.length}% - ${160 / chosen.length}px)` }} />)}
+            <col style={{ width: "9rem" }} />
+            {chosen.map(i => <col key={i.key} style={{ width: `calc(${100 / chosen.length}% - ${9 / chosen.length}rem)` }} />)}
           </colgroup>
-          <thead><tr><th className="w-40" />{chosen.map(i => <th key={i.key}><UniPhoto item={i} small /><span className="font-mono text-xs text-brand">{itemCode(i)}</span> <span className="text-sm text-ink">{itemName(i)}</span><button className="btn-ghost btn-sm mt-1" onClick={() => set(p => ({ compare: p.compare.filter(k => k !== i.key) }))}>{t("Remove")}</button></th>)}</tr></thead>
+          <thead><tr><th />{chosen.map(i => <th key={i.key}><UniPhoto item={i} small /><span className="font-mono text-xs text-brand">{itemCode(i)}</span> <span className="text-sm text-ink">{itemName(i)}</span><button className="btn-ghost btn-sm mt-1" onClick={() => set(p => ({ compare: p.compare.filter(k => k !== i.key) }))}>{t("Remove")}</button></th>)}</tr></thead>
           <tbody>{visibleRows.map(([label, cell]) => <tr key={label}><th>{t(label)}</th>{chosen.map(i => <td key={i.key}>{cell(i)}</td>)}</tr>)}</tbody>
-        </table></div>
+            </table>
+          </div>
+        </div>
       )}
       {chosen.length > 0 && collapsedRows.length < rows.length && (
         <div className="flex justify-center">

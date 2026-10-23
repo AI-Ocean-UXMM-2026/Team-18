@@ -604,6 +604,7 @@ export const MYANMAR: Record<string, string> = {
   "Universities": "တက္ကသိုလ်များ",
   "Universities discussed": "ဆွေးနွေးခဲ့သော တက္ကသိုလ်များ",
   "Universities for GED / IGCSE students": "GED / IGCSE ကျောင်းသားများအတွက် တက္ကသိုလ်များ",
+  "Swipe horizontally to compare universities": "တက္ကသိုလ်များကို နှိုင်းယှဉ်ရန် အလျားလိုက် ဆွဲပါ",
   "Add a university directly": "တက္ကသိုလ်ကို တိုက်ရိုက်ထည့်ရန်",
   "Save a GED / IGCSE university in CareerNest for students to explore and compare.": "ကျောင်းသားများ လေ့လာနှိုင်းယှဉ်နိုင်ရန် GED / IGCSE တက္ကသိုလ်ကို CareerNest တွင် သိမ်းပါ။",
   "Type into cells or paste rows copied from Excel. Add one or more universities, then save the sheet.": "ဆဲလ်များတွင် တိုက်ရိုက်ဖြည့်ပါ၊ သို့မဟုတ် Excel မှ ကူးထားသော အတန်းများကို ကပ်ပါ။ တက္ကသိုလ်တစ်ခု သို့မဟုတ် အများအပြားထည့်ပြီး ဇယားကို သိမ်းပါ။",
