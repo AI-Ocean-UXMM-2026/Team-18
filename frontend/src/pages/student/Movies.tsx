@@ -32,6 +32,11 @@ export default function Movies() {
     document.addEventListener("keydown", handleKey);
     return () => { document.body.style.overflow = previousOverflow; document.removeEventListener("keydown", handleKey); previousFocus?.focus(); };
   }, [showChoice, loading, data, go]);
+  useEffect(() => {
+    if (!data || !j.careerId) return;
+    const index = data.top.findIndex(match => match.career.id === j.careerId);
+    if (index >= 0) setSelected(index);
+  }, [data, j.careerId]);
   if (loading || !data) return <Spinner />;
   const current = data.top[selected]?.career ?? data.top[0].career;
   return (
@@ -48,7 +53,7 @@ export default function Movies() {
             <p className="mt-1 text-sm leading-6 text-muted">{t("Watch short career spotlights, or skip straight to choosing a career.")}</p>
           </div>
           <div className="grid auto-rows-fr grid-cols-2 items-stretch gap-3">
-            <button type="button" className="btn-outline h-full min-h-16 min-w-0 w-full whitespace-normal px-3 py-3 text-center" onClick={() => { set({ videoChoice: "skip" }); go("/student/career"); }}>{t("Skip videos & choose my career")}</button>
+            <button type="button" className="btn-outline h-full min-h-16 min-w-0 w-full whitespace-normal px-3 py-3 text-center" onClick={() => { set({ videoChoice: "skip" }); go(j.careerId ? "/student/majors" : "/student/career"); }}>{t(j.careerId ? "Skip videos & explore majors" : "Skip videos & choose my career")}</button>
             <button type="button" className="btn-primary h-full min-h-16 min-w-0 w-full whitespace-normal px-3 py-3 text-center" onClick={() => { set({ videoChoice: "watch" }); setShowChoice(false); }}>{t("Yes — watch career videos")}</button>
           </div>
         </section>
@@ -70,7 +75,7 @@ export default function Movies() {
         </div>
         <aside className="card"><h2 className="mb-4 text-lg">{t("Your career playlist")}</h2><div className="flex flex-col gap-3">{data.top.map(({career:c}, index) => <button key={c.id} aria-pressed={selected === index} className={`flex items-center gap-3 rounded-lg border p-3 text-left ${selected === index ? "border-brand bg-brand-soft" : "border-line"}`} onClick={() => setSelected(index)}><span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-soft text-xl text-brand">▷</span><span><b className="block text-sm">{c.t}</b><small className="text-muted">{c.video.len} · {t(j.watched[c.id] ? "Watched" : "Not watched yet")}</small></span></button>)}</div><p className="mt-5 text-xs leading-5 text-muted">{t("Watching is optional. Continue whenever you are ready to choose your career.")}</p></aside>
       </div>}
-      {j.videoChoice === "watch" && <Actions><Link href="/student/career" className="btn-primary">{t("Choose my career")}</Link></Actions>}
+      {j.videoChoice === "watch" && <Actions><Link href={j.careerId ? "/student/majors" : "/student/career"} className="btn-primary">{t(j.careerId ? "See majors for this career" : "Choose my career")}</Link></Actions>}
     </>
   );
 }
