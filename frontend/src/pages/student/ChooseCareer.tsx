@@ -1,4 +1,4 @@
-import { Link, useLocation } from "wouter";
+import { useLocation } from "wouter";
 import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
 import { useScore } from "@/lib/top3";
@@ -25,16 +25,6 @@ export default function ChooseCareer() {
               <button className={`mt-auto w-full ${chosen ? "btn-primary" : "btn-outline"}`} aria-pressed={chosen} onClick={() => choose(x.career.id)}>{t(chosen ? "Chosen" : "Choose")}</button>
             </article>;
           })}
-        </div>
-      </section>
-      <section className="space-y-3" aria-labelledby="career-study-heading">
-        <div><h2 id="career-study-heading" className="text-lg">{t("Study preparation")}</h2><p className="text-sm text-muted">{t("See the study length and school subjects for each option.")}</p></div>
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {top.map(x => <article key={x.career.id} className="card space-y-4">
-            <h3 className="font-semibold leading-snug">{x.career.t}</h3>
-            <div className="rounded-lg bg-soft p-3"><span className="block text-xs text-muted">{t("Study length")}</span><b className="text-sm">{x.career.study}</b></div>
-            <div><h4 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">{t("Key school subjects")}</h4><div className="flex flex-wrap gap-1.5">{x.career.subjects.map(subject => <span key={subject} className="rounded-full bg-brand-soft px-2.5 py-1 text-xs text-brand">{subject}</span>)}</div></div>
-          </article>)}
         </div>
       </section>
       <section className="space-y-3" aria-labelledby="career-work-heading">
