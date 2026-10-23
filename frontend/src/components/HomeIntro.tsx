@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "wouter";
 import { usePrefs } from "@/lib/prefs";
 
 export default function HomeIntro() {
+  const [location] = useLocation();
+  const isHomePage = location === "/" || location === "/student";
   const { t } = usePrefs();
   const [showIntro, setShowIntro] = useState(true);
   const introRef = useRef<HTMLElement>(null);
@@ -11,7 +14,7 @@ export default function HomeIntro() {
   const closeIntro = () => setShowIntro(false);
 
   useEffect(() => {
-    if (!showIntro) return;
+    if (!showIntro || !isHomePage) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     introRef.current?.focus();
@@ -52,9 +55,9 @@ export default function HomeIntro() {
       document.removeEventListener("pointerdown", enableSound);
       document.removeEventListener("keydown", enableSound);
     };
-  }, [showIntro]);
+  }, [showIntro, isHomePage]);
 
-  if (!showIntro) return null;
+  if (!showIntro || !isHomePage) return null;
   return (
     <section ref={introRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t("CareerNest introduction video")} className="fixed inset-0 z-[100] grid h-dvh w-full place-items-center overflow-y-auto bg-black/60 p-4 outline-none sm:p-8">
       <div className="relative w-full max-w-[min(28rem,92dvh)] overflow-hidden rounded-xl">
