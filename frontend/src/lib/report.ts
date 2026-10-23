@@ -1,5 +1,6 @@
 // Browser-generated Pro report. English text uses the built-in PDF fonts.
 import { jsPDF } from "jspdf";
+import logoImage from "@/assets/careernest-logo.png?inline";
 import type { Career, ScoreResult, UniItem } from "@/lib/api";
 import { LEVELS } from "@/lib/format";
 
@@ -26,13 +27,7 @@ export function buildReport(o: Input) {
     doc.setFillColor(...color); doc.setDrawColor(...INK); doc.setLineWidth(0.4); doc.roundedRect(x, top, width, height, 3, 3, "FD");
   };
   const logo = (x: number, top: number) => {
-    const size = 8, cx = x + size / 2, cy = top + size / 2, arm = 2.7, half = 0.75;
-    doc.setFillColor(...BRAND); doc.roundedRect(x, top, size, size, 1.8, 1.8, "F");
-    doc.setFillColor(...WHITE);
-    doc.triangle(cx, cy - arm, cx - half, cy, cx + half, cy, "F");
-    doc.triangle(cx + arm, cy, cx, cy - half, cx, cy + half, "F");
-    doc.triangle(cx, cy + arm, cx - half, cy, cx + half, cy, "F");
-    doc.triangle(cx - arm, cy, cx, cy - half, cx, cy + half, "F");
+    doc.addImage(logoImage, "PNG", x, top - 1, 10, 10);
     label("CareerNest", x + 10.5, top + 5.8, 12, INK, true);
     label(".", x + 10.5 + doc.getTextWidth("CareerNest"), top + 5.8, 12, BRAND, true);
   };
