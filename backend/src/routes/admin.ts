@@ -18,6 +18,7 @@ import { badRequest, body, conflict, HttpError, notFound, requireAdmin, requireR
 export const adminRouter = Router();
 adminRouter.use("/admin", requireRole("admin"));
 const ops = requireAdmin("ops"), content = requireAdmin("content"), superOnly = requireAdmin();
+const adminContact = requireAdmin("ops", "content");
 const adminUniversitySchema = z.object({
   annualTuition: z.string().trim().max(300).default(""),
   code: z.string().trim().min(2).max(20).regex(/^[A-Za-z0-9-]+$/, "Use letters, numbers, or hyphens for the code."),
@@ -56,6 +57,10 @@ const videoCompleteSchema = z.object({
   objectPath: z.string().trim().min(1).max(300),
   durationSeconds: z.number().finite().positive().max(240),
 });
+const supportContactSchema = z.object({
+  email: z.string().trim().email().max(254),
+  phone: z.string().trim().min(5).max(40),
+});
 
 function requireVideoStorage() {
   if (!ENV.supabaseUrl || !ENV.supabaseServiceRoleKey) {
@@ -80,6 +85,30 @@ function storageErrorMessage(payload: unknown, fallback: string) {
   }
   return fallback;
 }
+
+adminRouter.get("/contact-info", route(async () => {
+  const ready = !!(await one<{ ready: boolean }>("SELECT to_regclass('public.site_settings') IS NOT NULL AS ready"))?.ready;
+  if (!ready) return { contact: { email: "", phone: "" }, storageReady: false };
+  const row = await one<{ data: { email?: string; phone?: string } }>("SELECT data FROM site_settings WHERE setting_key = 'support_contact'");
+  return { contact: { email: row?.data.email ?? "", phone: row?.data.phone ?? "" }, storageReady: true };
+}));
+
+adminRouter.get("/admin/contact", adminContact, route(async () => {
+  const ready = !!(await one<{ ready: boolean }>("SELECT to_regclass('public.site_settings') IS NOT NULL AS ready"))?.ready;
+  if (!ready) return { contact: { email: "", phone: "" }, storageReady: false };
+  const row = await one<{ data: { email?: string; phone?: string } }>("SELECT data FROM site_settings WHERE setting_key = 'support_contact'");
+  return { contact: { email: row?.data.email ?? "", phone: row?.data.phone ?? "" }, storageReady: true };
+}));
+
+adminRouter.put("/admin/contact", adminContact, route(async req => {
+  const b = body(req, supportContactSchema);
+  const ready = !!(await one<{ ready: boolean }>("SELECT to_regclass('public.site_settings') IS NOT NULL AS ready"))?.ready;
+  if (!ready) throw new HttpError(503, "Support contact settings are not installed. Apply database/migrations/20261023_site_settings.sql first.");
+  await query(`INSERT INTO site_settings (setting_key, data, updated_by) VALUES ('support_contact', $1, $2)
+    ON CONFLICT (setting_key) DO UPDATE SET data = EXCLUDED.data, updated_by = EXCLUDED.updated_by, updated_at = now()`, [JSON.stringify(b), sessionOf(req).uid]);
+  await audit(sessionOf(req).uid, "site_settings.support_contact.update", "support_contact");
+  return { ok: true };
+}));
 
 adminRouter.get("/admin/stats", route(async () => ({
   ...(await one(`SELECT

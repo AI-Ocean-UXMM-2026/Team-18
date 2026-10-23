@@ -1,6 +1,23 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
 import { usePrefs } from "@/lib/prefs";
+import { api } from "@/lib/api";
+import { useApiData } from "@/hooks/useApiData";
+
+function SupportContact() {
+  const { lang } = usePrefs();
+  const { data } = useApiData(() => api.get<{ contact: { email: string; phone: string } }>("/contact-info"));
+  const contact = data?.contact;
+  const text = (en: string, my: string) => lang === "my" ? my : en;
+  if (!contact?.email && !contact?.phone) return <p className="rounded-xl bg-soft p-4 text-sm leading-6 text-muted">{text("Support contact details will be available here soon.", "အကူအညီဆက်သွယ်ရန် အချက်အလက်များကို မကြာမီ ဤနေရာတွင် ဖော်ပြပါမည်။")}</p>;
+  return <section className="rounded-xl border border-line bg-soft p-5">
+    <h2 className="mb-3 text-lg text-ink">{text("Contact support", "အကူအညီကို ဆက်သွယ်ရန်")}</h2>
+    <div className="space-y-3 text-sm">
+      {contact.email && <p><span className="font-semibold">{text("Email", "အီးမေးလ်")}: </span><a className="font-semibold text-brand hover:underline" href={`mailto:${contact.email}`}>{contact.email}</a></p>}
+      {contact.phone && <p><span className="font-semibold">{text("Phone", "ဖုန်း")}: </span><a className="font-semibold text-brand hover:underline" href={`tel:${contact.phone.replace(/[^+\d]/g, "")}`}>{contact.phone}</a></p>}
+    </div>
+  </section>;
+}
 
 export default function SiteInfo({ page }: { page: "about" | "contact" | "privacy" }) {
   const { lang, t } = usePrefs();
@@ -15,6 +32,7 @@ export default function SiteInfo({ page }: { page: "about" | "contact" | "privac
       <p className="rounded-xl bg-soft p-4 text-sm leading-6">{text("Results are a starting point for exploration. Confirm admissions, fees, and scholarship information directly with each university.", "ရလဒ်များသည် လေ့လာမှုစတင်ရန် အထောက်အကူသာ ဖြစ်သည်။ ဝင်ခွင့်၊ ကျောင်းလခနှင့် ပညာသင်ဆု အချက်အလက်များကို သက်ဆိုင်ရာ တက္ကသိုလ်ထံ အတည်ပြုပါ။")}</p>
     </>}
     {page === "contact" && <>
+      <SupportContact />
       <p className="leading-7 text-muted">{text("For project questions, technical problems, or feedback, visit the CareerNest project repository and use its Issues section when available.", "စီမံကိန်းဆိုင်ရာ မေးခွန်း၊ နည်းပညာပြဿနာ သို့မဟုတ် အကြံပြုချက်အတွက် CareerNest repository ၏ Issues ကဏ္ဍကို အသုံးပြုနိုင်သည်။")}</p>
       <a className="btn-primary inline-flex" href="https://github.com/AI-Ocean-UXMM-2026/Team-18" target="_blank" rel="noreferrer">{text("CareerNest on GitHub", "GitHub ရှိ CareerNest")}</a>
       <p className="text-sm leading-6 text-muted">{text("Include the page and steps that caused the problem. Public issues should not contain passwords, payment screenshots, or private account details. Check your payment status inside the Pro page.", "ပြဿနာဖြစ်သော စာမျက်နှာနှင့် အဆင့်များကို ဖော်ပြပါ။ အများမြင်နိုင်သော Issues တွင် စကားဝှက်၊ ငွေပေးချေမှု screenshot နှင့် ကိုယ်ရေးအချက်အလက်များ မထည့်ပါနှင့်။ ငွေပေးချေမှုအခြေအနေကို Pro စာမျက်နှာတွင် ကြည့်နိုင်သည်။")}</p>

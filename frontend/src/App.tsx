@@ -45,6 +45,7 @@ const MentorProfile = lazy(() => import("@/pages/mentor/Profile"));
 const AdminOverview = lazy(() => import("@/pages/admin/Overview"));
 const AdminPayments = lazy(() => import("@/pages/admin/Payments"));
 const AdminPaymentAccounts = lazy(() => import("@/pages/admin/PaymentAccounts"));
+const AdminContact = lazy(() => import("@/pages/admin/Contact"));
 const AdminMentors = lazy(() => import("@/pages/admin/Mentors"));
 const AdminStudents = lazy(() => import("@/pages/admin/Students"));
 const AdminUniversities = lazy(() => import("@/pages/admin/Universities"));
@@ -104,6 +105,7 @@ const G_MentorProfile = M(MentorProfile);
 const G_AdminOverview = A(AdminOverview, "/admin");
 const G_AdminPayments = A(AdminPayments, "/admin/payments");
 const G_AdminPaymentAccounts = A(AdminPaymentAccounts, "/admin/payment-accounts");
+const G_AdminContact = A(AdminContact, "/admin/contact");
 const G_AdminMentors = A(AdminMentors, "/admin/mentors");
 const G_AdminStudents = A(AdminStudents, "/admin/students");
 const G_AdminUniversities = A(AdminUniversities, "/admin/universities");
@@ -148,6 +150,7 @@ export default function App() {
         <Route path="/admin" component={G_AdminOverview} />
         <Route path="/admin/payments" component={G_AdminPayments} />
         <Route path="/admin/payment-accounts" component={G_AdminPaymentAccounts} />
+        <Route path="/admin/contact" component={G_AdminContact} />
         <Route path="/admin/mentors" component={G_AdminMentors} />
         <Route path="/admin/students" component={G_AdminStudents} />
         <Route path="/admin/universities" component={G_AdminUniversities} />

@@ -157,6 +157,14 @@ CREATE TABLE IF NOT EXISTS admin_career_videos (
   updated_at   TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Public support contact details, editable by admins.
+CREATE TABLE IF NOT EXISTS site_settings (
+  setting_key TEXT PRIMARY KEY,
+  data        JSONB NOT NULL CHECK (jsonb_typeof(data) = 'object'),
+  updated_by  INTEGER REFERENCES users(id) ON DELETE SET NULL,
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- Default receiving accounts (edit them in Admin -> Payment accounts)
 INSERT INTO payment_accounts (provider, label, enabled) VALUES
   ('kbz', 'KBZPay', true), ('wave', 'Wave Money', true), ('aya', 'AYA Pay', true),

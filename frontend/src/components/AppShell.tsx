@@ -27,12 +27,12 @@ const STUDENT_NAV = [
 ] as const;
 const NAV: Record<string, [string, string][]> = {
   mentor: [["/mentor", "Dashboard"], ["/mentor/requests", "Requests"], ["/mentor/availability", "Availability"], ["/mentor/sessions", "Sessions"], ["/mentor/profile", "Profile"]],
-  admin: [["/admin", "Dashboard"], ["/admin/payments", "Payments"], ["/admin/payment-accounts", "Payment accounts"], ["/admin/mentors", "Mentors"], ["/admin/students", "Students"], ["/admin/universities", "Universities"], ["/admin/content", "Content"], ["/admin/admins", "Admins"]],
+  admin: [["/admin", "Dashboard"], ["/admin/payments", "Payments"], ["/admin/payment-accounts", "Payment accounts"], ["/admin/contact", "Contact details"], ["/admin/mentors", "Mentors"], ["/admin/students", "Students"], ["/admin/universities", "Universities"], ["/admin/content", "Content"], ["/admin/admins", "Admins"]],
 };
 const ADMIN_ALLOWED: Record<string, string[]> = {
   super: NAV.admin.map(n => n[0]),
-  ops: ["/admin", "/admin/payments", "/admin/mentors", "/admin/students"],
-  content: ["/admin", "/admin/universities", "/admin/content"],
+  ops: ["/admin", "/admin/payments", "/admin/contact", "/admin/mentors", "/admin/students"],
+  content: ["/admin", "/admin/contact", "/admin/universities", "/admin/content"],
 };
 export const adminCan = (adminRole: string | null | undefined, path: string) => !!adminRole && (ADMIN_ALLOWED[adminRole] ?? []).includes(path);
 
