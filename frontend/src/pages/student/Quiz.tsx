@@ -64,7 +64,7 @@ export default function Quiz() {
     catch (e) { setHelp(h => ({ ...h, [q.id]: (e as Error).message })); }
   }
   return (
-    <section className="mx-auto flex w-full max-w-2xl flex-col gap-3 pb-20">
+    <section className="mx-auto flex w-full max-w-2xl flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-3"><Link href="/student" className="text-sm font-semibold text-muted">← {t("Back to dashboard")}</Link><span className="rounded-full bg-brand-soft px-3 py-1 text-xs font-semibold text-brand">{qs.length - missing.length} / {qs.length} {t("Answered")}</span></div>
       <div className="card flex items-center gap-3 !p-3"><div className="flex-1"><p className="mb-2 text-sm font-semibold">{t("Question")} {index + 1} / {qs.length} · {t(q.area)}</p><div className="h-1.5 overflow-hidden rounded-full bg-soft"><div className="h-full bg-brand transition-all" style={{ width: `${((qs.length - missing.length) / qs.length) * 100}%` }} /></div></div><Kip size={72} mood="studying" /></div>
       <div className="card w-full min-w-0 !p-2 sm:!p-3">
@@ -85,7 +85,7 @@ export default function Quiz() {
       </div>
 
       {showMissing && missing.length > 0 && <p role="alert" className="text-sm text-bad">{t("Answer every question before finishing the quiz.")}</p>}
-      <div className="fixed inset-x-3 bottom-[calc(env(safe-area-inset-bottom)+0.75rem)] z-30 mx-auto flex w-auto max-w-2xl items-center justify-between gap-3 rounded-xl border border-line bg-card/95 p-2 shadow-lg backdrop-blur-sm">
+      <div className="flex w-full items-center justify-between gap-3 rounded-xl border border-line bg-card p-2">
         <button className="btn-outline min-w-0 flex-1 border-brand/20 bg-brand-soft px-2 text-xs text-brand hover:border-brand/40 hover:bg-brand/15 sm:w-48 sm:flex-none sm:px-4 sm:text-sm" disabled={index === 0} onClick={() => { setShowMissing(false); setIndex(i => i - 1); }}>{t("Previous")}</button>
         <button className="btn-primary min-w-0 flex-1 px-2 text-xs sm:w-48 sm:flex-none sm:px-4 sm:text-sm" onClick={goNext}>{index === qs.length - 1 ? t("Finish") : t("Next")}</button>
       </div>
