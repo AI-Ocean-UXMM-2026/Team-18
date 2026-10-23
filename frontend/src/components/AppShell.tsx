@@ -8,6 +8,7 @@ import { usePrefs } from "@/lib/prefs";
 import { JOURNEY_PATHS, studentProgress, studentRouteRedirect } from "@/lib/studentFlow";
 import { FloatingAdvisor } from "@/components/FloatingAdvisor";
 import BrandLogo from "@/components/BrandLogo";
+import projectLogo from "@/assets/careernest-logo.png";
 import HomeIntro from "@/components/HomeIntro";
 
 const STUDENT_NAV = [
@@ -89,6 +90,11 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="flex items-center justify-between px-4 pb-3 pt-4 lg:px-3">
       <h2 id="student-navigation-title" className="text-[11px] font-bold uppercase tracking-wider text-muted">{t("Your pathway")}</h2>
       <button type="button" className="grid h-11 w-11 place-items-center rounded-lg text-muted hover:bg-soft" onClick={() => setNavOpen(false)} aria-label={t("Close navigation")}>×</button>
+    </div>
+    <div className="flex justify-center px-4 pb-4">
+      <Link href="/student" aria-label="CareerNest home" onClick={() => setNavOpen(false)} className="rounded-xl p-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">
+        <img src={projectLogo} alt="CareerNest" width={88} height={88} className="h-[88px] w-[88px] object-contain" />
+      </Link>
     </div>
     <nav aria-label={t("Student pathway")} className="flex flex-col gap-1 px-2">
       {STUDENT_NAV.map(([path, label, glyph], index) => {
