@@ -31,6 +31,7 @@ export default function Start() {
             <div className="mb-3 flex items-center justify-between gap-3 text-xs font-semibold text-white"><span>{t("Quiz progress")}</span><span className="font-mono">{answered} / {flow.total}</span></div>
             <div role="progressbar" aria-label={t("Quiz progress")} aria-valuenow={answered} aria-valuemin={0} aria-valuemax={Math.max(flow.total, 1)} className="h-2 overflow-hidden rounded-full bg-white/20"><div className="dashboard-progress h-full rounded-full bg-amber-200" style={{ width: `${flow.total ? Math.min(100, answered / flow.total * 100) : 0}%` }} /></div>
           </div>
+          <p className="max-w-md text-sm leading-6 text-white/75">{t("Discover your potential, explore your options, and take the next step toward your future.")}</p>
         </div>
         <div className="relative z-10 block"><KipGuide /></div>
       </section>

@@ -19,6 +19,7 @@ export const MYANMAR: Record<string, string> = {
   "How to use CareerNest": "CareerNest အသုံးပြုပုံ",
   "Find your": "သင့်အတွက်",
   "next move.": "နောက်တစ်ဆင့်ကို ရှာပါ။",
+  "Discover your potential, explore your options, and take the next step toward your future.": "သင့်အလားအလာကို ရှာဖွေပါ၊ ရွေးချယ်စရာများကို လေ့လာပါ၊ သင့်အနာဂတ်အတွက် နောက်တစ်ဆင့်ကို လှမ်းပါ။",
   "Your future.": "သင့်အနာဂတ်။",
   "Make it yours.": "သင်ကိုယ်တိုင် ပုံဖော်ပါ။",
   "Discover your strengths": "သင့်အားသာချက်များကို ရှာဖွေပါ",
