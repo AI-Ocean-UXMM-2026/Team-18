@@ -90,7 +90,7 @@ CREATE INDEX IF NOT EXISTS bookings_student ON bookings(student_id, status);
 
 -- 4. Pro payments: screenshot -> admin confirms -> student becomes Pro --------
 CREATE TABLE IF NOT EXISTS payment_accounts (
-  provider        VARCHAR(16) PRIMARY KEY,          -- kbz, wave, aya, uab, mytel
+  provider        VARCHAR(16) PRIMARY KEY,          -- kbz, wave, aya, uab, mytel, ctz
   label           TEXT NOT NULL,
   enabled         BOOLEAN NOT NULL DEFAULT false,
   account_name    TEXT NOT NULL DEFAULT '',
@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS admin_career_videos (
 -- Default receiving accounts (edit them in Admin -> Payment accounts)
 INSERT INTO payment_accounts (provider, label, enabled) VALUES
   ('kbz', 'KBZPay', true), ('wave', 'Wave Money', true), ('aya', 'AYA Pay', true),
-  ('uab', 'UAB Pay', false), ('mytel', 'MytelPay', false)
+  ('uab', 'UAB Pay', false), ('mytel', 'MytelPay', false), ('ctz', 'CTZ Pay', false)
 ON CONFLICT (provider) DO NOTHING;
 
 COMMIT;
