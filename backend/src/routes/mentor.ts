@@ -32,17 +32,17 @@ mentorRouter.get("/mentor/bookings", route(async req => ({
   bookings: await query(`${BOOKING_SELECT} WHERE b.mentor_id = $1 ORDER BY (b.status = 'pending') DESC, s.starts_at`, [sessionOf(req).uid]),
 })));
 
-async function change(req: any, from: string[], to: string, extra = "") {
-  const row = await one(`UPDATE bookings SET status = $1, responded_at = now() ${extra} WHERE id = $2 AND mentor_id = $3 AND status::text = ANY($4::text[]) RETURNING id`,
-    [to, Number(req.params.id), sessionOf(req).uid, from]);
+async function change(req: any, from: string[], to: string, meetingLink?: string) {
+  const row = await one(`UPDATE bookings SET status = $1, responded_at = now(), meeting_link = COALESCE($5, meeting_link)
+    WHERE id = $2 AND mentor_id = $3 AND status::text = ANY($4::text[]) RETURNING id`,
+    [to, Number(req.params.id), sessionOf(req).uid, from, meetingLink ?? null]);
   if (!row) throw notFound("Booking not found, or it has already changed.");
   await audit(sessionOf(req).uid, `booking.${to}`, `booking:${row.id}`);
   return { ok: true };
 }
 mentorRouter.post("/mentor/bookings/:id/accept", route(async req => {
   const b = body(req, z.object({ meetingLink: z.string().trim().url().max(300).optional() }));
-  if (b.meetingLink) await one("UPDATE bookings SET meeting_link = $1 WHERE id = $2 AND mentor_id = $3", [b.meetingLink, Number(req.params.id), sessionOf(req).uid]);
-  return change(req, ["pending"], "confirmed");
+  return change(req, ["pending"], "confirmed", b.meetingLink);
 }));
 mentorRouter.post("/mentor/bookings/:id/decline", route(req => change(req, ["pending"], "declined")));
 mentorRouter.post("/mentor/bookings/:id/complete", route(req => change(req, ["confirmed"], "completed")));

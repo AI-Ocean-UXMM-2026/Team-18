@@ -25,6 +25,14 @@ const secret = new TextEncoder().encode(ENV.jwtSecret);
 export type Role = "student" | "mentor" | "admin";
 export type AdminRole = "super" | "ops" | "content";
 export type Session = { uid: number; role: Role; adminRole: AdminRole | null };
+export type CurrentUser = { active: boolean; role: Role; adminRole: AdminRole | null; mentorStatus: string | null };
+
+export function sessionMatchesCurrentUser(session: Session, user: CurrentUser) {
+  return user.active
+    && session.role === user.role
+    && (session.role !== "admin" || session.adminRole === user.adminRole)
+    && (session.role !== "mentor" || user.mentorStatus === "active");
+}
 
 export async function createToken(s: Session) {
   return new SignJWT({ uid: s.uid, role: s.role, adminRole: s.adminRole })
@@ -40,8 +48,19 @@ export async function readToken(token: string): Promise<Session | null> {
 
 // small in-memory rate limiter (per key)
 const buckets = new Map<string, number[]>();
+const MAX_RATE_BUCKETS = 20_000;
+let lastBucketCleanup = 0;
 export function allow(key: string, limit: number, windowMs: number) {
   const now = Date.now();
+  if (now - lastBucketCleanup >= 60_000 || buckets.size >= MAX_RATE_BUCKETS) {
+    for (const [bucketKey, timestamps] of buckets) {
+      const recent = timestamps.filter(timestamp => now - timestamp < 3_600_000);
+      if (!recent.length) buckets.delete(bucketKey);
+      else if (recent.length !== timestamps.length) buckets.set(bucketKey, recent);
+    }
+    while (buckets.size >= MAX_RATE_BUCKETS) buckets.delete(buckets.keys().next().value!);
+    lastBucketCleanup = now;
+  }
   const recent = (buckets.get(key) ?? []).filter(t => now - t < windowMs);
   if (recent.length >= limit) { buckets.set(key, recent); return false; }
   recent.push(now); buckets.set(key, recent); return true;

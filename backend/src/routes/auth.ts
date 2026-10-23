@@ -37,7 +37,7 @@ authRouter.post("/auth/mentor-apply", route(async req => {
 }));
 
 authRouter.post("/auth/login", route(async req => {
-  const ip = (req.headers["x-forwarded-for"] as string | undefined)?.split(",")[0]?.trim() || req.ip || "local";
+  const ip = req.ip || "local";
   if (!allow("login:" + ip, ENV.loginRateLimit, ENV.loginRateWindowSeconds * 1000)) throw tooMany("Too many sign-in attempts. Wait a minute and try again.");
   const b = body(req, z.object({ email, password: z.string().min(1), portal: z.enum(["student", "mentor", "admin"]) }));
   const u = await one<{ id: number; password_hash: string; role: "student" | "mentor" | "admin"; admin_role: any; active: boolean }>("SELECT id, password_hash, role, admin_role, active FROM users WHERE email = $1", [b.email]);

@@ -25,7 +25,9 @@ import { startSweeper } from "./retention.js";
 
 assertEnv();
 const app = express();
-app.set("trust proxy", true);
+// Trust the hosting reverse proxy only. Trusting every forwarded hop lets
+// clients forge X-Forwarded-For and evade the login rate limit.
+app.set("trust proxy", ENV.isProduction ? 1 : false);
 app.use(express.json({ limit: "2mb" }));   // payment screenshots arrive as base64 (max 1 MB image)
 app.use(cors({
   origin(origin, cb) {

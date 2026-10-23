@@ -5,7 +5,7 @@
 //    /admin…    dashboard, payments, mentors, students, universities, content
 //  Each portal has its own sign-in page; nobody can open another role's pages.
 // ===========================================================================
-import type { ComponentType } from "react";
+import { lazy, Suspense, type ComponentType } from "react";
 import { Link, Redirect, Route, Switch } from "wouter";
 import { AppShell, adminCan } from "@/components/AppShell";
 import { ErrorNote, Spinner, Toaster } from "@/components/ui";
@@ -15,40 +15,40 @@ import type { Role } from "@/lib/api";
 import { useJourney } from "@/lib/journey";
 import { JOURNEY_PATHS, studentProgress, studentRouteRedirect } from "@/lib/studentFlow";
 
-import Landing from "@/pages/Landing";
-import Guide from "@/pages/Guide";
-import Login from "@/pages/Login";
-import Register from "@/pages/Register";
-import MentorApply from "@/pages/MentorApply";
-import NotFound from "@/pages/NotFound";
+const Landing = lazy(() => import("@/pages/Landing"));
+const Guide = lazy(() => import("@/pages/Guide"));
+const Login = lazy(() => import("@/pages/Login"));
+const Register = lazy(() => import("@/pages/Register"));
+const MentorApply = lazy(() => import("@/pages/MentorApply"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
 
-import Start from "@/pages/student/Start";
-import Quiz from "@/pages/student/Quiz";
-import Results from "@/pages/student/Results";
-import Movies from "@/pages/student/Movies";
-import ChooseCareer from "@/pages/student/ChooseCareer";
-import Majors from "@/pages/student/Majors";
-import Explorer from "@/pages/student/Explorer";
-import Compare from "@/pages/student/Compare";
-import Mentors from "@/pages/student/Mentors";
-import Plan from "@/pages/student/Plan";
-import Pro from "@/pages/student/Pro";
-import StudentAccount from "@/pages/student/Account";
+const Start = lazy(() => import("@/pages/student/Start"));
+const Quiz = lazy(() => import("@/pages/student/Quiz"));
+const Results = lazy(() => import("@/pages/student/Results"));
+const Movies = lazy(() => import("@/pages/student/Movies"));
+const ChooseCareer = lazy(() => import("@/pages/student/ChooseCareer"));
+const Majors = lazy(() => import("@/pages/student/Majors"));
+const Explorer = lazy(() => import("@/pages/student/Explorer"));
+const Compare = lazy(() => import("@/pages/student/Compare"));
+const Mentors = lazy(() => import("@/pages/student/Mentors"));
+const Plan = lazy(() => import("@/pages/student/Plan"));
+const Pro = lazy(() => import("@/pages/student/Pro"));
+const StudentAccount = lazy(() => import("@/pages/student/Account"));
 
-import MentorDashboard from "@/pages/mentor/Dashboard";
-import MentorRequests from "@/pages/mentor/Requests";
-import MentorAvailability from "@/pages/mentor/Availability";
-import MentorSessions from "@/pages/mentor/Sessions";
-import MentorProfile from "@/pages/mentor/Profile";
+const MentorDashboard = lazy(() => import("@/pages/mentor/Dashboard"));
+const MentorRequests = lazy(() => import("@/pages/mentor/Requests"));
+const MentorAvailability = lazy(() => import("@/pages/mentor/Availability"));
+const MentorSessions = lazy(() => import("@/pages/mentor/Sessions"));
+const MentorProfile = lazy(() => import("@/pages/mentor/Profile"));
 
-import AdminOverview from "@/pages/admin/Overview";
-import AdminPayments from "@/pages/admin/Payments";
-import AdminPaymentAccounts from "@/pages/admin/PaymentAccounts";
-import AdminMentors from "@/pages/admin/Mentors";
-import AdminStudents from "@/pages/admin/Students";
-import AdminUniversities from "@/pages/admin/Universities";
-import AdminContent from "@/pages/admin/Content";
-import AdminAdmins from "@/pages/admin/Admins";
+const AdminOverview = lazy(() => import("@/pages/admin/Overview"));
+const AdminPayments = lazy(() => import("@/pages/admin/Payments"));
+const AdminPaymentAccounts = lazy(() => import("@/pages/admin/PaymentAccounts"));
+const AdminMentors = lazy(() => import("@/pages/admin/Mentors"));
+const AdminStudents = lazy(() => import("@/pages/admin/Students"));
+const AdminUniversities = lazy(() => import("@/pages/admin/Universities"));
+const AdminContent = lazy(() => import("@/pages/admin/Content"));
+const AdminAdmins = lazy(() => import("@/pages/admin/Admins"));
 
 function guard(role: Role, Page: ComponentType, path?: string) {
   return function Guarded() {
@@ -112,6 +112,7 @@ const G_AdminAdmins = A(AdminAdmins, "/admin/admins");
 export default function App() {
   return (
     <AppShell>
+      <Suspense fallback={<Spinner />}>
       <Switch>
         <Route path="/" component={Landing} />
         <Route path="/guide" component={Guide} />
@@ -150,6 +151,7 @@ export default function App() {
         <Route path="/admin/admins" component={G_AdminAdmins} />
         <Route component={NotFound} />
       </Switch>
+      </Suspense>
       <Toaster />
     </AppShell>
   );

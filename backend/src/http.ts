@@ -3,7 +3,7 @@
 // ===========================================================================
 import type { NextFunction, Request, RequestHandler, Response } from "express";
 import { z } from "zod";
-import { readToken, type AdminRole, type Role, type Session } from "./auth.js";
+import { readToken, sessionMatchesCurrentUser, type AdminRole, type Role, type Session } from "./auth.js";
 import { one } from "./db.js";
 
 declare global {
@@ -33,16 +33,21 @@ export function body<T extends z.ZodTypeAny>(req: Request, schema: T): z.infer<T
 }
 
 /** Reads the Bearer token (if any) on every request. */
-export const attachSession: RequestHandler = async (req, _res, next) => {
-  const h = req.headers.authorization;
-  if (h?.startsWith("Bearer ")) {
-    const s = await readToken(h.slice(7));
-    if (s) {
-      const user = await one<{ active: boolean }>("SELECT active FROM users WHERE id = $1", [s.uid]).catch(() => null);
-      if (user?.active) req.session = s;
+export const attachSession: RequestHandler = (req, _res, next) => {
+  void (async () => {
+    const h = req.headers.authorization;
+    if (h?.startsWith("Bearer ")) {
+      const session = await readToken(h.slice(7));
+      if (session) {
+        const user = await one<{ active: boolean; role: Role; adminRole: AdminRole | null; mentorStatus: string | null }>(
+          `SELECT u.active, u.role, u.admin_role AS "adminRole", m.status AS "mentorStatus"
+           FROM users u LEFT JOIN mentors m ON m.user_id = u.id WHERE u.id = $1`,
+          [session.uid],
+        );
+        if (user && sessionMatchesCurrentUser(session, user)) req.session = session;
+      }
     }
-  }
-  next();
+  })().then(() => next(), next);
 };
 
 export function requireRole(...roles: Role[]): RequestHandler {
@@ -67,7 +72,9 @@ export function errorMiddleware(error: unknown, _req: Request, res: Response, _n
   if (error instanceof HttpError) return res.status(error.status).json({ error: error.message });
   const pgErr = error as { code?: string; constraint?: string };
   if (pgErr?.code === "23505") return res.status(409).json({ error: "This was already submitted." });
-  if ((error as { type?: string })?.type === "entity.too.large") return res.status(413).json({ error: "The upload is too large (max 1 MB image)." });
+  const bodyError = error as { type?: string };
+  if (bodyError?.type === "entity.parse.failed") return res.status(400).json({ error: "The request body must contain valid JSON." });
+  if (bodyError?.type === "entity.too.large") return res.status(413).json({ error: "The request body is too large." });
   console.error(error);
   res.status(500).json({ error: "Something went wrong on the server." });
 }

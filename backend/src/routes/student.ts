@@ -9,7 +9,7 @@ import { ENV } from "../env.js";
 import { CAREERS, CODES, FIELD_NAMES, G12_PROGRAMS, G12_UNIS, QUESTIONS, careerById } from "../data.js";
 import { hollandCode, codeScores, rankCareers, reasonsFor, unanswered } from "../quiz.js";
 import { getSchools } from "../schools.js";
-import { audit, one, query } from "../db.js";
+import { audit, one, query, tx } from "../db.js";
 import { HttpError, badRequest, body, conflict, notFound, requireRole, route, sessionOf } from "../http.js";
 
 export const studentRouter = Router();
@@ -89,16 +89,23 @@ studentRouter.get("/mentors", student, route(async req => {
 studentRouter.post("/bookings", student, route(async req => {
   const uid = await requireProStudent(req);
   const b = body(req, z.object({ slotId: z.number().int().positive(), question: z.string().trim().max(500).optional() }));
-  const slot = await one<{ id: number; mentor_id: number; starts_at: string }>(
-    `SELECT s.id, s.mentor_id, s.starts_at FROM mentor_slots s JOIN mentors m ON m.user_id = s.mentor_id
-     WHERE s.id = $1 AND m.status = 'active' AND s.starts_at > now() + interval '12 hours'`, [b.slotId]);
-  if (!slot) throw notFound("This time is no longer available. Please pick another.");
-  const live = await one<{ n: number }>("SELECT count(*)::int AS n FROM bookings WHERE student_id = $1 AND status IN ('pending', 'confirmed')", [uid]);
-  if ((live?.n ?? 0) >= 2) throw conflict("You can have at most 2 upcoming mentor sessions.");
   try {
-    const row = await one(`INSERT INTO bookings (slot_id, mentor_id, student_id, question) VALUES ($1, $2, $3, $4) RETURNING id, status`, [slot.id, slot.mentor_id, uid, b.question ?? null]);
-    return { booking: row, message: "Request sent. The mentor usually replies within 24 hours." };
-  } catch (e: any) { if (e?.code === "23505") throw conflict("Someone just booked this time. Please pick another."); throw e; }
+    const booking = await tx(async client => {
+      const user = (await client.query<{ is_pro: boolean }>("SELECT is_pro FROM users WHERE id = $1 FOR UPDATE", [uid])).rows[0];
+      if (!user?.is_pro) throw new HttpError(402, "Mentor sessions are part of CareerNest Pro.");
+      const slot = (await client.query<{ id: number; mentor_id: number }>(
+        `SELECT s.id, s.mentor_id FROM mentor_slots s JOIN mentors m ON m.user_id = s.mentor_id
+         WHERE s.id = $1 AND m.status = 'active' AND s.starts_at > now() + interval '12 hours' FOR UPDATE OF s`, [b.slotId])).rows[0];
+      if (!slot) throw notFound("This time is no longer available. Please pick another.");
+      const live = (await client.query<{ n: number }>("SELECT count(*)::int AS n FROM bookings WHERE student_id = $1 AND status IN ('pending', 'confirmed')", [uid])).rows[0];
+      if ((live?.n ?? 0) >= 2) throw conflict("You can have at most 2 upcoming mentor sessions.");
+      return (await client.query("INSERT INTO bookings (slot_id, mentor_id, student_id, question) VALUES ($1, $2, $3, $4) RETURNING id, status", [slot.id, slot.mentor_id, uid, b.question ?? null])).rows[0];
+    });
+    return { booking, message: "Request sent. The mentor usually replies within 24 hours." };
+  } catch (error) {
+    if ((error as { code?: string }).code === "23505") throw conflict("Someone just booked this time. Please pick another.");
+    throw error;
+  }
 }));
 
 studentRouter.get("/me/bookings", student, route(async req => {
