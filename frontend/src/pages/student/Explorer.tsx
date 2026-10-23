@@ -12,7 +12,7 @@ import { CardGridSkeleton, ErrorNote, Note, PageHead, Spinner, toast } from "@/c
 export default function Explorer() {
   const { j, set, ready } = useJourney(); const { t } = usePrefs();
   const [, go] = useLocation();
-  const [query, setQuery] = useState(""); const [scholarship, setScholarship] = useState(false); const [allFields, setAllFields] = useState(true);
+  const [searchText, setSearchText] = useState(""); const [query, setQuery] = useState(""); const [scholarship, setScholarship] = useState(false); const [allFields, setAllFields] = useState(true);
   const { data, loading, error, refresh } = useUniversities(scholarship, allFields);
   const g12 = j.level === "g12";
   const items = useMemo(() => (data?.items ?? []).filter(i => !query || JSON.stringify(i).toLowerCase().includes(query.toLowerCase())), [data, query]);
@@ -30,7 +30,10 @@ export default function Explorer() {
       {!g12 && <Note>{t("GED and IGCSE students usually study abroad. These universities in Thailand, Singapore and Malaysia accept GED or IGCSE students. Use the filter to see only those with scholarships.")}</Note>}
       {!g12 && <AdvisorChat title="AI university advisor" subtitle="Answers use only the CareerNest data on this page. Always confirm with the university." endpoint="/ai/advisor" payload={{ level: j.level, careerId: j.careerId, majors: j.majors }} suggestions={["Which option fits me best, and why?", "Which ones offer scholarships?", "Draft an email to confirm GED/IGCSE entry"]} />}
       <div className="card grid items-start gap-4 md:grid-cols-3">
-        <label className="label grow">{t("Search")}<span className="relative block"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" strokeWidth="1.8" /><path d="m16 16 4.2 4.2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg><input className="input pl-10" value={query} onChange={e => setQuery(e.target.value)} placeholder={t("University or programme")} /></span></label>
+        <form className="flex min-w-0 items-end gap-2" onSubmit={e => { e.preventDefault(); setQuery(searchText.trim()); }}>
+          <label className="label min-w-0 flex-1">{t("Search")}<span className="relative block"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted"><circle cx="10.8" cy="10.8" r="6.8" stroke="currentColor" strokeWidth="1.8" /><path d="m16 16 4.2 4.2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg><input className="input pl-10" value={searchText} onChange={e => setSearchText(e.target.value)} placeholder={t("University or programme")} /></span></label>
+          <button className="btn-primary shrink-0" type="submit">{t("Search")}</button>
+        </form>
         <div className="flex flex-col gap-1">
           <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={allFields} onChange={e => setAllFields(e.target.checked)} aria-describedby="all-fields-help" />{t("Show all fields")}</label>
           <p id="all-fields-help" className="pl-6 text-xs leading-5 text-muted">{t("All fields are shown by default. Turn this off to match your selected majors.")}</p>
