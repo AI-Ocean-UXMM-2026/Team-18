@@ -45,8 +45,9 @@ export function FloatingAdvisor() {
           </div>
           <button ref={closeButtonRef} type="button" onClick={() => setOpen(false)} className="grid h-11 w-11 shrink-0 place-items-center rounded-lg text-xl text-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white" aria-label={t("Close chat")} title={t("Close chat")}>×</button>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-2 sm:p-3">
+        <div className="min-h-0 flex-1 overflow-hidden p-2 sm:p-3">
           {user?.role === "student" || isGuest ? <AdvisorChat
+            fillPanel
             title="AI career coach"
             subtitle="Ask about careers, majors, or university options."
             endpoint="/ai/career"
