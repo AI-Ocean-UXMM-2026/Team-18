@@ -73,8 +73,8 @@ export default function Quiz() {
 
       {showMissing && missing.length > 0 && <p role="alert" className="text-sm text-bad">{t("Answer every question before finishing the quiz.")}</p>}
       <div className="flex items-center justify-between gap-3">
-        <button className="btn-ghost" disabled={index === 0} onClick={() => { setShowMissing(false); setIndex(i => i - 1); }}>{t("Previous")}</button>
-        <button className="btn-primary" onClick={goNext}>{t("Next")}</button>
+        <button className="btn-ghost w-32" disabled={index === 0} onClick={() => { setShowMissing(false); setIndex(i => i - 1); }}>{t("Previous")}</button>
+        <button className="btn-primary w-32" onClick={goNext}>{t("Next")}</button>
       </div>
     </section>
   );

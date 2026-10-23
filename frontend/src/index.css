@@ -94,8 +94,8 @@ html[data-theme="dark"] .skeleton-block::after { background: linear-gradient(90d
   .card { @apply rounded-xl border border-line bg-card p-5; }
   .btn, .btn-primary, .btn-outline, .btn-ghost, .btn-destructive { @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border px-4 py-2 text-center text-sm font-semibold leading-5 disabled:cursor-not-allowed; }
   .btn { @apply border-line bg-card text-ink hover:bg-soft; }
-  .btn-primary { @apply border-brand bg-brand text-on-brand hover:brightness-105; }
-  .btn-outline { @apply border-line bg-card text-ink hover:border-brand hover:bg-brand-soft; }
+  .btn-primary { @apply border-brand bg-brand text-on-brand hover:brightness-95; }
+  .btn-outline { @apply border-line bg-card text-ink hover:border-brand hover:bg-brand-soft hover:brightness-95; }
   .btn-ghost { @apply border-transparent bg-transparent text-ink hover:border-line hover:bg-soft; }
   .btn-destructive { @apply border-bad bg-bad-soft text-bad hover:border-bad hover:brightness-95; }
   .btn-sm { @apply min-h-10 px-3 py-1.5 text-xs; }
@@ -138,6 +138,7 @@ html[data-theme="dark"] .skeleton-block::after { background: linear-gradient(90d
 .shadow-md { box-shadow: var(--shadow-raised); }
 .shadow-lg, .shadow-xl, .shadow-2xl { box-shadow: var(--shadow-overlay); }
 :is(.btn, .btn-primary, .btn-outline, .btn-ghost, .btn-destructive):not(:disabled):active { transform: translateY(1px); }
+:is(button, a).bg-brand:not(:disabled):hover, :is(button, a).bg-brand-soft:not(:disabled):hover { filter: brightness(0.95); }
 .student-sidebar-link { transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease; }
 .student-sidebar-link[aria-current="page"] { border-color: var(--color-brand); background: var(--color-brand-soft); color: var(--color-outline); }
 html[data-theme="dark"] .student-sidebar-link[aria-current="page"] { color: var(--color-ink); }
