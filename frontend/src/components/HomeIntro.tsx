@@ -35,8 +35,8 @@ export default function HomeIntro() {
   if (!showIntro) return null;
   return (
     <section ref={introRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t("CareerNest introduction video")} className="fixed inset-0 z-[100] grid h-dvh w-full place-items-center overflow-y-auto bg-black/60 p-4 outline-none sm:p-8">
-      <div className="relative w-full max-w-4xl overflow-hidden rounded-xl border border-white/20 bg-black shadow-2xl">
-        <video ref={videoRef} tabIndex={-1} className="pointer-events-none block aspect-video max-h-[80dvh] w-full object-contain" src="/careernest-home-intro.mp4" autoPlay muted playsInline disablePictureInPicture disableRemotePlayback preload="auto"
+      <div className="relative w-full max-w-md overflow-hidden rounded-xl border border-white/20 bg-black shadow-2xl">
+        <video ref={videoRef} tabIndex={-1} className="pointer-events-none block aspect-video max-h-[80dvh] w-full object-contain" src="/careernest-welcome-intro.mp4" autoPlay playsInline disablePictureInPicture disableRemotePlayback preload="auto"
           onContextMenu={event => event.preventDefault()}
           onTimeUpdate={event => { if (!event.currentTarget.seeking) playbackPosition.current = event.currentTarget.currentTime; }}
           onSeeking={event => { if (Math.abs(event.currentTarget.currentTime - playbackPosition.current) > 0.1) event.currentTarget.currentTime = playbackPosition.current; }}
