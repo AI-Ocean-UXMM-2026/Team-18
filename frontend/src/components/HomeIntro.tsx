@@ -2,11 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { usePrefs } from "@/lib/prefs";
 
+const INTRO_SEEN_KEY = "careernest_home_intro_seen";
+
 export default function HomeIntro() {
   const [location] = useLocation();
   const isHomePage = location === "/" || location === "/student";
   const { t } = usePrefs();
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(() => {
+    try { return !sessionStorage.getItem(INTRO_SEEN_KEY); }
+    catch { return true; }
+  });
   const introRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -15,6 +20,7 @@ export default function HomeIntro() {
 
   useEffect(() => {
     if (!showIntro || !isHomePage) return;
+    try { sessionStorage.setItem(INTRO_SEEN_KEY, "1"); } catch { /* Session storage may be disabled. */ }
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     introRef.current?.focus();
