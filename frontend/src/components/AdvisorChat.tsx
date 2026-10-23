@@ -1,6 +1,5 @@
 // Chat box for /ai/career and /ai/advisor. Replies only in the chosen language.
 import { useEffect, useRef, useState } from "react";
-import { Link } from "wouter";
 import { api, ApiError, type ChatMessage } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { usePrefs } from "@/lib/prefs";
@@ -8,7 +7,7 @@ import { usePrefs } from "@/lib/prefs";
 type Props = { title: string; subtitle: string; endpoint: string; payload: Record<string, unknown>; suggestions: string[]; fillPanel?: boolean };
 export function AdvisorChat({ title, subtitle, endpoint, payload, suggestions, fillPanel = false }: Props) {
   const { lang, t } = usePrefs();
-  const { refresh, isGuest } = useAuth();
+  const { refresh, isGuest, user } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -16,21 +15,14 @@ export function AdvisorChat({ title, subtitle, endpoint, payload, suggestions, f
   const box = useRef<HTMLDivElement>(null);
   useEffect(() => { box.current?.scrollTo(0, box.current.scrollHeight); }, [messages, busy]);
 
-  if (isGuest) return (
-    <section className={`card ai-surface flex flex-col gap-3 ${fillPanel ? "h-full min-h-0 overflow-y-auto" : ""}`}>
-      <h2 className="ai-heading text-lg">✦ {t(title)}</h2>
-      <p className="text-sm text-muted">{t("Create an account to use the AI coach and save your progress.")}</p>
-      <Link href="/register" className={`btn-primary btn-sm shrink-0 self-start ${fillPanel ? "mt-auto" : ""}`}>{t("Create an account")}</Link>
-    </section>
-  );
-
   async function ask(text: string) {
     text = text.trim(); if (!text || busy) return;
     const next: ChatMessage[] = [...messages, { role: "user", content: text }];
     setMessages(next); setInput(""); setBusy(true);
     try {
       const { reply } = await api.post<{ reply: string }>(endpoint, { ...payload, lang, messages: next });
-      setMessages([...next, { role: "assistant", content: reply }]); refresh();
+      setMessages([...next, { role: "assistant", content: reply }]);
+      if (!isGuest && user) refresh();
     } catch (e) {
       if (e instanceof ApiError && e.status === 402) setNeedPro(true);
       setMessages([...next, { role: "assistant", content: e instanceof Error ? e.message : t("Sorry, something went wrong. Please try again.") }]);

@@ -16,6 +16,7 @@ export const aiRouter = Router();
 const lang = z.enum(["en", "my"]).default("en");
 const messages = z.array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().min(1).max(2000) })).min(1).max(24)
   .refine(l => l[l.length - 1].role === "user", "The last message must be from the student.");
+const careerRequest = z.object({ answers: z.record(z.string(), z.number().int().min(1).max(5)), level: z.enum(["g12", "ged", "igcse"]).default("g12"), lang, messages });
 
 async function spend(req: Request) {
   const uid = sessionOf(req).uid;
@@ -45,8 +46,20 @@ aiRouter.post("/ai/question", requireRole("student"), route(async req => {
 }));
 
 aiRouter.post("/ai/career", requireRole("student"), route(async req => {
-  const b = body(req, z.object({ answers: z.record(z.string(), z.number().int().min(1).max(5)), level: z.enum(["g12", "ged", "igcse"]).default("g12"), lang, messages }));
+  const b = body(req, careerRequest);
   const reply = await askForStudent(req, () => askAI(careerPrompt(b.answers, b.level, b.lang), last12(b.messages)));
+  return { reply: reply.replace(/^[ \t]*\d{1,2}[.)][ \t]+/gm, "") };
+}));
+
+// Visitors can use Kip without creating an account. Keep this to a small,
+// per-IP allowance so public access cannot consume unlimited provider usage.
+aiRouter.post("/ai/guest/career", route(async req => {
+  const b = body(req, careerRequest);
+  const ip = req.ip || "unknown";
+  if (!allow("guest-ai:" + ip, ENV.freeAiLimit, 3_600_000)) {
+    throw tooMany(`Guest access allows ${ENV.freeAiLimit} AI questions per hour. Sign in to continue.`);
+  }
+  const reply = await askAI(careerPrompt(b.answers, b.level, b.lang), last12(b.messages));
   return { reply: reply.replace(/^[ \t]*\d{1,2}[.)][ \t]+/gm, "") };
 }));
 

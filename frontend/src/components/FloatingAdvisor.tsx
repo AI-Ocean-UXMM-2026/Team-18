@@ -46,11 +46,11 @@ export function FloatingAdvisor() {
           <button ref={closeButtonRef} type="button" onClick={() => setOpen(false)} className="grid h-11 w-11 shrink-0 place-items-center rounded-lg text-xl text-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white" aria-label={t("Close chat")} title={t("Close chat")}>×</button>
         </div>
         <div className="min-h-0 flex-1 overflow-hidden p-2 sm:p-3">
-          {user?.role === "student" || isGuest ? <AdvisorChat
+          {user?.role === "student" || isGuest || !user ? <AdvisorChat
             fillPanel
             title="AI career coach"
             subtitle="Ask about careers, majors, or university options."
-            endpoint="/ai/career"
+            endpoint={user?.role === "student" ? "/ai/career" : "/ai/guest/career"}
             payload={{ answers: j.answers, level: j.level ?? "g12" }}
             suggestions={["What careers match my interests?", "How should I choose a university major?"]}
           /> : <section className="card ai-surface flex h-full min-h-0 flex-col gap-3 overflow-y-auto">
