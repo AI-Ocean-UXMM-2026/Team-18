@@ -17,10 +17,10 @@ export function AdvisorChat({ title, subtitle, endpoint, payload, suggestions, f
   useEffect(() => { box.current?.scrollTo(0, box.current.scrollHeight); }, [messages, busy]);
 
   if (isGuest) return (
-    <section className="card ai-surface flex flex-col gap-3">
+    <section className={`card ai-surface flex flex-col gap-3 ${fillPanel ? "h-full min-h-0 overflow-y-auto" : ""}`}>
       <h2 className="ai-heading text-lg">✦ {t(title)}</h2>
       <p className="text-sm text-muted">{t("Create an account to use the AI coach and save your progress.")}</p>
-      <Link href="/register" className="btn-primary btn-sm self-start">{t("Create an account")}</Link>
+      <Link href="/register" className={`btn-primary btn-sm shrink-0 self-start ${fillPanel ? "mt-auto" : ""}`}>{t("Create an account")}</Link>
     </section>
   );
 

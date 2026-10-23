@@ -53,10 +53,10 @@ export function FloatingAdvisor() {
             endpoint="/ai/career"
             payload={{ answers: j.answers, level: j.level ?? "g12" }}
             suggestions={["What careers match my interests?", "How should I choose a university major?"]}
-          /> : <section className="card ai-surface flex flex-col gap-3">
+          /> : <section className="card ai-surface flex h-full min-h-0 flex-col gap-3 overflow-y-auto">
             <h2 className="ai-heading text-lg">✦ {t("Kip AI Advisor")}</h2>
             <p className="text-sm text-muted">{t("Sign in to the student portal to chat with Kip about careers and universities.")}</p>
-            <Link href="/login" className="btn-primary btn-sm self-start">{t("Student sign in")}</Link>
+            <Link href="/login" className="btn-primary btn-sm mt-auto shrink-0 self-start">{t("Student sign in")}</Link>
           </section>}
         </div>
       </section>
