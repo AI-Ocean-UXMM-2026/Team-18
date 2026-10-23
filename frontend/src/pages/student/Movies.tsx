@@ -16,9 +16,18 @@ export default function Movies() {
   return (
     <>
       <PageHead back="/student/results" eyebrow="Step 1 · Short movies (optional)" title="See the real job before you choose">{t("About 3 minutes each: professionals show their real work, roles and daily life.")}</PageHead>
-      <div className="grid gap-3">
-        <button className={`choice ${j.videoChoice === "watch" ? "choice-on" : ""}`} onClick={() => set({ videoChoice: "watch" })}><b>{t("Watch short movies")}</b><small className="text-muted">{t("3 movies, about 3 minutes each. Or skip and choose your career below.")}</small></button>
-      </div>
+      <section className="card">
+        <h2 className="text-lg">{t("Career videos are optional")}</h2>
+        <p className="mt-1 mb-4 text-sm text-muted">{t("Watch short career spotlights, or skip straight to choosing a career.")}</p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <button type="button" aria-pressed={j.videoChoice === "watch"} className={`choice ${j.videoChoice === "watch" ? "choice-on" : ""}`} onClick={() => set({ videoChoice: "watch" })}>
+            <b>{t("Yes — watch career videos")}</b><small className="text-muted">{t("Watch short videos about your top career matches.")}</small>
+          </button>
+          <Link href="/student/career" className={`choice ${j.videoChoice === "skip" ? "choice-on" : ""}`} onClick={() => set({ videoChoice: "skip" })}>
+            <b>{t("Skip videos & choose my career")}</b><small className="text-muted">{t("Go directly to choosing your career.")}</small>
+          </Link>
+        </div>
+      </section>
       {j.videoChoice === "watch" && <div className="grid items-start gap-6 lg:grid-cols-3">
         <div className="flex flex-col gap-5 lg:col-span-2">
           <article className="overflow-hidden rounded-xl border border-line bg-card">
@@ -36,7 +45,7 @@ export default function Movies() {
         </div>
         <aside className="card"><h2 className="mb-4 text-lg">{t("Your career playlist")}</h2><div className="flex flex-col gap-3">{data.top.map(({career:c}, index) => <button key={c.id} aria-pressed={selected === index} className={`flex items-center gap-3 rounded-lg border p-3 text-left ${selected === index ? "border-brand bg-brand-soft" : "border-line"}`} onClick={() => setSelected(index)}><span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-soft text-xl text-brand">▷</span><span><b className="block text-sm">{c.t}</b><small className="text-muted">{c.video.len} · {t(j.watched[c.id] ? "Watched" : "Not watched yet")}</small></span></button>)}</div><p className="mt-5 text-xs leading-5 text-muted">{t("Watching is optional. Continue whenever you are ready to choose your career.")}</p></aside>
       </div>}
-      <Actions><Link href="/student/career" className="btn-primary">{t("Choose my career")}</Link></Actions>
+      {j.videoChoice === "watch" && <Actions><Link href="/student/career" className="btn-primary">{t("Choose my career")}</Link></Actions>}
     </>
   );
 }
