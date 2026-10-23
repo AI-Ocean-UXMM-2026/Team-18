@@ -5,7 +5,8 @@
 //  Sessions: the JWT from /auth/login is kept in localStorage and sent as
 //  Authorization: Bearer <token>.
 // ===========================================================================
-export const API_BASE = ((import.meta.env.VITE_API_URL as string | undefined)?.trim() || "/api").replace(/\/+$/, "");
+const defaultApiBase = import.meta.env.PROD ? "https://careernet-api.onrender.com" : "/api";
+export const API_BASE = ((import.meta.env.VITE_API_URL as string | undefined)?.trim() || defaultApiBase).replace(/\/+$/, "");
 const TOKEN_KEY = "careernet_token";
 
 export const tokenStore = {
