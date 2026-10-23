@@ -42,17 +42,23 @@ function metadataValue(value: string) {
 
 async function uploadResumableVideo(file: File, signed: SignedVideoUpload, onProgress: (progress: number) => void) {
   const metadata = [
-    ["bucketName", signed.bucket], ["objectName", signed.objectPath], ["contentType", file.type], ["cacheControl", "3600"],
+    ["bucketName", signed.bucket], ["objectName", signed.objectPath], ["contentType", file.type || "video/mp4"], ["cacheControl", "3600"],
   ].map(([key, value]) => `${key} ${metadataValue(value)}`).join(",");
   const tusHeaders = { "Tus-Resumable": "1.0.0", "x-signature": signed.token };
-  const created = await fetch(signed.uploadEndpoint, { method: "POST", headers: {
+  // Also accept endpoints returned by an older backend during rolling deployments.
+  const endpoint = signed.uploadEndpoint.replace(/\/resumable\/?$/, "/resumable/sign");
+  const created = await fetch(endpoint, { method: "POST", headers: {
     ...tusHeaders, "Upload-Length": String(file.size), "Upload-Metadata": metadata,
     "Content-Type": "application/offset+octet-stream",
   } });
-  if (created.status !== 201) throw new Error(`Supabase could not start the upload (${created.status}).`);
+  if (created.status !== 201) {
+    const detail = await created.json().catch(() => null) as { message?: string; error?: string } | null;
+    const reason = detail?.message || detail?.error;
+    throw new Error(`Supabase could not start the upload (${created.status}).${reason ? ` ${reason}` : ""}`);
+  }
   const location = created.headers.get("Location");
   if (!location) throw new Error("Supabase did not return an upload session.");
-  const uploadUrl = new URL(location, signed.uploadEndpoint).toString();
+  const uploadUrl = new URL(location, endpoint).toString();
   const chunkSize = 6 * 1024 * 1024;
   let offset = 0;
   while (offset < file.size) {

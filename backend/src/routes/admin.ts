@@ -239,7 +239,7 @@ adminRouter.post("/admin/content/videos/sign", content, route(async req => {
   const bucket = encodeURIComponent(ENV.supabaseVideoBucket);
   const bucketResponse = await storageRequest("/bucket", {
     method: "POST",
-    body: JSON.stringify({ id: ENV.supabaseVideoBucket, name: ENV.supabaseVideoBucket, public: true, file_size_limit: 300 * 1024 * 1024, allowed_mime_types: ["video/mp4"] }),
+    body: JSON.stringify({ id: ENV.supabaseVideoBucket, name: ENV.supabaseVideoBucket, public: true, file_size_limit: (input.size <= 50 * 1024 * 1024 ? 50 : 300) * 1024 * 1024, allowed_mime_types: ["video/mp4"] }),
   });
   if (!bucketResponse.ok) {
     const existingBucket = await storageRequest(`/bucket/${bucket}`);
@@ -274,7 +274,7 @@ adminRouter.post("/admin/content/videos/sign", content, route(async req => {
 
   const supabase = new URL(ENV.supabaseUrl);
   if (supabase.hostname.endsWith(".supabase.co")) supabase.hostname = supabase.hostname.replace(/\.supabase\.co$/, ".storage.supabase.co");
-  return { bucket: ENV.supabaseVideoBucket, objectPath, token, uploadEndpoint: `${supabase.origin}/storage/v1/upload/resumable` };
+  return { bucket: ENV.supabaseVideoBucket, objectPath, token, uploadEndpoint: `${supabase.origin}/storage/v1/upload/resumable/sign` };
 }));
 adminRouter.post("/admin/content/videos/complete", content, route(async req => {
   requireVideoStorage();
