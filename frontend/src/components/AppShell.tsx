@@ -38,7 +38,6 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { j, ready, content } = useJourney();
   const { lang, setLang, theme, setTheme, t } = usePrefs();
   const [navOpen, setNavOpen] = useState(false);
-  const [headerHidden, setHeaderHidden] = useState(false);
   const nav = user && user.role !== "student" ? NAV[user.role].filter(([p]) => user.role !== "admin" || adminCan(user.adminRole, p)) : [];
   const studentWorkspace = location.startsWith("/student/") || location === "/student";
   const showGuide = (!user || user.role === "student") && !/^\/(admin|mentor)(\/|$)/.test(location);
@@ -47,17 +46,6 @@ export function AppShell({ children }: { children: ReactNode }) {
   const progress = flow.total ? Math.round((answered / flow.total) * 100) : 0;
 
   useEffect(() => { setNavOpen(false); }, [location]);
-  useEffect(() => {
-    let previousY = window.scrollY;
-    const handleScroll = () => {
-      const currentY = window.scrollY;
-      if (currentY < 80 || currentY < previousY - 4) setHeaderHidden(false);
-      else if (currentY > previousY + 4) setHeaderHidden(true);
-      previousY = currentY;
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
   useEffect(() => {
     if (!navOpen) return;
     const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setNavOpen(false); };
@@ -119,7 +107,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="creative-shell min-h-dvh bg-bg">
-      <header className={`creative-header sticky top-0 z-30 bg-card/95 backdrop-blur transition-transform duration-200 ${headerHidden ? "-translate-y-full" : "translate-y-0"}`}>
+      <header className="creative-header bg-card">
         <div className="mx-auto flex min-w-0 max-w-[1440px] flex-wrap items-center gap-2 px-3 py-3 sm:gap-3 sm:px-6">
           {studentWorkspace && <button type="button" className="grid h-10 w-10 place-items-center rounded-lg border border-line text-lg text-ink hover:bg-soft" onClick={() => setNavOpen(true)} aria-label={t("Open navigation")} aria-expanded={navOpen} aria-controls="student-navigation">☰</button>}
           <Link href={user ? (user.role === "student" ? "/student" : `/${user.role}`) : isGuest ? "/student" : "/"} className="flex shrink-0 items-center gap-2.5 text-ink" aria-label="CareerNest home"><span className="creative-logo grid h-9 w-9 shrink-0 place-items-center rounded-xl text-lg" aria-hidden="true">✦</span><span className="creative-brand">CareerNest<span className="text-brand">.</span></span></Link>
