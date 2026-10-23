@@ -26,13 +26,13 @@ export default function Plan() {
   const c = content.careers.find(x => x.id === j.careerId);
   if (!c || !score.data) return <section className="card"><p>{t("Finish the quiz and choose a career first.")}</p><Link href="/student" className="btn-primary mt-3 inline-flex">{t("Start quiz")}</Link></section>;
   const shortlist = j.shortlist.map(k => unis.data?.items.find(i => i.key === k)).filter(Boolean) as NonNullable<typeof unis.data>["items"];
+  const comparing = j.compare.map(k => unis.data?.items.find(i => i.key === k)).filter(Boolean) as typeof shortlist;
   const session = bookings.data?.bookings.find(b => ["confirmed", "completed"].includes(b.status));
   const next = NEXT[j.level ?? "g12"];
   function download() {
     setPdfStatus("");
     let objectUrl: string | null = null;
     try {
-      const comparing = j.compare.map(key => unis.data?.items.find(item => item.key === key)).filter(Boolean) as typeof shortlist;
       const doc = buildReport({ name: user?.name ?? "", level: j.level ?? "g12", score: score.data!, career: c!, majors: j.majors, shortlist, comparing, videoChoice: j.videoChoice, watched: j.watched, nextSteps: next, session: session ? `${session.mentorName}, ${fmtWhen(session.startsAt)}` : null });
       const pdf = doc.output("blob");
       if (!pdf.size) throw new Error("The generated PDF is empty.");
@@ -64,6 +64,14 @@ export default function Plan() {
         {shortlist.length ? <ul className="divide-y divide-line">{shortlist.map(i => <li key={i.key} className="flex items-center justify-between gap-3 py-2"><span>{i.kind === "g12" ? i.university.name : i.school.name}</span>{i.kind === "intl" && i.school.hasScholarship && <Pill tone="ok">{t("Scholarship")}</Pill>}</li>)}</ul>
           : <p className="text-muted">{t("Nothing shortlisted yet.")} <Link href="/student/explorer" className="text-brand">{t("Open explorer")}</Link></p>}
       </div>
+      <section className="card">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3"><h2 className="text-lg">{t("Saved university comparison")}</h2><Link href="/student/compare" className="btn-outline btn-sm">{t("Edit comparison")}</Link></div>
+        <div className="grid gap-3 md:grid-cols-3">{comparing.map(item => <article key={item.key} className="rounded-xl border border-line bg-soft p-4">
+          <h3 className="font-semibold">{item.kind === "g12" ? item.university.name : item.school.name}</h3>
+          <p className="mt-1 text-xs text-muted">{item.kind === "g12" ? item.university.location : `${item.school.city}, ${item.school.country}`}</p>
+          {item.kind === "intl" && <><p className="mt-3 text-sm font-semibold text-brand">{t("Annual Average Tuition")}: {item.school.annualTuition || t("Confirm with university")}</p><p className="mt-2 text-sm">{item.school.scholarship || t("Confirm scholarship availability")}</p></>}
+        </article>)}</div>
+      </section>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="card"><h2 className="mb-2 text-lg">{t("Mentor session")}</h2>{session ? <p>{session.mentorName}, <span className="font-mono">{fmtWhen(session.startsAt)}</span></p> : (user?.isPro ? <><p className="text-muted">{t("Not booked (optional)")}</p><Link href="/student/mentors" className="btn-outline btn-sm mt-2 inline-flex">{t("Book a 1-hour mentor session")}</Link></>
           : isGuest ? <><p className="text-muted">{t("Mentor sessions require an account and CareerNest Pro.")}</p><Link href="/register" className="btn-outline btn-sm mt-2 inline-flex">{t("Create an account")}</Link></>

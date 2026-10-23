@@ -58,9 +58,26 @@ describe("student journey access", () => {
     j.comparisonCompleted = true;
     expect(redirect("/student/plan", j)).toBeNull();
     j.compare = ["a", "a"];
-    expect(redirect("/student/compare", j)).toBe("/student/explorer");
+    expect(redirect("/student/compare", j)).toBeNull();
+    expect(redirect("/student/plan", j)).toBe("/student/explorer");
     j.compare = ["a", "missing"];
-    expect(redirect("/student/compare", j)).toBe("/student/explorer");
+    expect(redirect("/student/compare", j)).toBeNull();
+    expect(redirect("/student/plan", j)).toBe("/student/explorer");
+  });
+  it("keeps the comparison picker accessible with zero or one selection while My Plan stays locked", () => {
+    for (const compare of [[], ["a"]]) {
+      const j = updateJourney(completed(), { compare });
+      expect(redirect("/student/compare", j)).toBeNull();
+      expect(redirect("/student/plan", j)).toBe("/student/explorer");
+    }
+  });
+  it("retains added universities in the shortlist and comparison after saving and reloading", () => {
+    const edited = updateJourney(completed(), { compare: ["a", "c"], shortlist: ["a", "b", "c"] });
+    expect(studentProgress(edited, content).comparisonDone).toBe(false);
+    const saved = JSON.parse(JSON.stringify(updateJourney(edited, { comparisonCompleted: true })));
+    expect(saved.compare).toEqual(["a", "c"]);
+    expect(saved.shortlist).toContain("c");
+    expect(redirect("/student/plan", saved)).toBeNull();
   });
   it("keeps mentor access restricted to Pro after completing the journey", () => {
     expect(redirect("/student/mentors", completed())).toBe("/student/pro");

@@ -68,16 +68,6 @@ authRouter.post("/auth/login", route(async req => {
     if (m?.status === "pending") throw unauthorized("Your mentor application is still being reviewed.");
     if (m?.status !== "active") throw unauthorized("Your mentor account is not active. Contact CareerNest.");
   }
-  if (u.role === "student") {
-    // A new student login starts a fresh guided pathway while keeping quiz answers and level.
-    await one(`UPDATE journeys SET data = jsonb_build_object(
-      'level', data->'level', 'answers', COALESCE(data->'answers', '{}'::jsonb),
-      'quizCompleted', false, 'resultsReviewed', false, 'careerId', null,
-      'majors', '[]'::jsonb, 'majorsConfirmed', false, 'shortlist', '[]'::jsonb,
-      'compare', '[]'::jsonb, 'comparisonCompleted', false,
-      'videoChoice', null, 'watched', '{}'::jsonb
-    ), updated_at = now() WHERE student_id = $1`, [u.id]);
-  }
   await audit(u.id, "auth.login", b.portal);
   return { token: await createToken({ uid: u.id, role: u.role, adminRole: u.admin_role, sessionVersion: u.session_version }), user: await profile(u.id) };
 }));

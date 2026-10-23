@@ -1,5 +1,5 @@
 // Side-by-side university overview, tuition, scholarships and entry information.
-import { useState, type ReactNode } from "react";
+import { useCallback, useState, type ReactNode } from "react";
 import { useLocation } from "wouter";
 import { useAuth } from "@/lib/auth";
 import { itemCode, itemName, type G12Item, type IntlItem, type UniItem } from "@/lib/api";
@@ -7,24 +7,46 @@ import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
 import { useUniversities } from "@/lib/unis";
 import { AdvisorChat } from "@/components/AdvisorChat";
+import CompareUniversityPicker from "@/components/CompareUniversityPicker";
 import { UniPhoto } from "@/components/UniCard";
 import { Actions, Note, PageHead, Spinner, toast } from "@/components/ui";
 
 export default function Compare() {
-  const { j, set } = useJourney(); const { t } = usePrefs(); const { user, isGuest } = useAuth(); const [, go] = useLocation();
+  const { j, set, save } = useJourney(); const { t } = usePrefs(); const { user, isGuest } = useAuth(); const [, go] = useLocation();
   const [showAllInfo, setShowAllInfo] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
+  const closePicker = useCallback(() => setPickerOpen(false), []);
   const { data, loading } = useUniversities(false, true);
   if (loading || !data) return <Spinner />;
   const find = (k: string) => data.items.find(i => i.key === k);
   const chosen = j.compare.map(find).filter(Boolean) as UniItem[];
-  const addable = j.shortlist.filter(k => !j.compare.includes(k)).map(find).filter(Boolean) as UniItem[];
+  function addUniversity(item: UniItem) {
+    set(previous => {
+      if (previous.compare.includes(item.key) || previous.compare.length >= 3) return {};
+      const compare = [...previous.compare, item.key];
+      return { compare, shortlist: [...new Set([...compare, ...previous.shortlist])].slice(0, 30) };
+    });
+  }
+  async function completeComparison(path = "/student/plan") {
+    setSaving(true); setSaveError("");
+    try {
+      await save({ comparisonCompleted: true });
+      if (!isGuest) toast(t("Saved"));
+      go(path);
+    } catch (error) { setSaveError(error instanceof Error ? error.message : t("Could not save your comparison. Please try again.")); }
+    finally { setSaving(false); }
+  }
   const lv = j.level === "igcse" ? "igcse" : "ged";
   const g12Rows: [string, (i: G12Item) => ReactNode][] = [
+    ["Highlights", i => i.university.description],
     ["Programmes", i => i.programs.join(" · ")], ["Admission", i => i.university.admission], ["Type", i => i.university.type],
     ["Location", i => i.university.location], ["Established", i => i.university.established],
     ["Website", i => <a className="text-brand" href={i.university.website} target="_blank" rel="noreferrer">{i.university.website.replace(/^https?:\/\//, "")}</a>],
   ];
   const intlRows: [string, (i: IntlItem) => ReactNode][] = [
+    ["Highlights", i => i.school.description],
     ["Annual Average Tuition", i => <div><p className="text-base font-bold text-brand">{i.school.annualTuition || t("Confirm with university")}</p>{!i.school.annualTuition && <a className="mt-1 inline-block text-xs text-brand underline" href={i.school.website} target="_blank" rel="noreferrer">{t("Official university website")}</a>}</div>],
     ["Scholarship Grants", i => <div className="space-y-2"><span className={`inline-block rounded-full px-2.5 py-1 text-xs font-semibold ${i.school.hasScholarship ? "bg-ok-soft text-ok" : "bg-soft text-muted"}`}>{t(i.school.hasScholarship ? "Scholarship available" : "Confirm scholarship availability")}</span><p className="text-sm leading-6">{i.school.scholarship || t("Confirm with university")}</p></div>],
     ["Accepted Credentials", i => <div className="flex flex-wrap gap-2">{([ ["GED", i.school.ged.ok], ["IGCSE", i.school.igcse.ok] ] as const).map(([label, status]) => <span key={label} className={`rounded-md px-2 py-1 text-xs font-semibold ${status === "yes" ? "bg-brand-soft text-brand" : "bg-soft text-muted"}`}>{label} · {t(status === "yes" ? "Accepted" : status === "no" ? "Not direct" : "Confirm")}</span>)}</div>],
@@ -43,7 +65,6 @@ export default function Compare() {
     <>
       <PageHead back="/student/explorer" eyebrow="Step 2 · Compare universities" title="Side by side" />
       {chosen.length < 2 && <Note>{t("Pick at least 2 to compare.")}</Note>}
-      {addable.length > 0 && chosen.length < 3 && <div className="flex flex-wrap gap-2">{addable.map(i => <button key={i.key} className="btn-outline btn-sm" onClick={() => set(p => ({ compare: [...p.compare, i.key].slice(0, 3) }))}>+ {itemCode(i)}</button>)}</div>}
       {chosen.length > 0 && (
         <div>
           <p className="px-1 pb-2 text-xs text-muted sm:hidden">{t("Swipe horizontally to compare universities")}</p>
@@ -53,7 +74,7 @@ export default function Compare() {
             <col style={{ width: "9rem" }} />
             {chosen.map(i => <col key={i.key} style={{ width: `calc(${100 / chosen.length}% - ${9 / chosen.length}rem)` }} />)}
           </colgroup>
-          <thead><tr><th>{t("University overview")}</th>{chosen.map(i => <th key={i.key}><div className="[&>img]:h-28 [&>img]:aspect-auto [&>div]:h-28 [&>div]:aspect-auto"><UniPhoto item={i} small /></div><p className="mb-1 text-xs font-semibold uppercase text-brand">{i.kind === "g12" ? i.university.type : i.school.type}</p><span className="font-mono text-xs text-brand">{itemCode(i)}</span> <span className="text-sm text-ink">{itemName(i)}</span><p className="mt-1 text-xs font-normal text-muted">{i.kind === "g12" ? i.university.location : `${i.school.city}, ${i.school.country}`}</p><button className="mt-1 block min-h-11 border-0 bg-transparent p-0 text-sm font-semibold text-brand transition-colors hover:text-bad focus-visible:text-bad" onClick={() => set(p => ({ compare: p.compare.filter(k => k !== i.key) }))}>{t("Remove")}</button></th>)}</tr></thead>
+          <thead><tr><th>{t("University overview")}</th>{chosen.map(i => <th key={i.key}><div className="[&>img]:h-28 [&>img]:aspect-auto [&>div]:h-28 [&>div]:aspect-auto"><UniPhoto item={i} small /></div><p className="mb-1 text-xs font-semibold uppercase text-brand">{i.kind === "g12" ? i.university.type : i.school.type}</p><span className="font-mono text-xs text-brand">{itemCode(i)}</span> <span className="text-sm text-ink">{itemName(i)}</span><p className="mt-1 text-xs font-normal text-muted">{i.kind === "g12" ? i.university.location : `${i.school.city}, ${i.school.country}`}</p><button className="mt-1 block min-h-11 border-0 bg-transparent p-0 text-sm font-semibold text-brand transition-colors hover:text-bad focus-visible:text-bad" disabled={saving} onClick={() => set(p => ({ compare: p.compare.filter(k => k !== i.key) }))}>{t("Remove")}</button></th>)}</tr></thead>
           <tbody>{visibleRows.map(([label, cell]) => <tr key={label}><th>{t(label)}</th>{chosen.map(i => <td key={i.key}>{cell(i)}</td>)}</tr>)}</tbody>
             </table>
           </div>
@@ -80,7 +101,7 @@ export default function Compare() {
         </div>
       )}
       {j.level !== "g12" && chosen.length > 0 && <AdvisorChat title="AI university advisor" subtitle="Ask about the options in this table." endpoint="/ai/advisor" payload={{ level: j.level, careerId: j.careerId, majors: j.majors, comparing: chosen.map(itemName) }} suggestions={["Compare these for me in plain words", "Which one is the safest choice?"]} />}
-      <Actions>{user?.isPro && <button className="btn-outline" disabled={chosen.length < 2} onClick={() => { set({ comparisonCompleted: true }); go("/student/mentors"); }}>{t("Meet a mentor")}</button>}<button className="btn-primary" disabled={chosen.length < 2} onClick={() => { set({ comparisonCompleted: true }); if (!isGuest) toast(t("Saved")); go("/student/plan"); }}>{t(isGuest ? "Continue" : "Save & continue")}</button></Actions>
+      <Actions>{user?.isPro && <button className="btn-outline" disabled={chosen.length < 2 || saving} onClick={() => void completeComparison("/student/mentors")}>{t("Meet a mentor")}</button>}<button className="btn-primary" disabled={chosen.length < 2 || saving} onClick={() => void completeComparison()}>{t(saving ? "Saving�" : isGuest ? "Continue" : "Save & continue")}</button></Actions>
     </>
   );
 }

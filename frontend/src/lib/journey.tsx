@@ -3,7 +3,7 @@
 //  so it follows them to any device. Loaded after sign-in, saved on change.
 // ===========================================================================
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { api, type Content, type Level } from "@/lib/api";
+import { api, tokenStore, type Content, type Level } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { updateJourney } from "./studentFlow";
 
@@ -14,7 +14,7 @@ export type Journey = {
 };
 export const EMPTY: Journey = { level: null, answers: {}, careerId: null, majors: [], shortlist: [], compare: [], videoChoice: null, watched: {} };
 
-type Ctx = { j: Journey; ready: boolean; content: Content | null; contentLoading: boolean; set: (patch: Partial<Journey> | ((j: Journey) => Partial<Journey>)) => void };
+type Ctx = { save: (patch?: Partial<Journey>) => Promise<void>; j: Journey; ready: boolean; content: Content | null; contentLoading: boolean; set: (patch: Partial<Journey> | ((j: Journey) => Partial<Journey>)) => void };
 const JourneyCtx = createContext<Ctx | null>(null);
 
 export function JourneyProvider({ children }: { children: ReactNode }) {
@@ -26,6 +26,16 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
   const [content, setContent] = useState<Content | null>(null);
   const [contentLoading, setContentLoading] = useState(true);
   const pending = useRef<Partial<Journey>>({});
+  const writes = useRef<Promise<unknown>>(Promise.resolve());
+  const persist = (data: Journey) => {
+    const token = tokenStore.get();
+    const request = writes.current.catch(() => {}).then(() => {
+      if (tokenStore.get() !== token) throw new Error("Your session changed. Please sign in again to save.");
+      return api.put("/me/journey", data);
+    });
+    writes.current = request;
+    return request;
+  };
   const guestDraft = useRef<Journey | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -55,11 +65,20 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
     if (user?.role === "student") {
       pending.current = next;
       if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(() => { const body = pending.current; pending.current = {}; api.put("/me/journey", body).catch(() => { /* retried on next change */ }); }, 500);
+      timer.current = setTimeout(() => { const body = pending.current; pending.current = {}; persist(body as Journey).catch(() => { /* retried on next change */ }); }, 500);
     }
     return next;
   });
-  return <JourneyCtx.Provider value={{ j, ready: ready && loadedFor === sessionKey, content, contentLoading, set }}>{children}</JourneyCtx.Provider>;
+  const save: Ctx["save"] = async (patch = {}) => {
+    const next = updateJourney(j, patch);
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = null;
+    pending.current = {};
+    if (user?.role === "student") await persist(next);
+    if (isGuest) guestDraft.current = next;
+    setJ(next);
+  };
+  return <JourneyCtx.Provider value={{ save, j, ready: ready && loadedFor === sessionKey, content, contentLoading, set }}>{children}</JourneyCtx.Provider>;
 }
 export function useJourney() { const v = useContext(JourneyCtx); if (!v) throw new Error("JourneyProvider missing"); return v; }
 

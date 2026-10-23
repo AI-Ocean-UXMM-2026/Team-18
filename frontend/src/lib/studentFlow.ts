@@ -27,7 +27,7 @@ export function studentRouteRedirect(path: string, progress: ReturnType<typeof s
     "/student/career": progress.resultsDone,
     "/student/majors": progress.careerDone,
     "/student/explorer": progress.majorsDone,
-    "/student/compare": progress.comparisonReady,
+    "/student/compare": progress.majorsDone,
     "/student/plan": progress.comparisonDone,
     "/student/mentors": progress.comparisonDone,
   };
