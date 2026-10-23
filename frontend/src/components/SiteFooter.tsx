@@ -4,8 +4,8 @@ import { usePrefs } from "@/lib/prefs";
 export default function SiteFooter() {
   const { t } = usePrefs();
   return <footer className="mt-auto border-t border-line bg-card">
-    <div className="mx-auto grid w-full max-w-[1440px] gap-5 px-4 pb-24 pt-7 sm:px-6 lg:grid-cols-[1fr_auto] lg:px-8">
-      <div><p className="text-lg font-bold text-ink">CareerNest<span className="text-brand">.</span></p><p className="mt-1 text-sm text-muted">{t("Career guidance for students in Myanmar")}</p><p className="mt-3 text-xs text-muted">© {new Date().getFullYear()} CareerNest. {t("All rights reserved.")}</p></div>
+    <div className="mx-auto grid w-full max-w-[1440px] gap-4 px-4 pb-16 pt-5 sm:px-6 lg:grid-cols-[1fr_auto] lg:px-8">
+      <div><p className="text-lg font-bold text-ink">CareerNest<span className="text-brand">.</span></p><p className="mt-1 text-sm text-muted">{t("Career guidance for students in Myanmar")}</p><p className="mt-2 text-xs text-muted">© {new Date().getFullYear()} CareerNest. {t("All rights reserved.")}</p></div>
       <div>
         <nav aria-label={t("Footer navigation")} className="flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold text-muted">
           {[["/about", "About Us"], ["/contact", "Contact"], ["/privacy", "Privacy Policy"], ["/guide", "Guide"]].map(([href, label]) => <Link key={href} href={href} className="inline-flex min-h-11 items-center hover:text-brand">{t(label)}</Link>)}
