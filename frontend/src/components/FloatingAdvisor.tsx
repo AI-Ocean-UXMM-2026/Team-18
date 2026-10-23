@@ -1,3 +1,4 @@
+import { Kip } from "@/components/Kip";
 import { useEffect, useRef, useState } from "react";
 import { AdvisorChat } from "@/components/AdvisorChat";
 import { useJourney } from "@/lib/journey";
@@ -74,7 +75,7 @@ export function FloatingAdvisor() {
       <section id="kip-advisor-panel" role="dialog" aria-labelledby="kip-advisor-title" aria-describedby="kip-advisor-description" aria-modal="false" className={`${open ? "mb-2 flex sm:mb-3" : "hidden"} h-[min(75dvh,40rem)] max-h-[calc(100dvh_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom)_-_1rem)] w-[min(25rem,calc(100vw-1rem))] min-h-0 flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-2xl sm:w-[min(25rem,calc(100vw-2rem))]`}>
         <div className="hero-gradient flex shrink-0 items-center justify-between gap-3 border-b border-line px-4 py-3 text-white">
           <div className="flex min-w-0 items-center gap-2.5">
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-mascot text-sm font-extrabold text-brand-deep">K</span>
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/15" aria-hidden="true"><Kip size={48} mood="thinking" /></span>
             <div className="min-w-0">
               <h2 id="kip-advisor-title" className="truncate text-sm font-bold !text-white">{t("Kip AI Advisor")}</h2>
               <p id="kip-advisor-description" className="text-[11px] leading-4 text-white/80">{t("Career and university guidance")}</p>
@@ -107,7 +108,7 @@ export function FloatingAdvisor() {
         className={`hero-gradient group flex h-11 items-center gap-2 rounded-full border-2 border-white px-3 text-white shadow-xl transition hover:scale-[1.03] hover:shadow-2xl active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/40 sm:h-12 sm:px-4 ${dock === "hidden" ? "invisible pointer-events-none" : ""}`}
         title={t("Chat with Kip AI Advisor")}
       >
-        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-mascot text-xs font-extrabold text-brand-deep shadow-sm">K</span>
+        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/15" aria-hidden="true"><Kip size={40} mood="waving" /></span>
         <span className="hidden text-left text-xs font-bold leading-none sm:block">{t("Chat with Kip")}</span>
         <span aria-hidden="true" className="ml-0.5 text-sm text-lime transition group-hover:rotate-12">✦</span>
       </button>

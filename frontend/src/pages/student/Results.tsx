@@ -25,7 +25,7 @@ export default function Results() {
   return (
     <>
       <PageHead back="/student/quiz" eyebrow="Step 1 · Career results" title="Your top 3 career matches">{t("Your Holland code is")} <b className="font-mono text-ink">{data.holland}</b></PageHead>
-      <section className="flex items-center gap-5 rounded-xl border border-brand/20 bg-brand-soft p-5"><Kip size={90} /><div><h2 className="text-lg sm:col-span-2 lg:col-span-3">{t("Your next chapter starts here")}</h2><p className="mt-1 text-sm text-muted">{t("Explore these career matches based on your interests and strengths. Your results are a starting point, not a limit.")}</p></div></section>
+      <section className="flex items-center gap-5 rounded-xl border border-brand/20 bg-brand-soft p-5"><Kip size={120} mood="celebrating" /><div><h2 className="text-lg sm:col-span-2 lg:col-span-3">{t("Your next chapter starts here")}</h2><p className="mt-1 text-sm text-muted">{t("Explore these career matches based on your interests and strengths. Your results are a starting point, not a limit.")}</p></div></section>
       <div className="flex flex-col gap-6">
         <div className="grid gap-5 lg:grid-cols-3">
           {data.top.map(({ career, pct, reasons, priority }) => (

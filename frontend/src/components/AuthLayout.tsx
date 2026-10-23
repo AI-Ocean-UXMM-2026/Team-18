@@ -1,22 +1,24 @@
+import { usePrefs } from "@/lib/prefs";
 import { Kip } from "@/components/Kip";
 import type { ReactNode } from "react";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
+  const { t } = usePrefs();
   return (
     <div className="mx-auto grid w-full max-w-7xl gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(24rem,30rem)] lg:items-stretch lg:gap-8">
       <aside className="creative-auth-panel hidden flex-col justify-between rounded-2xl border border-line bg-brand-soft p-8 lg:flex xl:p-10">
-        <p className="eyebrow">CareerNest · Your next move</p>
-        <div className="max-w-xl"><Kip size={150} />
-          <h2 className="text-3xl xl:text-4xl">Find a path that feels like yours.</h2>
+        <p className="eyebrow">CareerNest · {t("Your next move")}</p>
+        <div className="max-w-xl"><Kip size={220} mood="idle" />
+          <h2 className="text-3xl xl:text-4xl">{t("Find a path that feels like yours.")}</h2>
           <p className="mt-5 max-w-lg text-base leading-7 text-muted xl:text-lg">
-            Discover your strengths, explore careers and universities, and turn your ideas into a plan.
+            {t("Discover your strengths, explore careers and universities, and turn your ideas into a plan.")}
           </p>
         </div>
         <div className="grid grid-cols-3 gap-3 text-sm font-semibold">
           {["Discover", "Explore", "Plan"].map((step, index) => (
             <div key={step} className="rounded-xl border border-line bg-card/70 p-4">
               <span className="mb-3 grid h-9 w-9 place-items-center rounded-lg bg-brand text-on-brand">0{index + 1}</span>
-              {step}
+              {t(step)}
             </div>
           ))}
         </div>
