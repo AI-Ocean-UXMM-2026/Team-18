@@ -33,8 +33,9 @@ export default function HomeIntro() {
 
   if (!showIntro) return null;
   return (
-    <section ref={introRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t("CareerNest introduction video")} className="fixed inset-0 z-[100] h-dvh w-full overflow-hidden bg-black outline-none">
-        <video ref={videoRef} tabIndex={-1} className="pointer-events-none absolute inset-0 h-full w-full object-cover" src="/careernest-home-intro.mp4" autoPlay muted playsInline disablePictureInPicture disableRemotePlayback preload="auto"
+    <section ref={introRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={t("CareerNest introduction video")} className="fixed inset-0 z-[100] grid h-dvh w-full place-items-center overflow-y-auto bg-black/60 p-4 outline-none sm:p-8">
+      <div className="relative w-full max-w-4xl overflow-hidden rounded-xl border border-white/20 bg-black shadow-2xl">
+        <video ref={videoRef} tabIndex={-1} className="pointer-events-none block aspect-video max-h-[80dvh] w-full object-contain" src="/careernest-home-intro.mp4" autoPlay muted playsInline disablePictureInPicture disableRemotePlayback preload="auto"
           onContextMenu={event => event.preventDefault()}
           onTimeUpdate={event => { if (!event.currentTarget.seeking) playbackPosition.current = event.currentTarget.currentTime; }}
           onSeeking={event => { if (Math.abs(event.currentTarget.currentTime - playbackPosition.current) > 0.1) event.currentTarget.currentTime = playbackPosition.current; }}
@@ -43,6 +44,7 @@ export default function HomeIntro() {
           onPlaying={() => setNeedsPlay(false)}
           onEnded={closeIntro} onError={() => setShowIntro(false)} aria-label={t("CareerNest introduction video")} />
         {needsPlay && <div className="absolute inset-0 grid place-items-center bg-black/30"><button type="button" className="btn-primary" onClick={playIntro}>{t("Play introduction")}</button></div>}
-      </section>
+      </div>
+    </section>
   );
 }
