@@ -45,7 +45,7 @@ export default function HomeIntro() {
           onPlaying={() => setNeedsPlay(false)}
           onEnded={closeIntro} onError={() => setShowIntro(false)} aria-label={t("CareerNest introduction video")} />
         {needsPlay && <div className="absolute inset-0 grid place-items-center bg-black/30"><button type="button" className="btn-primary" onClick={playIntro}>{t("Play introduction")}</button></div>}
-        <button ref={closeButtonRef} type="button" onClick={closeIntro} aria-label={t("Close introduction")} className="absolute right-2 top-2 z-10 grid h-11 w-11 place-items-center rounded-full border border-white/50 bg-black/70 text-2xl text-white transition hover:bg-black/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-3 sm:top-3"><span aria-hidden="true">×</span></button>
+        <button ref={closeButtonRef} type="button" onClick={closeIntro} aria-label={t("Close introduction")} className="absolute right-2 top-2 z-10 grid h-11 w-11 place-items-center border-0 bg-transparent text-3xl text-white transition-opacity hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-3 sm:top-3"><span aria-hidden="true">×</span></button>
       </div>
     </section>
   );
