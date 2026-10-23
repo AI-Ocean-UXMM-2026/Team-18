@@ -128,6 +128,11 @@ html[data-theme="dark"] .skeleton-block::after { background: linear-gradient(90d
 .card.card-flush { padding: 0; }
 .card.border-t-4, .choice.border-t-4 { border-top-width: 4px; }
 .choice { border-width: 1px; }
+.choice-card-hover { position: relative; transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease; }
+@media (hover: hover) and (pointer: fine) {
+  .choice-card-hover:hover { z-index: 1; transform: translateY(-2px); border-color: color-mix(in srgb, var(--color-brand) 45%, var(--color-line)); background-color: color-mix(in srgb, var(--color-card) 96%, var(--color-brand-soft)); box-shadow: var(--shadow-raised); }
+}
+.choice-card-hover:focus-within { border-color: color-mix(in srgb, var(--color-brand) 55%, var(--color-line)); box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-brand) 16%, transparent), var(--shadow-raised); }
 .tile { border-width: 1px; padding: 1rem; }
 .btn, .btn-primary, .btn-outline, .btn-ghost, .btn-destructive, .input { border-radius: var(--radius-control); }
 .btn, .btn-primary, .btn-outline, .btn-ghost, .btn-destructive { border-width: 1px; font-weight: 650; line-height: 1.25; box-shadow: none; vertical-align: middle; transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease, filter 150ms ease, transform 100ms ease; }
@@ -180,8 +185,8 @@ html[data-theme="dark"] .landing-ribbon { color: var(--color-ink); }
 .guide-section { padding: var(--space-card); }
 
 @media (prefers-reduced-motion: reduce) {
-  .choice, .quiz-option, .btn, .btn-primary, .btn-outline, .btn-ghost, .btn-destructive { transition: none; }
-  .choice:hover, .quiz-option:hover, :is(.btn, .btn-primary, .btn-outline, .btn-ghost, .btn-destructive):hover:not(:disabled), :is(.btn, .btn-primary, .btn-outline, .btn-ghost, .btn-destructive):active:not(:disabled) { transform: none; }
+  .choice, .choice-card-hover, .quiz-option, .btn, .btn-primary, .btn-outline, .btn-ghost, .btn-destructive { transition: none; }
+  .choice:hover, .choice-card-hover:hover, .quiz-option:hover, :is(.btn, .btn-primary, .btn-outline, .btn-ghost, .btn-destructive):hover:not(:disabled), :is(.btn, .btn-primary, .btn-outline, .btn-ghost, .btn-destructive):active:not(:disabled) { transform: none; }
 }
 @media (max-width: 639px) {
   .level-choice { min-height: auto; }

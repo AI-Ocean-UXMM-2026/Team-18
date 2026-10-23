@@ -13,7 +13,7 @@ export function UniPhoto({ item, small }: { item: UniItem; small?: boolean }) {
 export function UniCard({ item, level, inShortlist, inCompare, onToggle }: { item: UniItem; level: string; inShortlist: boolean; inCompare: boolean; onToggle: (l: "shortlist" | "compare", k: string) => void }) {
   const { t } = usePrefs();
   return (
-    <article className="card grid grid-rows-subgrid [grid-row:span_8] overflow-hidden">
+    <article className="card choice-card-hover grid grid-rows-subgrid [grid-row:span_8] overflow-hidden">
       <UniPhoto item={item} />
       <div className="flex min-h-14 items-start gap-3">
         <span className="rounded-md bg-soft px-2 py-1 font-mono text-xs text-brand">{item.kind === "g12" ? item.university.code : item.school.code}</span>
