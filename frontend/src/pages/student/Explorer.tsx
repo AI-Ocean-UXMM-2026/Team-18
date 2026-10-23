@@ -12,7 +12,7 @@ import { CardGridSkeleton, ErrorNote, Note, PageHead, Spinner, toast } from "@/c
 export default function Explorer() {
   const { j, set, ready } = useJourney(); const { t } = usePrefs();
   const [, go] = useLocation();
-  const [query, setQuery] = useState(""); const [scholarship, setScholarship] = useState(false); const [allFields, setAllFields] = useState(false);
+  const [query, setQuery] = useState(""); const [scholarship, setScholarship] = useState(false); const [allFields, setAllFields] = useState(true);
   const { data, loading, error, refresh } = useUniversities(scholarship, allFields);
   const g12 = j.level === "g12";
   const items = useMemo(() => (data?.items ?? []).filter(i => !query || JSON.stringify(i).toLowerCase().includes(query.toLowerCase())), [data, query]);
@@ -33,7 +33,7 @@ export default function Explorer() {
         <label className="label grow">{t("Search")}<input className="input" value={query} onChange={e => setQuery(e.target.value)} placeholder={t("University or programme")} /></label>
         <div className="flex flex-col gap-1">
           <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={allFields} onChange={e => setAllFields(e.target.checked)} aria-describedby="all-fields-help" />{t("Show all fields")}</label>
-          <p id="all-fields-help" className="pl-6 text-xs leading-5 text-muted">{t("By default, results match your selected majors. Turn this on to include universities from every field.")}</p>
+          <p id="all-fields-help" className="pl-6 text-xs leading-5 text-muted">{t("All fields are shown by default. Turn this off to match your selected majors.")}</p>
         </div>
         {!g12 && <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={scholarship} onChange={e => setScholarship(e.target.checked)} />{t("Only universities with scholarships for international students")}</label>}
       </div>
