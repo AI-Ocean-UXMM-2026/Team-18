@@ -27,18 +27,18 @@ export default function Results() {
       <PageHead back="/student/quiz" eyebrow="Step 1 · Career results" title="Your top 3 career matches">{t("Your Holland code is")} <b className="font-mono text-ink">{data.holland}</b></PageHead>
       <section className="flex items-center gap-5 rounded-xl border border-brand/20 bg-brand-soft p-5"><Kip size={120} mood="celebrating" /><div><h2 className="text-lg sm:col-span-2 lg:col-span-3">{t("Your next chapter starts here")}</h2><p className="mt-1 text-sm text-muted">{t("Explore these career matches based on your interests and strengths. Your results are a starting point, not a limit.")}</p></div></section>
       <div className="flex flex-col gap-6">
-        <div className="grid gap-5 lg:grid-cols-3">
+        <div className="grid gap-5 lg:grid-cols-3 lg:gap-y-0">
           {data.top.map(({ career, pct, reasons, priority }) => (
-            <article key={career.id} className="card card-flush choice-card-hover flex h-full flex-col overflow-hidden">
+            <article key={career.id} className="card card-flush choice-card-hover grid overflow-hidden lg:row-span-5 lg:grid-rows-subgrid">
               <div className="border-b border-line bg-gradient-to-b from-soft to-card p-5">
                 <div className="mb-3 flex items-center justify-between"><span className="grid h-8 w-8 place-items-center rounded-full bg-brand-deep text-xs font-bold text-white">#{priority}</span><span className="rounded-full border border-ok/20 bg-ok-soft px-3 py-1 text-xs font-bold text-ok">✦ {pct}% {t("match")}</span></div>
                 <h2 className="text-lg">{career.t}</h2><p className="mt-2 text-sm leading-6 text-muted">{career.blurb}</p>
               </div>
-              <div className="flex-1 space-y-5 p-5">
-                <div className="grid grid-cols-2 gap-3 rounded-lg border border-line bg-soft p-3 text-xs"><div><span className="block text-muted">{t("Study length")}</span><b>{career.study}</b></div><div><span className="block text-muted">{t("Job demand")}</span><b className="text-ok">{career.demand}</b></div></div>
-                <div><h3 className="mb-2 text-xs uppercase tracking-wide">{t("Why it fits")}</h3><ul className="space-y-2 text-sm">{reasons.map(r => <li key={r.code} className="flex gap-2"><span className="text-ok">✓</span><span>{t("High")} <b>{r.name}</b> ({r.score}){r.example ? `: “${r.example}”` : ""}</span></li>)}</ul></div>
-                <div><h3 className="mb-2 text-xs uppercase tracking-wide">{t("Skills")}</h3><div className="flex flex-wrap gap-1.5">{career.skills.slice(0,3).map(skill => <span key={skill} className="rounded bg-brand-soft px-2 py-1 text-xs text-brand">{skill}</span>)}</div></div>
+              <div className="px-5 pt-5">
+                <div className="grid h-full grid-cols-2 gap-3 rounded-lg border border-line bg-soft p-3 text-xs"><div><span className="block text-muted">{t("Study length")}</span><b>{career.study}</b></div><div><span className="block text-muted">{t("Job demand")}</span><b className="text-ok">{career.demand}</b></div></div>
               </div>
+              <div className="px-5 pt-5"><h3 className="mb-2 text-xs uppercase tracking-wide">{t("Why it fits")}</h3><ul className="space-y-2 text-sm">{reasons.map(r => <li key={r.code} className="flex gap-2"><span className="text-ok">✓</span><span>{t("High")} <b>{r.name}</b> ({r.score}){r.example ? `: “${r.example}”` : ""}</span></li>)}</ul></div>
+              <div className="p-5"><h3 className="mb-2 text-xs uppercase tracking-wide">{t("Skills")}</h3><div className="flex flex-wrap gap-1.5">{career.skills.slice(0,3).map(skill => <span key={skill} className="rounded bg-brand-soft px-2 py-1 text-xs text-brand">{skill}</span>)}</div></div>
               <div className="flex flex-col gap-2 border-t border-line bg-soft p-4">
                 <button type="button" className={j.careerId === career.id ? "btn-outline w-full" : "btn-primary w-full"} onClick={() => selectCareer(career.id)}>{t(j.careerId === career.id ? "Selected career" : "Select this career")}</button>
                 <button type="button" className="btn-outline w-full" aria-haspopup="dialog" onClick={() => setInspecting(data.top.find(match => match.career.id === career.id)!)}>{t("Inspect full details")}</button>
