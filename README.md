@@ -58,7 +58,7 @@ Requirements: Node.js 20 or later and PostgreSQL 16 or a compatible PostgreSQL s
 
    On Windows PowerShell, use `psql "postgresql://USER:PASSWORD@HOST:5432/careernet_db" -f database/schema.sql` with your database connection details.
 
-   For an existing database, apply every SQL script in `database/migrations/` after the schema, in filename order. These migrations include admin-managed university and content storage, optional payment transaction IDs, career video references, and one-time password recovery tokens.
+   For an existing database, apply every SQL script in `database/migrations/` after the schema, in filename order. These migrations include admin-managed university and content storage, optional payment transaction IDs, and career video references.
 
 2. Configure the backend:
 
@@ -67,7 +67,7 @@ Requirements: Node.js 20 or later and PostgreSQL 16 or a compatible PostgreSQL s
    cp .env.example .env
    ```
 
-   On Windows PowerShell, use `Copy-Item .env.example .env`. Set `DATABASE_URL` and a long random `JWT_SECRET` in `backend/.env`. Add an AI provider key if you want to use AI features. To enable forgot-password emails, configure `RESEND_API_KEY`, a verified `EMAIL_FROM` sender, and the public frontend `PUBLIC_APP_URL` on the backend host. The backend listens on port 8000 by default and exposes `/health`.
+   On Windows PowerShell, use `Copy-Item .env.example .env`. Set `DATABASE_URL` and a long random `JWT_SECRET` in `backend/.env`. Add an AI provider key if you want to use AI features. The backend listens on port 8000 by default and exposes `/health`.
 
 3. Install backend dependencies and start the API:
 

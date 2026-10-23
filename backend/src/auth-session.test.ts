@@ -1,16 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { createToken, readToken, sessionMatchesCurrentUser, type CurrentUser, type Session } from "./auth.js";
 
-const activeAdmin: CurrentUser = { active: true, role: "admin", adminRole: "ops", mentorStatus: null, sessionVersion: 0 };
-const adminSession: Session = { uid: 7, role: "admin", adminRole: "ops", sessionVersion: 0 };
+const activeAdmin: CurrentUser = { active: true, role: "admin", adminRole: "ops", mentorStatus: null };
+const adminSession: Session = { uid: 7, role: "admin", adminRole: "ops" };
 
 describe("session authorization freshness", () => {
-  it("keeps the password-reset session version in newly issued tokens", async () => {
-    const session = { ...adminSession, sessionVersion: 3 };
+  it("round-trips authorized claims through a signed token", async () => {
+    const session = adminSession;
     const decoded = await readToken(await createToken(session));
     expect(decoded).toEqual(session);
-    expect(sessionMatchesCurrentUser(decoded!, { ...activeAdmin, sessionVersion: 3 })).toBe(true);
-    expect(sessionMatchesCurrentUser(adminSession, { ...activeAdmin, sessionVersion: 3 })).toBe(false);
+    expect(sessionMatchesCurrentUser(decoded!, activeAdmin)).toBe(true);
   });
 
   it("allows a session whose account and role are still active", () => {
@@ -27,8 +26,8 @@ describe("session authorization freshness", () => {
   });
 
   it("allows only active mentors to keep using mentor sessions", () => {
-    const mentor: Session = { uid: 8, role: "mentor", adminRole: null, sessionVersion: 0 };
-    const current: CurrentUser = { active: true, role: "mentor", adminRole: null, mentorStatus: "active", sessionVersion: 0 };
+    const mentor: Session = { uid: 8, role: "mentor", adminRole: null };
+    const current: CurrentUser = { active: true, role: "mentor", adminRole: null, mentorStatus: "active" };
     expect(sessionMatchesCurrentUser(mentor, current)).toBe(true);
     expect(sessionMatchesCurrentUser(mentor, { ...current, mentorStatus: "suspended" })).toBe(false);
     expect(sessionMatchesCurrentUser(mentor, { ...current, mentorStatus: "pending" })).toBe(false);

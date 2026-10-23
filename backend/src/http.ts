@@ -40,8 +40,8 @@ export const attachSession: RequestHandler = (req, _res, next) => {
     if (h?.startsWith("Bearer ")) {
       const session = await readToken(h.slice(7));
       if (session) {
-        const user = await one<{ active: boolean; role: Role; adminRole: AdminRole | null; mentorStatus: string | null; sessionVersion: number }>(
-          `SELECT u.active, u.role, u.admin_role AS "adminRole", u.session_version AS "sessionVersion", m.status AS "mentorStatus"
+        const user = await one<{ active: boolean; role: Role; adminRole: AdminRole | null; mentorStatus: string | null }>(
+          `SELECT u.active, u.role, u.admin_role AS "adminRole", m.status AS "mentorStatus"
            FROM users u LEFT JOIN mentors m ON m.user_id = u.id WHERE u.id = $1`,
           [session.uid],
         );

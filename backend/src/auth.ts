@@ -24,28 +24,25 @@ export function verifyPassword(password: string, stored: string | null | undefin
 const secret = new TextEncoder().encode(ENV.jwtSecret);
 export type Role = "student" | "mentor" | "admin";
 export type AdminRole = "super" | "ops" | "content";
-export type Session = { uid: number; role: Role; adminRole: AdminRole | null; sessionVersion: number };
-export type CurrentUser = { active: boolean; role: Role; adminRole: AdminRole | null; mentorStatus: string | null; sessionVersion: number };
+export type Session = { uid: number; role: Role; adminRole: AdminRole | null };
+export type CurrentUser = { active: boolean; role: Role; adminRole: AdminRole | null; mentorStatus: string | null };
 
 export function sessionMatchesCurrentUser(session: Session, user: CurrentUser) {
   return user.active
     && session.role === user.role
-    && session.sessionVersion === user.sessionVersion
     && (session.role !== "admin" || session.adminRole === user.adminRole)
     && (session.role !== "mentor" || user.mentorStatus === "active");
 }
 
 export async function createToken(s: Session) {
-  return new SignJWT({ uid: s.uid, role: s.role, adminRole: s.adminRole, sessionVersion: s.sessionVersion })
+  return new SignJWT({ uid: s.uid, role: s.role, adminRole: s.adminRole })
     .setProtectedHeader({ alg: "HS256" }).setIssuedAt().setIssuer("careernet")
     .setExpirationTime(`${ENV.jwtExpireMinutes}m`).sign(secret);
 }
 export async function readToken(token: string): Promise<Session | null> {
   try {
     const { payload } = await jwtVerify(token, secret, { issuer: "careernet" });
-    const sessionVersion = payload.sessionVersion === undefined ? 0 : Number(payload.sessionVersion);
-    if (!Number.isSafeInteger(sessionVersion) || sessionVersion < 0) return null;
-    return { uid: Number(payload.uid), role: payload.role as Role, adminRole: (payload.adminRole as AdminRole) ?? null, sessionVersion };
+    return { uid: Number(payload.uid), role: payload.role as Role, adminRole: (payload.adminRole as AdminRole) ?? null };
   } catch { return null; }
 }
 

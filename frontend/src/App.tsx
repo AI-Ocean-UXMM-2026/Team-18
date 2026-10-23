@@ -19,7 +19,6 @@ const SiteInfo = lazy(() => import("@/pages/SiteInfo"));
 const Landing = lazy(() => import("@/pages/Landing"));
 const Guide = lazy(() => import("@/pages/Guide"));
 const Login = lazy(() => import("@/pages/Login"));
-const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
 const Register = lazy(() => import("@/pages/Register"));
 const MentorApply = lazy(() => import("@/pages/MentorApply"));
 const NotFound = lazy(() => import("@/pages/NotFound"));
@@ -122,7 +121,6 @@ export default function App() {
         <Route path="/contact">{() => <SiteInfo page="contact" />}</Route>
         <Route path="/privacy">{() => <SiteInfo page="privacy" />}</Route>
         <Route path="/login">{() => <Login portal="student" />}</Route>
-        <Route path="/reset-password" component={ResetPassword} />
         <Route path="/register" component={Register} />
         <Route path="/mentor/login">{() => <Login portal="mentor" />}</Route>
         <Route path="/mentor/apply" component={MentorApply} />

@@ -29,10 +29,6 @@ export const ENV = {
   ),
   seedOnStart: flag("SEED_ON_START", text("NODE_ENV") !== "production"),
   seedPassword: text("SEED_PASSWORD", "careernet123"),
-  resendApiKey: text("RESEND_API_KEY"),
-  emailFrom: text("EMAIL_FROM"),
-  publicAppUrl: text("PUBLIC_APP_URL").replace(/\/+$/, ""),
-
   schoolsSheetUrl: text("SCHOOLS_SHEET_CSV_URL"),
   schoolsCacheSeconds: number("SCHOOLS_CACHE_SECONDS", 600),
 

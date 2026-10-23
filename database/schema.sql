@@ -39,20 +39,9 @@ CREATE TABLE IF NOT EXISTS users (
   pro_expires_at TIMESTAMPTZ,
   ai_used        INTEGER NOT NULL DEFAULT 0,        -- free users get FREE_AI_LIMIT questions
   active         BOOLEAN NOT NULL DEFAULT true,
-  session_version INTEGER NOT NULL DEFAULT 0,
   created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
   CHECK ((role = 'admin') = (admin_role IS NOT NULL))
 );
-
--- One-time password recovery tokens are stored only as SHA-256 hashes.
-CREATE TABLE IF NOT EXISTS password_reset_tokens (
-  id          BIGSERIAL PRIMARY KEY,
-  user_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  token_hash  CHAR(64) NOT NULL UNIQUE,
-  expires_at  TIMESTAMPTZ NOT NULL,
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
-);
-CREATE INDEX IF NOT EXISTS password_reset_tokens_expiry_idx ON password_reset_tokens (expires_at);
 
 -- 2. Student journey (quiz answers, career, majors, shortlist) ----------------
 CREATE TABLE IF NOT EXISTS journeys (
