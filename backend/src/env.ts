@@ -4,6 +4,7 @@
 import "dotenv/config";
 
 const text = (key: string, fallback = "") => (process.env[key] ?? fallback).trim();
+const defaultCorsOrigins = "http://localhost:5173,http://127.0.0.1:5173";
 const number = (key: string, fallback: number) => {
   const raw = process.env[key];
   const parsed = Number(raw);
@@ -24,7 +25,11 @@ export const ENV = {
   jwtExpireMinutes: number("JWT_EXPIRE_MINUTES", 1440),
   port: number("PORT", 8000),
   host: text("HOST", "0.0.0.0"),
-  corsOrigins: text("CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",").map(s => s.trim()).filter(Boolean),
+  corsOrigins: [...new Set([
+    ...text("CORS_ORIGINS", defaultCorsOrigins).split(",").map(s => s.trim()).filter(Boolean),
+    // The production frontend is hosted separately from this API on Render.
+    "https://careernet-bn5l.onrender.com",
+  ])],
   corsOriginRegex: new RegExp(
     text("CORS_ORIGIN_REGEX", "^https?://(localhost|127\\.0\\.0\\.1|10\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}|192\\.168\\.\\d{1,3}\\.\\d{1,3}|172\\.(1[6-9]|2\\d|3[01])\\.\\d{1,3}\\.\\d{1,3})(:\\d+)?$") || "^$",
   ),
