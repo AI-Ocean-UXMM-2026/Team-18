@@ -36,7 +36,7 @@ export function sessionMatchesCurrentUser(session: Session, user: CurrentUser) {
 }
 
 export async function createToken(s: Session) {
-  return new SignJWT({ uid: s.uid, role: s.role, adminRole: s.adminRole })
+  return new SignJWT({ uid: s.uid, role: s.role, adminRole: s.adminRole, sessionVersion: s.sessionVersion })
     .setProtectedHeader({ alg: "HS256" }).setIssuedAt().setIssuer("careernet")
     .setExpirationTime(`${ENV.jwtExpireMinutes}m`).sign(secret);
 }

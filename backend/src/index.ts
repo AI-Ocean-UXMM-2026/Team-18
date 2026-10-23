@@ -11,7 +11,7 @@
 import express from "express";
 import cors from "cors";
 import { ENV, aiConfigured, assertEnv } from "./env.js";
-import { assertSchemaInstalled, closeDatabase, pingDatabase } from "./db.js";
+import { assertSchemaInstalled, closeDatabase, ensurePasswordRecoverySchema, pingDatabase } from "./db.js";
 import { attachSession, errorMiddleware, route } from "./http.js";
 import { authRouter } from "./routes/auth.js";
 import { studentRouter } from "./routes/student.js";
@@ -40,7 +40,7 @@ app.use(attachSession);
 app.get("/health", route(async () => {
   const database = await pingDatabase();
   let schools = 0; try { schools = (await getSchools()).length; } catch { /* reported as 0 */ }
-  return { status: database.ok ? "ok" : "degraded", service: "careernet-api", database, ai: { provider: ENV.aiProvider, configured: aiConfigured() }, schools: { count: schools, source: schoolsSource() } };
+  return { status: database.ok ? "ok" : "degraded", service: "careernet-api", release: process.env.RENDER_GIT_COMMIT ?? null, passwordRecovery: { available: true, emailConfigured: !!(ENV.resendApiKey && ENV.emailFrom && ENV.publicAppUrl) }, database, ai: { provider: ENV.aiProvider, configured: aiConfigured() }, schools: { count: schools, source: schoolsSource() } };
 }));
 
 app.use(authRouter);
@@ -51,6 +51,7 @@ app.use(adminRouter);
 app.use(errorMiddleware);
 
 async function main() {
+  await ensurePasswordRecoverySchema();
   await assertSchemaInstalled();
   await loadManagedContent();
   if (ENV.seedOnStart) await seedDatabase();

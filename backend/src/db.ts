@@ -55,6 +55,20 @@ export async function pingDatabase() {
 }
 
 const REQUIRED_TABLES = ["users", "journeys", "mentors", "mentor_slots", "bookings", "payment_accounts", "payments", "audit_log", "admin_universities", "password_reset_tokens"];
+/** Additive, idempotent recovery migration for existing deployments. */
+export async function ensurePasswordRecoverySchema() {
+  await tx(async client => {
+    await client.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS session_version INTEGER NOT NULL DEFAULT 0");
+    await client.query(`CREATE TABLE IF NOT EXISTS password_reset_tokens (
+      id BIGSERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      token_hash CHAR(64) NOT NULL UNIQUE,
+      expires_at TIMESTAMPTZ NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )`);
+    await client.query("CREATE INDEX IF NOT EXISTS password_reset_tokens_expiry_idx ON password_reset_tokens (expires_at)");
+  });
+}
 export async function assertSchemaInstalled() {
   const rows = await query<{ table_name: string }>("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'");
   const have = new Set(rows.map(r => r.table_name));

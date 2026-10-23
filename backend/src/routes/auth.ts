@@ -91,9 +91,9 @@ authRouter.post("/auth/password/forgot", route(async req => {
     await client.query("INSERT INTO password_reset_tokens (user_id, token_hash, expires_at) VALUES ($1, $2, now() + INTERVAL '30 minutes')", [user.id, tokenHash]);
   });
 
-  const resetUrl = new URL("/reset-password", ENV.publicAppUrl);
-  resetUrl.hash = new URLSearchParams({ token }).toString();
   try {
+    const resetUrl = new URL("/reset-password", ENV.publicAppUrl);
+    resetUrl.hash = new URLSearchParams({ token }).toString();
     await sendPasswordResetEmail(b.email, resetUrl.toString());
   } catch {
     await query("DELETE FROM password_reset_tokens WHERE token_hash = $1", [tokenHash]);
@@ -102,20 +102,23 @@ authRouter.post("/auth/password/forgot", route(async req => {
   return { ok: true, message: genericResetMessage };
 }));
 
-authRouter.post("/auth/password/reset", route(async req => {
-  const b = body(req, z.object({ token: z.string().min(20).max(200), password }));
+authRouter.post("/auth/password/reset", route(async (req, res) => {
+  res.set("Cache-Control", "no-store");
+  const b = body(req, z.object({ token: z.string().min(20).max(200), password: password.optional() }));
+  const generatedPassword = b.password === undefined ? randomBytes(18).toString("base64url") : undefined;
+  const nextPassword = b.password ?? generatedPassword!;
   const tokenHash = resetTokenHash(b.token);
   await tx(async client => {
     const reset = await client.query<{ id: number; user_id: number }>(
-      "SELECT id, user_id FROM password_reset_tokens WHERE token_hash = $1 AND expires_at > now() FOR UPDATE",
+      "SELECT r.id, r.user_id FROM password_reset_tokens r JOIN users u ON u.id = r.user_id WHERE r.token_hash = $1 AND r.expires_at > now() AND u.active = true FOR UPDATE OF r",
       [tokenHash],
     );
     const record = reset.rows[0];
     if (!record) throw badRequest("This password reset link is invalid or has expired. Request a new one.");
-    await client.query("UPDATE users SET password_hash = $1, session_version = session_version + 1 WHERE id = $2", [hashPassword(b.password), record.user_id]);
+    await client.query("UPDATE users SET password_hash = $1, session_version = session_version + 1 WHERE id = $2 AND active = true", [hashPassword(nextPassword), record.user_id]);
     await client.query("DELETE FROM password_reset_tokens WHERE user_id = $1", [record.user_id]);
   });
-  return { ok: true };
+  return { ok: true, ...(generatedPassword ? { password: generatedPassword } : {}) };
 }));
 
 authRouter.get("/auth/me", route(async req => ({ user: await profile(sessionOf(req).uid) })));
