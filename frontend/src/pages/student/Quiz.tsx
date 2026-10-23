@@ -1,5 +1,5 @@
 import { Kip } from "@/components/Kip";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Redirect, useLocation } from "wouter";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
@@ -17,14 +17,26 @@ const LIKERT = [
 export default function Quiz() {
   const { j, set, content, ready } = useJourney(); const { lang, t } = usePrefs(); const [, go] = useLocation();
   const { isGuest } = useAuth();
+  const [analyzing, setAnalyzing] = useState(false);
   const [index, setIndex] = useState(() => {
     const firstUnanswered = content?.questions.findIndex(question => !Number.isInteger(j.answers[question.id]) || j.answers[question.id] < 1 || j.answers[question.id] > 5) ?? -1;
     return firstUnanswered >= 0 ? firstUnanswered : 0;
   });
   const [showMissing, setShowMissing] = useState(false);
   const [help, setHelp] = useState<Record<number, string>>({});
+  useEffect(() => {
+    if (!analyzing) return;
+    const timer = window.setTimeout(() => go("/student/results"), 2400);
+    return () => window.clearTimeout(timer);
+  }, [analyzing, go]);
   if (!ready || !content) return <Spinner />;
   if (!j.level) return <Redirect to="/student" />;
+  if (analyzing) return (
+    <section className="card mx-auto flex min-h-64 w-full max-w-3xl flex-col items-center justify-center gap-4 text-center" role="status" aria-live="polite">
+      <span aria-hidden="true" className="motion-safe:animate-spin h-10 w-10 rounded-full border-4 border-brand/20 border-t-brand" />
+      <p className="text-lg font-semibold">{t("Analyzing your answers")}…</p>
+    </section>
+  );
   const qs = content.questions; const q = qs[index];
   const missing = qs.filter(x => !Number.isInteger(j.answers[x.id]) || j.answers[x.id] < 1 || j.answers[x.id] > 5);
 
@@ -45,7 +57,7 @@ export default function Quiz() {
       return;
     }
     set({ quizCompleted: true });
-    go("/student/results");
+    setAnalyzing(true);
   }
   async function explain() {
     setHelp(h => ({ ...h, [q.id]: t("Thinking…") }));
@@ -73,8 +85,8 @@ export default function Quiz() {
 
       {showMissing && missing.length > 0 && <p role="alert" className="text-sm text-bad">{t("Answer every question before finishing the quiz.")}</p>}
       <div className="flex items-center justify-between gap-3">
-        <button className="btn-ghost w-32" disabled={index === 0} onClick={() => { setShowMissing(false); setIndex(i => i - 1); }}>{t("Previous")}</button>
-        <button className="btn-primary w-32" onClick={goNext}>{t("Next")}</button>
+        <button className="btn-ghost min-w-0 flex-1 px-2 text-xs sm:w-48 sm:flex-none sm:px-4 sm:text-sm" disabled={index === 0} onClick={() => { setShowMissing(false); setIndex(i => i - 1); }}>{t("Previous")}</button>
+        <button className="btn-primary min-w-0 flex-1 px-2 text-xs sm:w-48 sm:flex-none sm:px-4 sm:text-sm" onClick={goNext}>{index === qs.length - 1 ? <>{t("Finish")} <span aria-hidden="true">✨</span></> : t("Next")}</button>
       </div>
     </section>
   );
