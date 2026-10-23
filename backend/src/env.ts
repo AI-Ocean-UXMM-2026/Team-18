@@ -13,6 +13,7 @@ const flag = (key: string, fallback: boolean) => {
   const v = text(key).toLowerCase();
   return v ? ["1", "true", "yes"].includes(v) : fallback;
 };
+const configuredGeminiModel = text("GEMINI_MODEL", "gemini-3.8-flash");
 
 export const ENV = {
   databaseUrl: text("DATABASE_URL"),
@@ -39,7 +40,8 @@ export const ENV = {
   aiProvider: (text("AI_PROVIDER", "gemini").toLowerCase() === "claude" ? "claude" : "gemini") as "gemini" | "claude",
   geminiKey: text("GEMINI_API_KEY"),
   geminiFallbackKey: text("GEMINI_FALLBACK_API_KEY"),
-  geminiModel: text("GEMINI_MODEL", "gemini-3.8-flash"),
+  // Move installations pinned to the old default to Gemini's current stable Flash model.
+  geminiModel: configuredGeminiModel === "gemini-2.5-flash" ? "gemini-3.8-flash" : configuredGeminiModel,
   openrouterKey: text("OPENROUTER_API_KEY"),
   openrouterModel: text("OPENROUTER_MODEL", "nvidia/nemotron-3.5-lightning:free"),
   openrouterReferer: text("OPENROUTER_REFERER", "https://careernest-bn5l.onrender.com"),

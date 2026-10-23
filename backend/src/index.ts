@@ -40,7 +40,7 @@ app.use(attachSession);
 app.get("/health", route(async () => {
   const database = await pingDatabase();
   let schools = 0; try { schools = (await getSchools()).length; } catch { /* reported as 0 */ }
-  return { status: database.ok ? "ok" : "degraded", service: "careernet-api", release: process.env.RENDER_GIT_COMMIT ?? null, database, ai: { provider: ENV.aiProvider, configured: aiConfigured() }, schools: { count: schools, source: schoolsSource() } };
+  return { status: database.ok ? "ok" : "degraded", service: "careernet-api", release: process.env.RENDER_GIT_COMMIT ?? null, database, ai: { provider: ENV.aiProvider, model: ENV.aiProvider === "claude" ? ENV.claudeModel : ENV.geminiModel, configured: aiConfigured() }, schools: { count: schools, source: schoolsSource() } };
 }));
 
 app.use(authRouter);
