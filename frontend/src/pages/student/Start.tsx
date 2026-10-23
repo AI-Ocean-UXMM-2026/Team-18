@@ -5,6 +5,7 @@ import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
 import { Actions, Spinner } from "@/components/ui";
 import { KipGuide } from "@/components/Kip";
+import JourneyOverview from "@/components/JourneyOverview";
 import { studentProgress } from "@/lib/studentFlow";
 
 export default function Start() {
@@ -28,6 +29,7 @@ export default function Start() {
         </div>
         <div className="block"><KipGuide /></div>
       </section>
+      <JourneyOverview />
       <section className="mt-3 flex flex-col gap-4">
         <div className="flex items-center gap-3"><span aria-hidden="true" className="font-mono text-xs font-bold text-brand">01 /</span><h2 className="text-xl">{t("Select your education level")}</h2></div>
         <div className="grid gap-4 sm:grid-cols-3">
