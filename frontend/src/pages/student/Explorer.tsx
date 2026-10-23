@@ -37,9 +37,9 @@ export default function Explorer() {
       {error && <ErrorNote message={error} onRetry={refresh} />}
       {loading && <CardGridSkeleton count={4} />}
       {!loading && <p className="text-sm text-muted">{items.length} {t("results")}</p>}
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">{items.map(i => <UniCard key={i.key} item={i} level={j.level!} inShortlist={j.shortlist.includes(i.key)} inCompare={j.compare.includes(i.key)} onToggle={toggle} />)}</div>
+      <div className="grid items-start gap-5 md:grid-cols-2 xl:grid-cols-3">{items.map(i => <UniCard key={i.key} item={i} level={j.level!} inShortlist={j.shortlist.includes(i.key)} inCompare={j.compare.includes(i.key)} onToggle={toggle} />)}</div>
       {!loading && !items.length && <div className="card text-center text-muted">{t("No universities found. Try “Show all fields”.")}</div>}
-      <div className="sticky bottom-0 -mx-4 flex flex-wrap items-center gap-3 border-t border-line bg-bg px-4 py-3">
+      <div className="sticky bottom-0 z-20 isolate flex flex-wrap items-center gap-3 border-t border-line bg-bg px-4 py-3">
         <span className="mr-auto text-sm text-muted">{j.compare.length} / 3 {t("selected to compare")}{j.compare.length ? ` · ${items.filter(i => j.compare.includes(i.key)).map(itemName).join(", ")}` : ""}</span>
         <button className="btn-primary" disabled={j.compare.length < 2} onClick={() => go("/student/compare")}>{t("Compare universities")}</button>
       </div>

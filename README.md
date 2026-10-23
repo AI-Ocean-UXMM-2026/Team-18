@@ -107,3 +107,9 @@ The backend also provides `npm test`, `npm run seed`, and `npm start`. The front
 - `frontend/src/` — React app, role portals, translations, journey state, and client-side PDF generation.
 - `frontend/public/universities/` — university photos.
 - `deploy/README.md` — hosting, production environment, and AI failover details.
+
+### Monthly Pro membership
+
+Each approved Pro payment (default 5,000 Ks) grants one calendar month from approval. A further approved payment adds one month from the current expiry, or from approval if the previous membership has expired. No automatic charge is made. Expired memberships lose Pro AI and mentor access and may submit a new payment; the client also removes the Pro badge and PDF access at expiry.
+
+Before deploying this version, run `database/migrations/20261023_monthly_pro.sql` on the database. Existing paid Pro accounts expire one month after their most recent approved payment. Existing manual/demo Pro grants without an approved payment receive one month from migration. The migration is safe to rerun and does not reset existing expiry dates. The backend refuses to start if the expiry column is missing.

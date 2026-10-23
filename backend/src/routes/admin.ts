@@ -84,7 +84,7 @@ adminRouter.get("/admin/stats", route(async () => ({
   ...(await one(`SELECT
      (SELECT count(*) FROM users WHERE role = 'student')::int AS students,
      (SELECT count(*) FROM journeys WHERE jsonb_typeof(data->'answers') = 'object' AND ((data->>'quizCompleted' = 'true') OR (data->>'quizCompleted' IS NULL AND (SELECT count(*) FROM jsonb_object_keys(data->'answers')) >= $1)))::int AS "quizzesCompleted",
-     (SELECT count(*) FROM users WHERE is_pro)::int AS "proMembers",
+     (SELECT count(*) FROM users WHERE is_pro AND pro_expires_at > now())::int AS "proMembers",
      (SELECT count(*) FROM payments WHERE status IN ('pending', 'disputed'))::int AS "paymentsToCheck",
      (SELECT count(*) FROM mentors WHERE status = 'pending')::int AS "mentorApplications",
      (SELECT count(*) FROM bookings WHERE status IN ('confirmed', 'completed'))::int AS "mentorSessions",
@@ -116,9 +116,9 @@ adminRouter.post("/admin/payments/:id/approve", ops, route(async req => {
     if (!p) throw notFound("Payment not found.");
     if (!["pending", "disputed"].includes(p.status)) throw conflict("This payment was already decided.");
     await c.query("UPDATE payments SET status = 'approved', reason = NULL, decided_by = $1, decided_at = now() WHERE id = $2", [adminId, p.id]);
-    await c.query("UPDATE users SET is_pro = true WHERE id = $1", [p.student_id]);
+    await c.query("UPDATE users SET is_pro = true, pro_expires_at = GREATEST(COALESCE(pro_expires_at, now()), now()) + INTERVAL '1 month' WHERE id = $1", [p.student_id]);
     await c.query("INSERT INTO audit_log (actor_id, action, target) VALUES ($1, 'payment.approve', $2)", [adminId, `payment:${p.id}`]);
-    return { ok: true, message: "Approved. Pro is now on for this student." };
+    return { ok: true, message: "Approved. Pro is active for one month." };
   });
 }));
 
@@ -165,7 +165,7 @@ adminRouter.post("/admin/mentors/:id/status", ops, route(async req => {
 adminRouter.get("/admin/students", ops, route(async req => {
   const q = `%${String(req.query.q ?? "").trim()}%`;
   return {
-    students: await query(`SELECT u.id, u.name, u.email, u.is_pro AS "isPro", u.active, u.created_at AS "createdAt", j.data->>'level' AS level, j.data->>'careerId' AS "careerId",
+    students: await query(`SELECT u.id, u.name, u.email, (u.is_pro AND COALESCE(u.pro_expires_at > now(), false)) AS "isPro", u.pro_expires_at AS "proExpiresAt", u.active, u.created_at AS "createdAt", j.data->>'level' AS level, j.data->>'careerId' AS "careerId",
         (SELECT count(*) FROM bookings b WHERE b.student_id = u.id)::int AS bookings
       FROM users u LEFT JOIN journeys j ON j.student_id = u.id WHERE u.role = 'student' AND (u.name ILIKE $1 OR u.email ILIKE $1) ORDER BY u.created_at DESC LIMIT 100`, [q]),
   };

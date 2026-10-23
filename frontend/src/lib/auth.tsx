@@ -21,6 +21,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try { setUser((await api.get<{ user: User }>("/auth/me")).user); } catch { setUser(null); } finally { setLoading(false); }
   }, []);
   useEffect(() => { refresh(); const off = () => { setUser(null); setIsGuest(false); }; window.addEventListener("careernet:signed-out", off); return () => window.removeEventListener("careernet:signed-out", off); }, [refresh]);
+  useEffect(() => {
+    if (!user?.isPro || !user.proExpiresAt) return;
+    const expires = Date.parse(user.proExpiresAt);
+    if (!Number.isFinite(expires)) return;
+    let timer: ReturnType<typeof setTimeout>;
+    const checkExpiry = () => {
+      clearTimeout(timer);
+      const remaining = expires - Date.now();
+      if (remaining <= 0) {
+        setUser(current => current ? { ...current, isPro: false } : current);
+        void refresh();
+      } else timer = setTimeout(checkExpiry, Math.min(remaining, 2_147_483_647));
+    };
+    checkExpiry();
+    window.addEventListener("focus", checkExpiry);
+    return () => { clearTimeout(timer); window.removeEventListener("focus", checkExpiry); };
+  }, [user?.id, user?.isPro, user?.proExpiresAt, refresh]);
   const login = async (portal: Role, email: string, password: string) => {
     const r = await api.post<{ token: string; user: User }>("/auth/login", { portal, email, password });
     tokenStore.set(r.token); setIsGuest(false); setUser(r.user); return r.user;

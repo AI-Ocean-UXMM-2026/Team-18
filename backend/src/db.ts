@@ -60,6 +60,8 @@ export async function assertSchemaInstalled() {
   const have = new Set(rows.map(r => r.table_name));
   const missing = REQUIRED_TABLES.filter(t => !have.has(t));
   if (missing.length) throw new Error(`Database is missing tables: ${missing.join(", ")}. Run database/schema.sql and all scripts in database/migrations/ first (see README section 3).`);
+  const proExpiry = await one("SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'users' AND column_name = 'pro_expires_at'");
+  if (!proExpiry) throw new Error("Run database/migrations/20261023_monthly_pro.sql before starting the monthly Pro backend.");
 }
 
 export async function audit(actorId: number | null, action: string, target: string | null, details?: unknown) {

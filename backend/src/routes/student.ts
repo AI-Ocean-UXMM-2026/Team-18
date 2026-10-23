@@ -17,7 +17,7 @@ const student = requireRole("student");
 
 async function requireProStudent(req: Request) {
   const uid = sessionOf(req).uid;
-  const me = await one<{ is_pro: boolean }>("SELECT is_pro FROM users WHERE id = $1", [uid]);
+  const me = await one<{ is_pro: boolean }>("SELECT (is_pro AND COALESCE(pro_expires_at > now(), false)) AS is_pro FROM users WHERE id = $1", [uid]);
   if (!me?.is_pro) throw new HttpError(402, "Mentor sessions are part of CareerNest Pro.");
   return uid;
 }
@@ -91,7 +91,7 @@ studentRouter.post("/bookings", student, route(async req => {
   const b = body(req, z.object({ slotId: z.number().int().positive(), question: z.string().trim().max(500).optional() }));
   try {
     const booking = await tx(async client => {
-      const user = (await client.query<{ is_pro: boolean }>("SELECT is_pro FROM users WHERE id = $1 FOR UPDATE", [uid])).rows[0];
+      const user = (await client.query<{ is_pro: boolean }>("SELECT (is_pro AND COALESCE(pro_expires_at > now(), false)) AS is_pro FROM users WHERE id = $1 FOR UPDATE", [uid])).rows[0];
       if (!user?.is_pro) throw new HttpError(402, "Mentor sessions are part of CareerNest Pro.");
       const slot = (await client.query<{ id: number; mentor_id: number }>(
         `SELECT s.id, s.mentor_id FROM mentor_slots s JOIN mentors m ON m.user_id = s.mentor_id
@@ -125,12 +125,12 @@ studentRouter.post("/me/bookings/:id/cancel", student, route(async req => {
 // --- Pro: pay outside the app, send screenshot, admin confirms ------------------------------
 studentRouter.get("/pro", student, route(async req => {
   const uid = sessionOf(req).uid;
-  const user = await one<{ is_pro: boolean; ai_used: number }>("SELECT is_pro, ai_used FROM users WHERE id = $1", [uid]);
+  const user = await one<{ is_pro: boolean; pro_expires_at: string | null; ai_used: number }>("SELECT (is_pro AND COALESCE(pro_expires_at > now(), false)) AS is_pro, pro_expires_at, ai_used FROM users WHERE id = $1", [uid]);
   const accounts = await query(`SELECT provider, label, account_name AS "accountName", account_number AS "accountNumber" FROM payment_accounts WHERE enabled AND account_number <> '' ORDER BY label`);
   const latest = await one(`SELECT id, provider, account_name AS "accountName", account_number AS "accountNumber", amount_mmk AS amount,
       status, reason, dispute_used AS "disputeUsed", created_at AS "createdAt", decided_at AS "decidedAt", proof_data AS proof
       FROM payments WHERE student_id = $1 ORDER BY created_at DESC LIMIT 1`, [uid]);
-  return { isPro: !!user?.is_pro, aiUsed: user?.ai_used ?? 0, freeAiLimit: ENV.freeAiLimit, price: ENV.proPrice, accounts, latest };
+  return { isPro: !!user?.is_pro, proExpiresAt: user?.pro_expires_at ?? null, aiUsed: user?.ai_used ?? 0, freeAiLimit: ENV.freeAiLimit, price: ENV.proPrice, accounts, latest };
 }));
 
 const MAX_PROOF_BYTES = 1024 * 1024;
@@ -143,7 +143,7 @@ studentRouter.post("/pro/payments", student, route(async req => {
   }));
   const again = await one("SELECT id, status FROM payments WHERE request_key = $1 AND student_id = $2", [b.requestKey, uid]);
   if (again) return { payment: again };                                          // same submission twice = one payment
-  if ((await one<{ is_pro: boolean }>("SELECT is_pro FROM users WHERE id = $1", [uid]))?.is_pro) throw conflict("You already have Pro.");
+  if ((await one<{ is_pro: boolean }>("SELECT (is_pro AND COALESCE(pro_expires_at > now(), false)) AS is_pro FROM users WHERE id = $1", [uid]))?.is_pro) throw conflict("You already have Pro.");
   if (b.amount !== ENV.proPrice) throw badRequest(`Please send exactly ${ENV.proPrice.toLocaleString("en-US")} Ks.`);
   const acc = await one<{ account_name: string; account_number: string }>("SELECT account_name, account_number FROM payment_accounts WHERE provider = $1 AND enabled AND account_number <> ''", [b.provider]);
   if (!acc) throw badRequest("Choose an available payment app.");

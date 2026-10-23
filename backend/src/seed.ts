@@ -39,12 +39,12 @@ const DEMO_JOURNEY = {
 async function upsertUser(email: string, name: string, role: string, adminRole: string | null, isPro = false) {
   const found = await one<{ id: number }>("SELECT id FROM users WHERE email = $1", [email]);
   if (found) {
-    await one("UPDATE users SET password_hash = $1, name = $2, role = $3, admin_role = $4, is_pro = $5, ai_used = 0, active = TRUE WHERE id = $6",
+    await one("UPDATE users SET password_hash = $1, name = $2, role = $3, admin_role = $4, is_pro = $5, pro_expires_at = CASE WHEN $5 THEN now() + INTERVAL '1 month' ELSE NULL END, ai_used = 0, active = TRUE WHERE id = $6",
       [hashPassword(ENV.seedPassword), name, role, adminRole, isPro, found.id]);
     return found.id;
   }
   const row = await one<{ id: number }>(
-    "INSERT INTO users (email, password_hash, name, role, admin_role, is_pro, ai_used) VALUES ($1, $2, $3, $4, $5, $6, 0) RETURNING id",
+    "INSERT INTO users (email, password_hash, name, role, admin_role, is_pro, pro_expires_at, ai_used) VALUES ($1, $2, $3, $4, $5, $6, CASE WHEN $6 THEN now() + INTERVAL '1 month' ELSE NULL END, 0) RETURNING id",
     [email, hashPassword(ENV.seedPassword), name, role, adminRole, isPro]);
   return row!.id;
 }

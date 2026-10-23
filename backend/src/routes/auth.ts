@@ -14,7 +14,7 @@ const password = z.string().min(8, "Password needs at least 8 characters.").max(
 const name = z.string().trim().min(1).max(120);
 
 async function profile(uid: number) {
-  return one(`SELECT u.id, u.email, u.name, u.role, u.admin_role AS "adminRole", u.language, u.is_pro AS "isPro", u.ai_used AS "aiUsed",
+  return one(`SELECT u.id, u.email, u.name, u.role, u.admin_role AS "adminRole", u.language, (u.is_pro AND COALESCE(u.pro_expires_at > now(), false)) AS "isPro", u.pro_expires_at AS "proExpiresAt", u.ai_used AS "aiUsed",
       m.status AS "mentorStatus" FROM users u LEFT JOIN mentors m ON m.user_id = u.id WHERE u.id = $1`, [uid]);
 }
 

@@ -36,7 +36,7 @@ export const api = {
 // --- shared types -------------------------------------------------------------
 export type Role = "student" | "mentor" | "admin";
 export type AdminRole = "super" | "ops" | "content";
-export type User = { id: number; email: string; name: string; role: Role; adminRole: AdminRole | null; language: "en" | "my"; isPro: boolean; aiUsed: number };
+export type User = { id: number; email: string; name: string; role: Role; adminRole: AdminRole | null; language: "en" | "my"; isPro: boolean; proExpiresAt?: string | null; aiUsed: number };
 export type Level = "g12" | "ged" | "igcse";
 export type Question = { id: number; area: string; code: string; en: string; my: string };
 export type Career = { id: string; t: string; codes: string; f: number[]; demand: string; study: string; blurb: string; positions: string[]; skills: string[]; quals: string[]; outlook: string; subjects: string[]; majors: { n: string; f: number }[]; video: { len: string; ch: string[]; url: string } };

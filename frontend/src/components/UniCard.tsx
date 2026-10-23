@@ -13,26 +13,31 @@ export function UniPhoto({ item, small }: { item: UniItem; small?: boolean }) {
 export function UniCard({ item, level, inShortlist, inCompare, onToggle }: { item: UniItem; level: string; inShortlist: boolean; inCompare: boolean; onToggle: (l: "shortlist" | "compare", k: string) => void }) {
   const { t } = usePrefs();
   return (
-    <article className="card choice-card-hover grid grid-rows-subgrid [grid-row:span_8] overflow-hidden">
-      <UniPhoto item={item} />
-      <div className="flex min-h-14 items-start gap-3">
+    <article className="card flex min-w-0 flex-col gap-3 overflow-hidden transition-colors hover:border-brand focus-within:border-brand">
+      <div className="shrink-0"><UniPhoto item={item} /></div>
+      <div className="flex h-20 shrink-0 items-start gap-3">
         <span className="rounded-md bg-soft px-2 py-1 font-mono text-xs text-brand">{item.kind === "g12" ? item.university.code : item.school.code}</span>
-        <div className="min-w-0 flex-1"><h3 className="text-base">{item.kind === "g12" ? item.university.name : item.school.name}</h3>
-          <p className="text-xs text-muted">{item.kind === "g12" ? `${item.university.location} · ${item.university.type}` : `${item.school.city}, ${item.school.country} · ${item.school.type}`}</p></div>
+        <div className="min-w-0 flex-1"><h3 className="line-clamp-2 text-base">{item.kind === "g12" ? item.university.name : item.school.name}</h3>
+          <p className="line-clamp-2 text-xs text-muted">{item.kind === "g12" ? `${item.university.location} · ${item.university.type}` : `${item.school.city}, ${item.school.country} · ${item.school.type}`}</p></div>
       </div>
-      <p className="min-h-[4.5rem] text-sm leading-6">{item.kind === "g12" ? item.university.description : item.school.description}</p>
-      {item.kind === "g12" ? (
-        <div className="text-sm">
-          <p className="font-semibold">{t("Programmes in your field")}:</p>
-          <div className="mt-1.5 flex flex-wrap gap-1.5">{item.programs.slice(0, 6).map(p => <span key={p} className="rounded-full bg-soft px-2.5 py-0.5 text-xs">{p}</span>)}{item.programs.length > 6 && <span className="text-xs text-muted">+{item.programs.length - 6}</span>}</div>
-        </div>
-      ) : (
-        <p className={`min-h-40 rounded-lg px-3 py-2 text-sm leading-6 ${item.school.hasScholarship ? "bg-ok-soft" : "bg-soft text-muted"}`}><b>{t("Scholarship")}:</b> {item.school.scholarship}</p>
-      )}
-      {item.kind === "g12" ? <div aria-hidden="true" /> : <p className="min-h-12 text-sm leading-6"><b>{t("Pathway")}:</b> {item.school.pathway}</p>}
-      {item.kind === "g12" ? <div aria-hidden="true" /> : <p className="min-h-[4.5rem] text-sm leading-6"><b>{t("Entry")}:</b> {level === "igcse" ? item.school.igcse.note : item.school.ged.note}</p>}
-      {item.kind === "g12" ? <div aria-hidden="true" /> : <a className="text-xs text-brand" href={item.school.source} target="_blank" rel="noreferrer">{t("source")} · {item.school.lastChecked}</a>}
-      <div className="flex items-end gap-2">
+      <div className="min-w-0 space-y-3 [overflow-wrap:anywhere]">
+        <p className="line-clamp-2 h-12 text-sm leading-6">{item.kind === "g12" ? item.university.description : item.school.description}</p>
+        {item.kind === "g12" ? <div className="h-24 overflow-hidden text-sm"><p className="font-semibold">{t("Programmes in your field")}:</p><div className="mt-1.5 flex flex-wrap gap-1.5">{item.programs.slice(0, 6).map(p => <span key={p} className="rounded-full bg-soft px-2.5 py-0.5 text-xs">{p}</span>)}{item.programs.length > 6 && <span className="text-xs text-muted">+{item.programs.length - 6}</span>}</div></div>
+          : <div className={`h-24 overflow-hidden rounded-lg px-3 py-2 text-sm leading-6 ${item.school.hasScholarship ? "bg-ok-soft" : "bg-soft text-muted"}`}><p className="line-clamp-3"><b>{t("Scholarship")}:</b> {item.school.scholarship}</p></div>}
+        <details className="border-t border-line pt-2 text-sm leading-6">
+          <summary className="cursor-pointer font-semibold text-brand">{t("Show more details")}</summary>
+          <div className="mt-3 max-h-64 space-y-3 overflow-y-auto overscroll-contain pr-2" tabIndex={0} aria-label={t("University details")}>
+            <p>{item.kind === "g12" ? item.university.description : item.school.description}</p>
+            {item.kind === "g12" ? <p><b>{t("Programmes in your field")}:</b> {item.programs.join(", ")}</p> : <>
+              <p><b>{t("Scholarship")}:</b> {item.school.scholarship}</p>
+              <p><b>{t("Pathway")}:</b> {item.school.pathway}</p>
+              <p><b>{t("Entry")}:</b> {level === "igcse" ? item.school.igcse.note : item.school.ged.note}</p>
+              <a className="inline-block text-xs text-brand" href={item.school.source} target="_blank" rel="noreferrer">{t("source")} · {item.school.lastChecked}</a>
+            </>}
+          </div>
+        </details>
+      </div>
+      <div className="flex shrink-0 flex-wrap gap-2 border-t border-line pt-3">
         <button className={inShortlist ? "btn-primary btn-sm" : "btn-outline btn-sm"} onClick={() => onToggle("shortlist", item.key)}>{t(inShortlist ? "Shortlisted" : "Shortlist")}</button>
         <button className={inCompare ? "btn-primary btn-sm" : "btn-ghost btn-sm"} onClick={() => onToggle("compare", item.key)}>{t(inCompare ? "In compare" : "Add to compare")}</button>
       </div>

@@ -25,7 +25,7 @@ export default function Mentors() {
       <section className="card flex flex-col items-center gap-3 text-center">
         <span className="rounded-md bg-brand-soft px-2 py-0.5 text-xs font-semibold text-brand">Pro</span>
         <h2 className="text-lg">{t("Mentor sessions are part of CareerNest Pro")}</h2>
-        <p className="text-muted">{t("Upgrade once to book a 1-hour session with a professional.")}</p>
+        <p className="text-muted">{t("Upgrade to monthly Pro to book a 1-hour session with a professional.")}</p>
         <Link href="/student/pro" className="btn-primary">{t("Go Pro")}</Link>
       </section>
     </>

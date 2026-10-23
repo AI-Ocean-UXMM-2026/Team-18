@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS users (
   admin_role     admin_role,                        -- only for role = 'admin'
   language       VARCHAR(2) NOT NULL DEFAULT 'en' CHECK (language IN ('en', 'my')),
   is_pro         BOOLEAN NOT NULL DEFAULT false,
+  pro_expires_at TIMESTAMPTZ,
   ai_used        INTEGER NOT NULL DEFAULT 0,        -- free users get FREE_AI_LIMIT questions
   active         BOOLEAN NOT NULL DEFAULT true,
   created_at     TIMESTAMPTZ NOT NULL DEFAULT now(),

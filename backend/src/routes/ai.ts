@@ -22,7 +22,7 @@ async function spend(req: Request) {
   if (!allow("ai:" + uid, ENV.aiRateLimitPerHour, 3_600_000)) throw tooMany("You asked a lot of questions. Please try again in an hour.");
   const reservation = await one<{ id: number }>(
     `UPDATE users SET ai_used = ai_used + 1
-     WHERE id = $1 AND (is_pro OR ai_used < $2) RETURNING id`,
+     WHERE id = $1 AND ((is_pro AND pro_expires_at > now()) OR ai_used < $2) RETURNING id`,
     [uid, ENV.freeAiLimit],
   );
   if (!reservation) throw new HttpError(402, `You have used your ${ENV.freeAiLimit} free AI questions. Upgrade to CareerNest Pro for unlimited questions.`);

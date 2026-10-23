@@ -14,7 +14,7 @@ import { ErrorNote, PageHead, Pill, Spinner, toast } from "@/components/ui";
 
 type Account = { provider: string; label: string; accountName: string; accountNumber: string };
 type Payment = { id: number; provider: string; accountName: string; accountNumber: string; amount: number; status: "pending" | "approved" | "rejected" | "disputed"; reason: string | null; disputeUsed: boolean; createdAt: string; proof: string | null };
-type ProInfo = { isPro: boolean; aiUsed: number; freeAiLimit: number; price: number; accounts: Account[]; latest: Payment | null };
+type ProInfo = { isPro: boolean; proExpiresAt: string | null; aiUsed: number; freeAiLimit: number; price: number; accounts: Account[]; latest: Payment | null };
 const MAX = 1024 * 1024;
 const readAsDataUrl = (f: File) => new Promise<string>((ok, bad) => { const r = new FileReader(); r.onload = () => ok(String(r.result)); r.onerror = () => bad(new Error("read")); r.readAsDataURL(f); });
 
@@ -22,10 +22,10 @@ export default function Pro() {
   const { t } = usePrefs(); const { user, refresh: refreshUser } = useAuth();
   const { data, loading, error, refresh } = useApiData(() => api.get<ProInfo>("/pro"));
   const [provider, setProvider] = useState<string | null>(null);
-  const [amount, setAmount] = useState(""); const [file, setFile] = useState<File | null>(null);
+  const [amount, setAmount] = useState("5000"); const [file, setFile] = useState<File | null>(null);
   const [err, setErr] = useState<string | null>(null); const [busy, setBusy] = useState(false);
   const [draft, setDraft] = useState<{ proof: string } | null>(null); // filled form waiting for "Confirm & send"
-  useEffect(() => { if (data?.isPro && !user?.isPro) refreshUser(); }, [data?.isPro, user?.isPro, refreshUser]);
+  useEffect(() => { if (data && data.isPro !== user?.isPro) refreshUser(); }, [data?.isPro, user?.isPro, refreshUser]);
   const requestKey = useMemo(() => crypto.randomUUID(), [data?.latest?.id]);
   if (loading) return <Spinner />;
   if (error || !data) return <ErrorNote message={error ?? "No data"} onRetry={refresh} />;
@@ -51,10 +51,11 @@ export default function Pro() {
   }
   async function dispute() { try { await api.post(`/pro/payments/${p!.id}/dispute`); toast(t("Re-review requested")); refresh(); } catch (e2) { toast((e2 as Error).message); } }
 
-  if (data.isPro) return (
+  if (data.isPro && (!data.proExpiresAt || Date.parse(data.proExpiresAt) > Date.now())) return (
     <section className="card mx-auto flex max-w-lg flex-col items-center gap-3 text-center border-ok">
       <div className="grid h-16 w-16 place-items-center rounded-full bg-ok-soft text-2xl font-bold text-ok">✓</div>
       <h1 className="text-2xl">{t("You are Pro")}</h1><p className="text-muted">{t("Payment approved. All Pro features are unlocked.")}</p>
+      {data.proExpiresAt && <p className="text-sm text-muted">{t("Pro expires")}: <span className="font-mono">{fmtWhen(data.proExpiresAt)}</span></p>}
       <Link href="/student/plan" className="btn-primary" onClick={() => refreshUser()}>{t("Get my PDF report")}</Link>
     </section>
   );
@@ -63,7 +64,7 @@ export default function Pro() {
       <PageHead back="/student/plan" eyebrow="CareerNest Pro" title="Upgrade to Pro" />
       <div className="grid gap-4 md:grid-cols-2">
         <div className="card"><b>{t("Free")}</b><ul className="mt-2 list-disc pl-5 text-sm"><li>{t("Career quiz & top 3 careers")}</li><li>{t("Majors, university explorer & compare")}</li><li>{t("AI questions")}: {data.freeAiLimit} ({t("used")} {data.aiUsed})</li></ul></div>
-        <div className="card border-2 border-ai bg-ai-soft"><b>Pro · <span className="font-mono">{fmtKs(data.price)}</span> {t("one time")}</b><ul className="mt-2 list-disc pl-5 text-sm"><li>{t("Full PDF report")}</li><li>{t("Unlimited AI career coach and university advisor")}</li><li>{t("1-hour sessions with professional mentors")}</li><li>{t("Pro badge on your account")}</li></ul></div>
+        <div className="card border-2 border-ai bg-ai-soft"><b>Pro · <span className="font-mono">{fmtKs(data.price)}</span> {t("for one month")}</b><ul className="mt-2 list-disc pl-5 text-sm"><li>{t("Full PDF report")}</li><li>{t("Unlimited AI career coach and university advisor")}</li><li>{t("1-hour sessions with professional mentors")}</li><li>{t("Pro badge on your account")}</li></ul></div>
       </div>
       {open ? (
         <section className="card flex flex-col gap-3">
@@ -99,7 +100,10 @@ export default function Pro() {
               </div>
               <h2 className="text-lg">3. {t("Send us the payment details")}</h2>
               <form className="flex flex-col gap-3" onSubmit={submit} noValidate>
-                <label className="label">{t("Amount you sent (Ks)")}<input className="input" type="number" inputMode="numeric" value={amount} placeholder={String(data.price)} onChange={e => setAmount(e.target.value)} /></label>
+                <label className="label">{t("Amount you sent (Ks)")}<input className="input" type="number" inputMode="numeric" min={0} max={100_000_000} step={5000} value={amount} placeholder="5000"
+                  onKeyDown={e => { if (["-", "+", "e", "E", ".", ","].includes(e.key)) e.preventDefault(); }}
+                  onChange={e => { const value = e.target.value; setAmount(value === "" ? "" : String(Math.min(100_000_000, Math.max(0, Math.trunc(Number(value) || 0))))); }}
+                  onBlur={() => { if (amount !== "") setAmount(String(Math.ceil(Number(amount) / 5000) * 5000)); }} /></label>
                 <label className="label">{t("Payment screenshot (image, max 1 MB)")}<input className="input" type="file" accept="image/png,image/jpeg,image/webp" onChange={e => setFile(e.target.files?.[0] ?? null)} /></label>
                 <p className="text-xs text-muted">{t("A screenshot alone is not proof. We check that the money arrived in our account before turning on Pro. Screenshots are deleted 10 days after the decision.")}</p>
                 {err && <p className="text-sm font-semibold text-bad">{err}</p>}
