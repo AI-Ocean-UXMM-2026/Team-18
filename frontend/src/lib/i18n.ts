@@ -20,6 +20,8 @@ export const MYANMAR: Record<string, string> = {
   "Color theme": "အရောင်အပြင်အဆင်",
   "Light theme": "အလင်းအပြင်အဆင်",
   "Dark theme": "အမှောင်အပြင်အဆင်",
+  "Switch language to Myanmar": "မြန်မာဘာသာသို့ ပြောင်းရန်",
+  "Switch language to English": "အင်္ဂလိပ်ဘာသာသို့ ပြောင်းရန်",
   "Open navigation": "လမ်းညွှန်မီနူး ဖွင့်ရန်",
   "Close navigation": "လမ်းညွှန်မီနူး ပိတ်ရန်",
   "Student pathway": "ကျောင်းသား လမ်းညွှန်ခရီးစဉ်",

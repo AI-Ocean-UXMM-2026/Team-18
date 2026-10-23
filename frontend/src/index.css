@@ -200,6 +200,7 @@ img, video, canvas { max-width: 100%; }
 
 @media (max-width: 639px) {
   .app-header-controls { width: 100%; margin-left: 0; justify-content: flex-end; }
+  .app-header-controls > :is(a, button) { min-height: 44px; }
   .page-actions { align-items: stretch; flex-direction: column; padding-bottom: 4rem; }
   .page-actions > :is(a, button) { width: 100%; }
   .btn-sm { min-height: 2.5rem; }
