@@ -22,7 +22,7 @@ export default function Majors() {
         <div className="card"><h2 className="mb-2 text-lg">{t("Learning pathway")}</h2><ol className="list-decimal pl-5">{PATHS[j.level ?? "g12"].map(p => <li key={p}>{t(p)}</li>)}</ol></div>
       </div>
       <h2 className="text-lg">{t("Choose up to 2 majors to explore")}</h2>
-      <div className="grid gap-3 sm:grid-cols-3">{c.majors.map(m => <button key={m.n} className={`choice min-h-40 justify-center gap-3 border-t-4 ${j.majors.includes(m.n) ? "choice-on" : ""}`} onClick={() => toggle(m.n)}><span className="text-xs font-semibold text-brand">{t("Degree pathway")}</span><b className="text-lg">{m.n}</b><small className="text-muted">{content.fields[m.f]}</small></button>)}</div>
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">{c.majors.map(m => <button key={m.n} className={`choice min-h-40 justify-center gap-3 border-t-4 ${j.majors.includes(m.n) ? "choice-on" : ""}`} onClick={() => toggle(m.n)}><span className="text-xs font-semibold text-brand">{t("Degree pathway")}</span><b className="text-lg">{m.n}</b><small className="text-muted">{content.fields[m.f]}</small></button>)}</div>
       <Actions><button className="btn-primary" disabled={!j.majors.length} onClick={() => { set({ majorsConfirmed: true }); go("/student/explorer"); }}>{t("Continue to Step 2: University / College")}</button></Actions>
     </>
   );

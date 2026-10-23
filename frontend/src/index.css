@@ -162,3 +162,24 @@ body { line-height: 1.5; }
 .creative-pagehead h1 { letter-spacing: -0.025em; }
 .btn-outline { border-color: var(--color-line); color: var(--color-ink); }
 @media (prefers-reduced-motion: reduce) { .kip-art svg * { animation: none !important; } }
+
+/* Keep every route usable in narrow viewports without shrinking desktop layouts. */
+main, main > *, .card, .tile { min-width: 0; }
+img, video, canvas { max-width: 100%; }
+.table-wrap { width: 100%; max-width: 100%; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch; }
+.table-wrap :is(td, th) { overflow-wrap: anywhere; }
+.btn, .btn-primary, .btn-outline, .btn-ghost { max-width: 100%; text-align: center; }
+
+@media (max-width: 639px) {
+  .app-header-controls { width: 100%; margin-left: 0; justify-content: flex-end; }
+  .page-actions { align-items: stretch; flex-direction: column; padding-bottom: 4rem; }
+  .page-actions > :is(a, button) { width: 100%; }
+  .card { padding: 16px; }
+  .btn-sm { min-height: 2.5rem; }
+  /* Prevent mobile browsers from zooming the page when a form field receives focus. */
+  input, select, textarea { font-size: 16px; }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .table-wrap { scrollbar-gutter: stable; }
+}

@@ -65,7 +65,7 @@ export function PageHead({ eyebrow, title, back, children }: { eyebrow?: string;
   const { t } = usePrefs();
   return <div className="creative-pagehead flex flex-col gap-3">{back && <Link href={back} className="mb-1 self-start text-sm font-semibold text-muted hover:text-brand">← {t("Back")}</Link>}{eyebrow && <p className="eyebrow">{t(eyebrow)}</p>}<h1 className="text-[28px] leading-10 sm:text-[32px]">{t(title)}</h1>{children && <div className="max-w-3xl text-muted">{children}</div>}</div>;
 }
-export const Actions = ({ children }: { children: ReactNode }) => <div className="mt-2 flex flex-wrap items-center justify-end gap-3">{children}</div>;
+export const Actions = ({ children }: { children: ReactNode }) => <div className="page-actions mt-2 flex flex-wrap items-center justify-end gap-3">{children}</div>;
 export const Note = ({ children }: { children: ReactNode }) => <div className="rounded-xl bg-info-soft px-4 py-3 text-sm">{children}</div>;
 
 /** Tiny toast: toast("Saved") from anywhere. */
