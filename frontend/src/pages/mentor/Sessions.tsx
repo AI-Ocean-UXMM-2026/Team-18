@@ -23,7 +23,7 @@ export default function Sessions() {
           <div><b>{b.studentFirstName}</b> <span className="text-sm text-muted">· {LEVELS[b.level ?? ""] ?? "–"} · {content?.careers.find(c => c.id === b.careerId)?.t ?? "–"}</span>
             <p className="font-mono text-sm">{fmtWhen(b.startsAt)} · {b.minutes} min</p>{b.meetingLink && <a className="text-sm text-brand" href={b.meetingLink} target="_blank" rel="noreferrer">{b.meetingLink}</a>}</div>
           <div className="flex flex-wrap items-center gap-2"><Pill tone={TONE[b.status] ?? "info"}>{t(b.status)}</Pill>
-            {b.status === "confirmed" && <><button className="btn-outline btn-sm" onClick={() => act(b.id, "complete")}>{t("Mark as completed")}</button><button className="btn-ghost btn-sm" onClick={() => act(b.id, "no-show")}>{t("Student did not come")}</button><button className="btn-ghost btn-sm" onClick={() => act(b.id, "cancel")}>{t("Cancel")}</button></>}</div>
+            {b.status === "confirmed" && <><button className="btn-outline btn-sm" onClick={() => act(b.id, "complete")}>{t("Mark as completed")}</button><button className="btn-destructive btn-sm" onClick={() => act(b.id, "no-show")}>{t("Student did not come")}</button><button className="btn-destructive btn-sm" onClick={() => act(b.id, "cancel")}>{t("Cancel")}</button></>}</div>
         </article>
       ))}
     </>

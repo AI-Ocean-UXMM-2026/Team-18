@@ -122,7 +122,7 @@ export default function Universities() {
               style={{ width: [100, 240, 150, 140, 140, 240, 180, 140, 240, 150, 240, 260, 170, 150, 120, 200, 220, 140, 180, 230, 230, 280, 280, 240][columnIndex] }}
               className="spreadsheet-cell" onChange={event => { setRows(previous => previous.map((values, i) => i === rowIndex ? values.map((cell, j) => j === columnIndex ? event.target.value : cell) : values)); setRowErrors([]); }}
             /></td>)}
-            <td><button type="button" className="btn-ghost btn-sm" onClick={() => { setRows(previous => previous.length === 1 ? [blankRow()] : previous.filter((_, i) => i !== rowIndex)); setRowErrors([]); }} aria-label={`${t("Delete row")} ${rowIndex + 1}`}>×</button></td>
+            <td><button type="button" className="btn-destructive btn-sm btn-icon" onClick={() => { setRows(previous => previous.length === 1 ? [blankRow()] : previous.filter((_, i) => i !== rowIndex)); setRowErrors([]); }} aria-label={`${t("Delete row")} ${rowIndex + 1}`}>×</button></td>
           </tr>)}</tbody>
         </table>
       </div>

@@ -23,8 +23,8 @@ export default function Students() {
         <thead><tr><th>{t("Student")}</th><th>{t("Level")}</th><th>{t("Career")}</th><th>Pro</th><th>{t("Bookings")}</th><th /></tr></thead>
         <tbody>{data!.students.map(s => <tr key={s.id}><td><b>{s.name}</b><br /><span className="text-xs text-muted">{s.email}</span></td><td>{LEVELS[s.level ?? ""] ?? "–"}</td><td>{content?.careers.find(c => c.id === s.careerId)?.t ?? "–"}</td>
           <td>{s.isPro ? <Pill tone="ok">Pro</Pill> : "–"}</td><td className="font-mono">{s.bookings}</td>
-          <td className="flex flex-wrap gap-2"><button className="text-xs font-semibold text-brand" onClick={() => toggle(s)}>{t(s.active ? "Switch off" : "Switch on")}</button>
-            {user?.adminRole === "super" && <button className="text-xs font-semibold text-bad" onClick={() => del(s)}>{t(sure === s.id ? "Tap again to delete" : "Delete data")}</button>}</td></tr>)}</tbody>
+          <td className="flex flex-wrap gap-2"><button className={s.active ? "btn-destructive btn-sm" : "btn-outline btn-sm"} onClick={() => toggle(s)}>{t(s.active ? "Switch off" : "Switch on")}</button>
+            {user?.adminRole === "super" && <button className="btn-destructive btn-sm" onClick={() => del(s)}>{t(sure === s.id ? "Tap again to delete" : "Delete data")}</button>}</td></tr>)}</tbody>
       </table></div>}
     </>
   );

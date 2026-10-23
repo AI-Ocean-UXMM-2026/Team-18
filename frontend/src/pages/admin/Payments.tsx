@@ -43,7 +43,7 @@ export default function Payments() {
                     <label className="flex items-center gap-2"><input type="checkbox" checked={!!checked[p.id]} onChange={e => setChecked({ ...checked, [p.id]: e.target.checked })} />{t("I checked the money arrived in our account")}</label>
                     <div className="flex flex-wrap gap-2"><button className="btn-primary btn-sm" onClick={() => approve(p.id)}>{t("Approve · turn on Pro")}</button>
                       <input className="input flex-1 py-1.5 text-sm" maxLength={300} placeholder={t("Reason to reject (required)")} value={reasons[p.id] ?? ""} onChange={e => setReasons({ ...reasons, [p.id]: e.target.value })} />
-                      <button className="btn btn-sm border-2 border-bad text-bad" onClick={() => reject(p.id)}>{t("Reject")}</button></div>
+                      <button className="btn-destructive btn-sm" onClick={() => reject(p.id)}>{t("Reject")}</button></div>
                   </div>
                 )}
               </div>

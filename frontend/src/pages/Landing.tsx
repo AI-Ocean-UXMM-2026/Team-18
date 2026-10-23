@@ -21,8 +21,8 @@ export default function Landing() {
             <h1 className="creative-display max-w-2xl">{t("Your future.")}<br /><span className="text-hero-muted">{t("Make it yours.")}</span></h1>
             <p className="max-w-xl text-base leading-7 text-white/85 sm:text-lg">{t("Take the career quiz, discover your top matches, then explore majors and universities that fit your education level.")}</p>
             <div className="flex w-full flex-col gap-3 pt-1 sm:w-auto sm:flex-row">
-              <button className="btn-primary min-h-12 px-5" onClick={startGuestJourney}>{t("Start the career quiz")} <span aria-hidden>↗</span></button>
-              <Link href="/register" className="btn-outline min-h-12 px-5">{t("Create a free account")}</Link>
+              <button className="btn-primary" onClick={startGuestJourney}>{t("Start the career quiz")} <span aria-hidden>↗</span></button>
+              <Link href="/register" className="btn-outline">{t("Create a free account")}</Link>
             </div>
             <div className="flex flex-wrap gap-x-5 gap-y-2 pt-2 text-xs font-semibold text-white/85 sm:text-sm">
               <span>✓ {t("Grade 12, GED and IGCSE")}</span><span>✓ {t("Career interest assessment")}</span><span>✓ {t("Start as a guest")}</span>

@@ -59,7 +59,7 @@ function MentorMarketplace() {
             <article key={b.id} className="card flex flex-wrap items-center justify-between gap-3">
               <div><b>{b.mentorName}</b> <span className="text-sm text-muted">· {b.mentorTitle}</span><p className="font-mono text-sm">{fmtWhen(b.startsAt)} · {b.minutes} min</p>
                 {b.status === "confirmed" && (b.meetingLink ? <a className="text-sm font-semibold text-brand" href={b.meetingLink} target="_blank" rel="noreferrer">{t("Join the video call")}</a> : <p className="text-xs text-muted">{t("The meeting link will be sent before the session.")}</p>)}</div>
-              <div className="flex items-center gap-2"><Pill tone={STATUS[b.status][1]}>{t(STATUS[b.status][0])}</Pill>{["pending", "confirmed"].includes(b.status) && <button className="btn-ghost btn-sm" onClick={() => cancel(b.id)}>{t("Cancel")}</button>}</div>
+              <div className="flex items-center gap-2"><Pill tone={STATUS[b.status][1]}>{t(STATUS[b.status][0])}</Pill>{["pending", "confirmed"].includes(b.status) && <button className="btn-destructive btn-sm" onClick={() => cancel(b.id)}>{t("Cancel")}</button>}</div>
             </article>
           ))}
         </section>

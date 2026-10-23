@@ -260,7 +260,7 @@ export default function Content() {
             style={{ width: kind === "career" ? ([96, 180, 100, 110, 120, 120, 250, 210, 210, 210, 250, 180, 250, 110, 220, 240][columnIndex]) : ([90, 140, 100, 280, 280][columnIndex]) }}
             className="spreadsheet-cell" onChange={event => { setCell(kind, rowIndex, columnIndex, event.target.value); setErrors([]); }}
           /></td>)}
-          <td><button type="button" className="btn-ghost btn-sm" onClick={() => deleteRow(kind, rowIndex)} aria-label={`${t("Delete row")} ${rowIndex + 1}`}>×</button></td>
+          <td><button type="button" className="btn-destructive btn-sm btn-icon" onClick={() => deleteRow(kind, rowIndex)} aria-label={`${t("Delete row")} ${rowIndex + 1}`}>×</button></td>
         </tr>)}</tbody>
       </table>
     </div>;

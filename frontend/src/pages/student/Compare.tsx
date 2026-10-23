@@ -48,7 +48,7 @@ export default function Compare() {
             <col style={{ width: "10rem" }} />
             {chosen.map(i => <col key={i.key} style={{ width: `calc(${100 / chosen.length}% - ${160 / chosen.length}px)` }} />)}
           </colgroup>
-          <thead><tr><th className="w-40" />{chosen.map(i => <th key={i.key}><UniPhoto item={i} small /><span className="font-mono text-xs text-brand">{itemCode(i)}</span> <span className="text-sm text-ink">{itemName(i)}</span><button className="block text-xs font-semibold text-brand" onClick={() => set(p => ({ compare: p.compare.filter(k => k !== i.key) }))}>{t("Remove")}</button></th>)}</tr></thead>
+          <thead><tr><th className="w-40" />{chosen.map(i => <th key={i.key}><UniPhoto item={i} small /><span className="font-mono text-xs text-brand">{itemCode(i)}</span> <span className="text-sm text-ink">{itemName(i)}</span><button className="btn-ghost btn-sm mt-1" onClick={() => set(p => ({ compare: p.compare.filter(k => k !== i.key) }))}>{t("Remove")}</button></th>)}</tr></thead>
           <tbody>{visibleRows.map(([label, cell]) => <tr key={label}><th>{t(label)}</th>{chosen.map(i => <td key={i.key}>{cell(i)}</td>)}</tr>)}</tbody>
         </table></div>
       )}
@@ -73,7 +73,7 @@ export default function Compare() {
         </div>
       )}
       {j.level !== "g12" && chosen.length > 0 && <AdvisorChat title="AI university advisor" subtitle="Ask about the options in this table." endpoint="/ai/advisor" payload={{ level: j.level, careerId: j.careerId, majors: j.majors, comparing: chosen.map(itemName) }} suggestions={["Compare these for me in plain words", "Which one is the safest choice?"]} />}
-      <Actions>{user?.isPro && <button className="btn-outline" disabled={chosen.length < 2} onClick={() => { set({ comparisonCompleted: true }); go("/student/mentors"); }}>{t("Meet a mentor")}</button>}<button className="btn-primary px-5 py-3 text-base" disabled={chosen.length < 2} onClick={() => { set({ comparisonCompleted: true }); if (!isGuest) toast(t("Saved")); go("/student/plan"); }}>{t(isGuest ? "Continue" : "Save & continue")}</button></Actions>
+      <Actions>{user?.isPro && <button className="btn-outline" disabled={chosen.length < 2} onClick={() => { set({ comparisonCompleted: true }); go("/student/mentors"); }}>{t("Meet a mentor")}</button>}<button className="btn-primary" disabled={chosen.length < 2} onClick={() => { set({ comparisonCompleted: true }); if (!isGuest) toast(t("Saved")); go("/student/plan"); }}>{t(isGuest ? "Continue" : "Save & continue")}</button></Actions>
     </>
   );
 }

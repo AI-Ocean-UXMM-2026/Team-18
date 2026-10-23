@@ -26,7 +26,7 @@ export default function Availability() {
       {loading ? <CardGridSkeleton count={3} /> : error ? <ErrorNote message={error} onRetry={refresh} /> : (
         <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {data!.slots.map(s => <div key={s.id} className="card flex items-center justify-between gap-2 py-3"><span className="font-mono text-sm">{fmtWhen(s.startsAt)}</span>
-            {s.bookingStatus ? <Pill tone={s.bookingStatus === "confirmed" ? "ok" : "info"}>{t(s.bookingStatus === "confirmed" ? "Booked" : "Requested")}</Pill> : <button className="text-xs font-semibold text-bad" onClick={() => remove(s.id)}>{t("Remove")}</button>}</div>)}
+            {s.bookingStatus ? <Pill tone={s.bookingStatus === "confirmed" ? "ok" : "info"}>{t(s.bookingStatus === "confirmed" ? "Booked" : "Requested")}</Pill> : <button className="btn-destructive btn-sm" onClick={() => remove(s.id)}>{t("Remove")}</button>}</div>)}
           {!data!.slots.length && <p className="text-muted">{t("No free times yet.")}</p>}
         </div>
       )}

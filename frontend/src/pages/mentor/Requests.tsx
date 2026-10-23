@@ -29,7 +29,7 @@ export default function Requests() {
           <p className="text-sm">{LEVELS[b.level ?? ""] ?? "–"} · {t("Career")}: <b>{content?.careers.find(c => c.id === b.careerId)?.t ?? "–"}</b>{b.majors?.length ? ` · ${t("Major")}: ${b.majors.join(", ")}` : ""}</p>
           {b.question && <p className="text-sm text-muted">“{b.question}”</p>}
           <label className="label">{t("Meeting link (optional, e.g. Google Meet)")}<input className="input" value={links[b.id] ?? ""} onChange={e => setLinks({ ...links, [b.id]: e.target.value })} placeholder="https://meet.google.com/…" /></label>
-          <div className="flex gap-2"><button className="btn-primary btn-sm" onClick={() => act(b.id, "accept")}>{t("Accept")}</button><button className="btn btn-sm border-2 border-bad text-bad" onClick={() => act(b.id, "decline")}>{t("Decline")}</button></div>
+          <div className="flex gap-2"><button className="btn-primary btn-sm" onClick={() => act(b.id, "accept")}>{t("Accept")}</button><button className="btn-destructive btn-sm" onClick={() => act(b.id, "decline")}>{t("Decline")}</button></div>
         </article>
       ))}
     </>
