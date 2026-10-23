@@ -9,6 +9,7 @@
 export type Language = "en" | "my";
 
 export const MYANMAR: Record<string, string> = {
+  "Possibilities": "အခွင့်အလမ်းများ",
   "Mechanical Engineering": "စက်မှုအင်ဂျင်နီယာပညာ",
   "Mechatronics Engineering": "မက်ခါထရောနစ် အင်ဂျင်နီယာပညာ",
   "Manufacturing Engineering": "ကုန်ထုတ်လုပ်မှု အင်ဂျင်နီယာပညာ",

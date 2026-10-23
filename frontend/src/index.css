@@ -218,3 +218,23 @@ img, video, canvas { max-width: 100%; }
 @media (min-width: 640px) and (max-width: 1023px) {
   .table-wrap { scrollbar-gutter: stable; }
 }
+
+/* Home dashboard accents stay behind the content and never intercept input. */
+.dashboard-hero { position: relative; isolation: isolate; overflow: hidden; }
+.dashboard-decoration { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.dashboard-decoration span { position: absolute; border: 1px solid #ffffff20; border-radius: 50%; animation: dashboard-drift 8s ease-in-out both; }
+.dashboard-decoration span:nth-child(1) { width: 28rem; height: 28rem; left: 22%; top: -18rem; background: radial-gradient(circle, #93c5fd18, transparent 70%); }
+.dashboard-decoration span:nth-child(2) { width: 18rem; height: 18rem; left: 32%; bottom: -12rem; border-width: 24px; border-color: #ffffff08; animation-delay: 150ms; }
+.dashboard-decoration span:nth-child(3) { width: 5rem; height: 5rem; left: 52%; top: 36%; border-style: dashed; border-color: #fde68a50; animation-delay: 300ms; }
+.dashboard-reveal { animation: dashboard-arrive 500ms ease-out both; }
+.dashboard-level { transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease; }
+.dashboard-level:hover, .dashboard-level:focus-visible { transform: translateY(-3px); box-shadow: 0 8px 20px color-mix(in srgb, var(--color-brand) 12%, transparent); }
+.dashboard-progress { transform-origin: left; animation: dashboard-fill 800ms ease-out both; transition: width 250ms ease; }
+@keyframes dashboard-arrive { from { opacity: 0; translate: 0 10px; } to { opacity: 1; translate: 0 0; } }
+@keyframes dashboard-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes dashboard-drift { 0%, 100% { transform: translate(0, 0) rotate(0); } 50% { transform: translate(12px, 8px) rotate(12deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-reveal, .dashboard-progress, .dashboard-decoration span { animation: none; }
+  .dashboard-level, .dashboard-progress { transition: none; }
+  .dashboard-level:hover, .dashboard-level:focus-visible { transform: none; }
+}
