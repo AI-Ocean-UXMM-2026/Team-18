@@ -48,12 +48,12 @@ const videoUploadSchema = z.object({
   careerId: z.string().trim().min(1).max(40),
   fileName: z.string().trim().min(1).max(180),
   contentType: z.literal("video/mp4"),
-  size: z.number().int().positive().max(50 * 1024 * 1024),
+  size: z.number().int().positive().max(300 * 1024 * 1024),
 });
 const videoCompleteSchema = z.object({
   careerId: z.string().trim().min(1).max(40),
   objectPath: z.string().trim().min(1).max(300),
-  durationSeconds: z.number().finite().positive().max(180),
+  durationSeconds: z.number().finite().positive().max(240),
 });
 
 function requireVideoStorage() {
@@ -239,7 +239,7 @@ adminRouter.post("/admin/content/videos/sign", content, route(async req => {
   const bucket = encodeURIComponent(ENV.supabaseVideoBucket);
   const bucketResponse = await storageRequest("/bucket", {
     method: "POST",
-    body: JSON.stringify({ id: ENV.supabaseVideoBucket, name: ENV.supabaseVideoBucket, public: true, file_size_limit: 50 * 1024 * 1024, allowed_mime_types: ["video/mp4"] }),
+    body: JSON.stringify({ id: ENV.supabaseVideoBucket, name: ENV.supabaseVideoBucket, public: true, file_size_limit: 300 * 1024 * 1024, allowed_mime_types: ["video/mp4"] }),
   });
   if (!bucketResponse.ok) {
     const existingBucket = await storageRequest(`/bucket/${bucket}`);
@@ -247,8 +247,17 @@ adminRouter.post("/admin/content/videos/sign", content, route(async req => {
       const detail = await bucketResponse.json().catch(() => null);
       throw new HttpError(502, `Could not prepare Supabase video storage: ${storageErrorMessage(detail, bucketResponse.statusText)}.`);
     }
-    const existing = await existingBucket.json().catch(() => ({})) as { public?: boolean };
+    const existing = await existingBucket.json().catch(() => ({})) as { public?: boolean; file_size_limit?: number | null };
     if (!existing.public) throw new HttpError(503, `Make the Supabase Storage bucket "${ENV.supabaseVideoBucket}" public so students can watch career videos.`);
+    if (existing.file_size_limit != null && existing.file_size_limit < input.size) {
+      const updatedBucket = await storageRequest(`/bucket/${bucket}`, {
+        method: "PUT",
+        body: JSON.stringify({ public: true, file_size_limit: 300 * 1024 * 1024, allowed_mime_types: ["video/mp4"] }),
+      });
+      if (!updatedBucket.ok) {
+        throw new HttpError(503, "Could not raise the video bucket limit to 300 MB. Set Supabase Storage's global file size limit to at least 300 MB; uploads above 50 MB require a paid Supabase plan.");
+      }
+    }
   }
 
   const safeName = input.fileName.replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^\.+/, "").slice(-120) || "career-video.mp4";

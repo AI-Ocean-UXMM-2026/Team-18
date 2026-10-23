@@ -9,6 +9,8 @@
 export type Language = "en" | "my";
 
 export const MYANMAR: Record<string, string> = {
+  "Video files must be 300 MB or smaller.": "ဗီဒီယိုဖိုင်သည် ၃၀၀ MB သို့မဟုတ် ထိုထက်ငယ်ရပါမည်။",
+  "Video must be 4 minutes or shorter.": "ဗီဒီယိုသည် ၄ မိနစ် သို့မဟုတ် ထိုထက်တိုရပါမည်။",
   "Guide": "အသုံးပြုလမ်းညွှန်",
   "How to use CareerNest": "CareerNest အသုံးပြုပုံ",
   "Find your": "သင့်အတွက်",
@@ -696,7 +698,7 @@ export const MYANMAR: Record<string, string> = {
   "Very like me": "ကျွန်ုပ်နှင့် အလွန်တူသည်",
   "Video": "ဗီဒီယို",
   "Choose an MP4 encoded with H.264 video and AAC audio for broad browser support.": "ဘရောက်ဇာအများစုတွင် အဆင်ပြေစွာ ဖွင့်နိုင်ရန် H.264 ဗီဒီယိုနှင့် AAC အသံပါသော MP4 ကို ရွေးပါ။",
-  "For reliable playback on phones and computers, upload an MP4 encoded with H.264 video and AAC audio. Maximum 3 minutes and 50 MB.": "ဖုန်းနှင့် ကွန်ပျူတာများတွင် ယုံကြည်စိတ်ချစွာ ဖွင့်နိုင်ရန် H.264 ဗီဒီယိုနှင့် AAC အသံပါသော MP4 ကို တင်ပါ။ အများဆုံး ၃ မိနစ်နှင့် ၅၀ MB ဖြစ်သည်။",
+  "For reliable playback on phones and computers, upload an MP4 encoded with H.264 video and AAC audio. Maximum 4 minutes and 300 MB.": "ဖုန်းနှင့် ကွန်ပျူတာများတွင် ယုံကြည်စိတ်ချစွာ ဖွင့်နိုင်ရန် H.264 ဗီဒီယိုနှင့် AAC အသံပါသော MP4 ကို တင်ပါ။ အများဆုံး ၄ မိနစ်နှင့် ၃၀၀ MB ဖြစ်သည်။",
   "Video coming soon": "ဗီဒီယို မကြာမီ ရောက်မည်",
   "This video could not play on this device. Try opening it in a new tab.": "ဤစက်တွင် ဗီဒီယိုကို ဖွင့်မရပါ။ တဘ်အသစ်တွင် ဖွင့်ကြည့်ပါ။",
   "Open video in a new tab": "ဗီဒီယိုကို တဘ်အသစ်တွင် ဖွင့်ရန်",

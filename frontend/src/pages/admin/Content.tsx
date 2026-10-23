@@ -129,11 +129,11 @@ export default function Content() {
   async function uploadCareerVideo(careerId: string, file: File) {
     if (!data?.videoUploadReady) return;
     if (!/\.mp4$/i.test(file.name) || (file.type && file.type !== "video/mp4")) { toast(t("Choose an MP4 encoded with H.264 video and AAC audio for broad browser support.")); return; }
-    if (file.size > 50 * 1024 * 1024) { toast(t("Video files must be 50 MB or smaller.")); return; }
+    if (file.size > 300 * 1024 * 1024) { toast(t("Video files must be 300 MB or smaller.")); return; }
     setVideoUploads(current => ({ ...current, [careerId]: 0 }));
     try {
       const durationSeconds = await readVideoDuration(file);
-      if (!Number.isFinite(durationSeconds) || durationSeconds <= 0 || durationSeconds > 180) throw new Error(t("Video must be 3 minutes or shorter."));
+      if (!Number.isFinite(durationSeconds) || durationSeconds <= 0 || durationSeconds > 240) throw new Error(t("Video must be 4 minutes or shorter."));
       const signed = await api.post<SignedVideoUpload>("/admin/content/videos/sign", { careerId, fileName: file.name, contentType: file.type || "video/mp4", size: file.size });
       await uploadResumableVideo(file, signed, progress => setVideoUploads(current => ({ ...current, [careerId]: progress })));
       await api.post("/admin/content/videos/complete", { careerId, objectPath: signed.objectPath, durationSeconds });
@@ -291,7 +291,7 @@ export default function Content() {
       <input className="sr-only" type="file" accept=".mp4,video/mp4" disabled={!data.videoUploadReady || videoUploads[c.id] !== undefined} onChange={event => { const file = event.currentTarget.files?.[0]; if (file) void uploadCareerVideo(c.id, file); event.currentTarget.value = ""; }} />
       {videoUploads[c.id] !== undefined ? `${t("Uploading")} ${videoUploads[c.id]}%` : t(c.hasVideo ? "Replace video" : "Upload video")}
     </label></td></tr>)}</tbody></table></div>
-    <p className="-mt-2 text-xs text-muted">{t("For reliable playback on phones and computers, upload an MP4 encoded with H.264 video and AAC audio. Maximum 3 minutes and 50 MB.")}</p>
+    <p className="-mt-2 text-xs text-muted">{t("For reliable playback on phones and computers, upload an MP4 encoded with H.264 video and AAC audio. Maximum 4 minutes and 300 MB.")}</p>
   </>;
 }
 
