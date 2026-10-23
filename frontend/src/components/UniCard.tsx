@@ -12,17 +12,14 @@ export function UniPhoto({ item, small }: { item: UniItem; small?: boolean }) {
   return <div className={`${cls} flex flex-col justify-end bg-gradient-to-br from-brand-soft to-soft p-4 text-brand`} aria-hidden="true"><b className="text-2xl">{code}</b><span className="text-xs text-muted">{where}</span></div>;
 }
 
-export function UniCard({ item, level, inShortlist, inCompare, onToggle }: { item: UniItem; level: string; inShortlist: boolean; inCompare: boolean; onToggle: (l: "shortlist" | "compare", k: string) => void }) {
+export function UniCard({ item, level, inCompare, onToggle }: { item: UniItem; level: string; inCompare: boolean; onToggle: (l: "shortlist" | "compare", k: string) => void }) {
   const { t } = usePrefs(); const [detailsOpen, setDetailsOpen] = useState(false);
   const closeDetails = useCallback(() => setDetailsOpen(false), []);
   const website = item.kind === "g12" ? item.university.website : item.school.website;
   return (
     <>
     <article className="card flex min-w-0 flex-col gap-3 overflow-hidden transition-colors hover:border-brand focus-within:border-brand">
-      <div className="relative shrink-0"><UniPhoto item={item} /><div className="absolute right-3 top-3 flex gap-2">
-        <button type="button" onClick={() => onToggle("shortlist", item.key)} aria-label={t(inShortlist ? "Remove from shortlist" : "Add to shortlist")} aria-pressed={inShortlist} title={t(inShortlist ? "Remove from shortlist" : "Add to shortlist")} className={`grid h-10 w-10 place-items-center rounded-full border shadow-sm transition-colors ${inShortlist ? "border-ok bg-ok text-white" : "border-line bg-card/95 text-muted hover:border-brand hover:text-brand"}`}><svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill={inShortlist ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6.5 4.75A1.75 1.75 0 0 1 8.25 3h7.5a1.75 1.75 0 0 1 1.75 1.75V21l-5.75-3.8L6 21V4.75Z" /></svg></button>
-        <button type="button" onClick={() => onToggle("compare", item.key)} aria-label={t(inCompare ? "Remove from compare" : "Add to compare")} aria-pressed={inCompare} title={t(inCompare ? "Remove from compare" : "Add to compare")} className={`grid h-10 w-10 place-items-center rounded-full border shadow-sm transition-colors ${inCompare ? "border-brand bg-brand text-on-brand" : "border-line bg-card/95 text-muted hover:border-brand hover:text-brand"}`}><svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h15m0 0-3-3m3 3-3 3M20 17H5m0 0 3-3m-3 3 3 3" /></svg></button>
-      </div></div>
+      <div className="relative shrink-0"><UniPhoto item={item} /><button type="button" onClick={() => onToggle("compare", item.key)} aria-label={t(inCompare ? "Remove from compare" : "Add to compare")} aria-pressed={inCompare} title={t(inCompare ? "Remove from compare" : "Add to compare")} className={`absolute right-3 top-3 grid h-10 w-10 place-items-center rounded-full border shadow-sm transition-colors ${inCompare ? "border-brand bg-brand text-on-brand" : "border-line bg-card/95 text-muted hover:border-brand hover:text-brand"}`}><svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill={inCompare ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6.5 4.75A1.75 1.75 0 0 1 8.25 3h7.5a1.75 1.75 0 0 1 1.75 1.75V21l-5.75-3.8L6 21V4.75Z" /></svg></button></div>
       <div className="flex h-20 shrink-0 items-start gap-3">
         <span className="rounded-md bg-soft px-2 py-1 font-mono text-xs text-brand">{item.kind === "g12" ? item.university.code : item.school.code}</span>
         <div className="min-w-0 flex-1"><h3 className="line-clamp-2 text-base">{item.kind === "g12" ? item.university.name : item.school.name}</h3>
