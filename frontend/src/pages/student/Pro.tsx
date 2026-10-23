@@ -89,7 +89,7 @@ export default function Pro() {
             <div className="mt-2 flex flex-wrap items-baseline gap-x-2 gap-y-1"><strong className="text-3xl font-extrabold sm:text-4xl">{fmtKs(data.price)}</strong><span className="text-sm text-white/80">{t("for one month")}</span></div>
             <p className="mt-1 text-sm text-white/75">{t("One month of Pro access. Payment is reviewed before Pro is activated.")}</p>
           </div>
-          <a href={`#${paymentSectionId}`} className="btn-primary mt-5 w-full justify-center bg-gradient-to-r from-ai to-brand py-3 text-base shadow-md hover:brightness-105 sm:w-auto sm:min-w-80">{t("Choose a payment method")} <span aria-hidden="true">→</span></a>
+          <a href={`#${paymentSectionId}`} className="btn-primary mt-5 w-full justify-center bg-gradient-to-r from-ai to-brand shadow-md hover:brightness-105 sm:w-auto sm:min-w-80">{t("Choose a payment method")} <span aria-hidden="true">→</span></a>
         </div>
       </section>
       {open ? (

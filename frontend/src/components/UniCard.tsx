@@ -30,7 +30,7 @@ export function UniCard({ item, level, inCompare, onToggle }: { item: UniItem; l
         {item.kind === "g12" ? <div className="h-24 overflow-hidden text-sm"><p className="font-semibold">{t("Programmes in your field")}:</p><div className="mt-1.5 flex flex-wrap gap-1.5">{item.programs.slice(0, 6).map(p => <span key={p} className="rounded-full bg-soft px-2.5 py-0.5 text-xs">{p}</span>)}{item.programs.length > 6 && <span className="text-xs text-muted">+{item.programs.length - 6}</span>}</div></div>
           : <div className={`h-24 overflow-hidden rounded-lg px-3 py-2 text-sm leading-6 ${item.school.hasScholarship ? "bg-ok-soft" : "bg-soft text-muted"}`}><p className="line-clamp-3"><b>{t("Scholarship")}:</b> {item.school.scholarship}</p></div>}
         <div className="mt-auto grid grid-cols-[minmax(0,1fr)_auto] gap-2 border-t border-line pt-3">
-          <button type="button" className="btn-primary min-w-0 px-3" onClick={() => setDetailsOpen(true)} aria-haspopup="dialog">{t("View Full Details")}</button>
+          <button type="button" className="btn-primary min-w-0" onClick={() => setDetailsOpen(true)} aria-haspopup="dialog">{t("View Full Details")}</button>
           {website && <a className="btn-outline btn-sm shrink-0" href={website} target="_blank" rel="noreferrer">{t("Portal")}<svg aria-hidden="true" viewBox="0 0 20 20" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"><path d="M11 3h6v6m0-6-8 8"/><path d="M15 11v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4"/></svg></a>}
         </div>
       </div>

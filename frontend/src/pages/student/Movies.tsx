@@ -53,8 +53,8 @@ export default function Movies() {
             <p className="mt-1 text-sm leading-6 text-muted">{t("Watch short career spotlights, or skip straight to choosing a career.")}</p>
           </div>
           <div className="grid auto-rows-fr grid-cols-2 items-stretch gap-3">
-            <button type="button" className="btn-outline h-full min-h-16 min-w-0 w-full whitespace-normal px-3 py-3 text-center" onClick={() => { set({ videoChoice: "skip" }); go(j.careerId ? "/student/majors" : "/student/career"); }}>{t(j.careerId ? "Skip videos & explore majors" : "Skip videos & choose my career")}</button>
-            <button type="button" className="btn-primary h-full min-h-16 min-w-0 w-full whitespace-normal px-3 py-3 text-center" onClick={() => { set({ videoChoice: "watch" }); setShowChoice(false); }}>{t("Yes — watch career videos")}</button>
+            <button type="button" className="btn-outline min-w-0 w-full whitespace-normal text-center" onClick={() => { set({ videoChoice: "skip" }); go(j.careerId ? "/student/majors" : "/student/career"); }}>{t(j.careerId ? "Skip videos & explore majors" : "Skip videos & choose my career")}</button>
+            <button type="button" className="btn-primary min-w-0 w-full whitespace-normal text-center" onClick={() => { set({ videoChoice: "watch" }); setShowChoice(false); }}>{t("Yes — watch career videos")}</button>
           </div>
         </section>
       </div>}

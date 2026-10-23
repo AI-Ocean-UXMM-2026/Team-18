@@ -98,7 +98,7 @@ html[data-theme="dark"] .skeleton-block::after { background: linear-gradient(90d
   .btn-outline { @apply border-line bg-card text-ink hover:border-brand hover:bg-brand-soft hover:brightness-95; }
   .btn-ghost { @apply border-transparent bg-transparent text-ink hover:border-line hover:bg-soft; }
   .btn-destructive { @apply border-bad bg-bad-soft text-bad hover:border-bad hover:brightness-95; }
-  .btn-sm { @apply min-h-10 px-3 py-1.5 text-xs; }
+  .btn-sm { @apply min-h-10 px-3 py-1.5 text-[13px]; }
   .btn-icon { width: 2.5rem; min-width: 2.5rem; padding: 0; }
   .input { @apply w-full rounded-lg border border-line bg-card px-3 py-2 text-sm text-ink outline-none focus:border-brand focus:ring-2 focus:ring-brand/20; }
   .label { @apply flex flex-col gap-1 text-xs font-semibold text-muted; }
