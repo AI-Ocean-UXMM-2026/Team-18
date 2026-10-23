@@ -622,6 +622,7 @@ export const MYANMAR: Record<string, string> = {
   "Strong fit": "အလွန်ကိုက်ညီ",
   "Student": "ကျောင်းသား",
   "Student sign in": "ကျောင်းသား အကောင့်ဝင်ရန်",
+  "Sign in to the student portal to chat with Kip about careers and universities.": "အသက်မွေးဝမ်းကျောင်းနှင့် တက္ကသိုလ်များအကြောင်း Kip နှင့် စကားပြောရန် ကျောင်းသားပေါ်တယ်သို့ အကောင့်ဝင်ပါ။",
   "Students": "ကျောင်းသားများ",
   "Study length": "ပညာသင်ကြာချိန်",
   "Study preparation": "ပညာရေး ပြင်ဆင်မှု",

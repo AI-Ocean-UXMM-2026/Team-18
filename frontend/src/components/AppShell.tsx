@@ -165,7 +165,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </main>
       </div> : <main className="mx-auto flex flex-1 min-w-0 w-full max-w-[1440px] flex-col gap-6 px-3 pb-16 pt-6 sm:px-6 sm:pt-8 lg:px-8">{children}</main>}
       <SiteFooter />
-      {studentWorkspace && <FloatingAdvisor />}
+      <FloatingAdvisor />
       <HomeIntro />
     </div>
   );

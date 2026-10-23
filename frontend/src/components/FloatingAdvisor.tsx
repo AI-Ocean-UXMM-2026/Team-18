@@ -1,14 +1,18 @@
 import { Kip } from "@/components/Kip";
 import { useEffect, useRef, useState } from "react";
 import { AdvisorChat } from "@/components/AdvisorChat";
+import { Link } from "wouter";
+import { useAuth } from "@/lib/auth";
 import { useJourney } from "@/lib/journey";
 import { usePrefs } from "@/lib/prefs";
 
 export function FloatingAdvisor() {
   const { j } = useJourney();
+  const { user, isGuest } = useAuth();
   const { t } = usePrefs();
   const [open, setOpen] = useState(false);
-  const [dock, setDock] = useState<"right" | "left" | "hidden">("right");
+  const [dock, setDock] = useState<"right" | "left">("right");
+  const [bottomOffset, setBottomOffset] = useState(24);
   const rootRef = useRef<HTMLDivElement>(null);
   const launcherRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -27,7 +31,7 @@ export function FloatingAdvisor() {
       wasOpen.current = true;
       return;
     }
-    if (wasOpen.current && dock !== "hidden") launcherRef.current?.focus();
+    if (wasOpen.current) launcherRef.current?.focus();
     wasOpen.current = false;
   }, [open, dock]);
 
@@ -41,17 +45,28 @@ export function FloatingAdvisor() {
       const obstacles = Array.from(document.querySelectorAll<HTMLElement>(
         "main :is(button, a, input, select, textarea), main .page-actions, header nav :is(button, a), [data-kip-avoid]",
       )).filter(element => !root.contains(element) && element.getClientRects().length > 0);
-      const overlaps = (left: number) => obstacles.some(element => {
+      const edgeOffset = window.innerWidth < 640 ? 8 : 24;
+      const baseOffset = edgeOffset;
+      const right = Math.max(edgeOffset, window.innerWidth - current.width - edgeOffset);
+      const left = edgeOffset;
+      const maxOffset = Math.max(baseOffset, window.innerHeight - current.height - 8);
+      let best: { side: "right" | "left"; bottom: number; collisions: number } = { side: "right", bottom: baseOffset, collisions: Number.POSITIVE_INFINITY };
+      for (let bottom = baseOffset; bottom <= maxOffset; bottom += 16) {
+        for (const [side, x] of [["right", right], ["left", left]] as const) {
+          const top = window.innerHeight - bottom - current.height;
+          const collisions = obstacles.filter(element => {
         const rect = element.getBoundingClientRect();
-        return rect.width > 0 && rect.height > 0
-          && left < rect.right + 8 && left + current.width > rect.left - 8
-          && current.top < rect.bottom + 8 && current.bottom > rect.top - 8;
-      });
-      const right = Math.max(16, window.innerWidth - current.width - 16);
-      const left = 16;
-      const next = !overlaps(right) ? "right" : !overlaps(left) ? "left" : "hidden";
-      setDock(previous => previous === next ? previous : next);
-      if (next === "hidden" && open) setOpen(false);
+            return rect.width > 0 && rect.height > 0
+              && x < rect.right + 8 && x + current.width > rect.left - 8
+              && top < rect.bottom + 8 && top + current.height > rect.top - 8;
+          }).length;
+          if (collisions < best.collisions) best = { side, bottom, collisions };
+          if (collisions === 0) break;
+        }
+        if (best.collisions === 0) break;
+      }
+      setDock(previous => previous === best.side ? previous : best.side);
+      setBottomOffset(previous => previous === best.bottom ? previous : best.bottom);
     };
     const scheduleCheck = () => {
       cancelAnimationFrame(frame);
@@ -71,7 +86,7 @@ export function FloatingAdvisor() {
   }, [open]);
 
   return (
-    <div ref={rootRef} className={`fixed bottom-[max(0.5rem,env(safe-area-inset-bottom))] z-40 flex flex-col sm:bottom-6 ${dock === "left" ? "left-[max(0.5rem,env(safe-area-inset-left))] items-start sm:left-6" : "right-[max(0.5rem,env(safe-area-inset-right))] items-end sm:right-6"}`}>
+    <div ref={rootRef} style={{ bottom: `calc(env(safe-area-inset-bottom, 0px) + ${bottomOffset}px)` }} className={`fixed z-40 flex flex-col ${dock === "left" ? "left-[max(0.5rem,env(safe-area-inset-left))] items-start sm:left-6" : "right-[max(0.5rem,env(safe-area-inset-right))] items-end sm:right-6"}`}>
       <section id="kip-advisor-panel" role="dialog" aria-labelledby="kip-advisor-title" aria-describedby="kip-advisor-description" aria-modal="false" className={`${open ? "mb-2 flex sm:mb-3" : "hidden"} h-[min(75dvh,40rem)] max-h-[calc(100dvh_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom)_-_1rem)] w-[min(25rem,calc(100vw-1rem))] min-h-0 flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-2xl sm:w-[min(25rem,calc(100vw-2rem))]`}>
         <div className="hero-gradient flex shrink-0 items-center justify-between gap-3 border-b border-line px-4 py-3 text-white">
           <div className="flex min-w-0 items-center gap-2.5">
@@ -84,13 +99,17 @@ export function FloatingAdvisor() {
           <button ref={closeButtonRef} type="button" onClick={() => setOpen(false)} className="grid h-11 w-11 shrink-0 place-items-center rounded-lg text-xl text-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white" aria-label={t("Close chat")} title={t("Close chat")}>×</button>
         </div>
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-2 sm:p-3">
-          <AdvisorChat
+          {user?.role === "student" || isGuest ? <AdvisorChat
             title="AI career coach"
             subtitle="Ask about careers, majors, or university options."
             endpoint="/ai/career"
             payload={{ answers: j.answers, level: j.level ?? "g12" }}
             suggestions={["What careers match my interests?", "How should I choose a university major?"]}
-          />
+          /> : <section className="card ai-surface flex flex-col gap-3">
+            <h2 className="ai-heading text-lg">✦ {t("Kip AI Advisor")}</h2>
+            <p className="text-sm text-muted">{t("Sign in to the student portal to chat with Kip about careers and universities.")}</p>
+            <Link href="/login" className="btn-primary btn-sm self-start">{t("Student sign in")}</Link>
+          </section>}
         </div>
       </section>
 
@@ -102,10 +121,7 @@ export function FloatingAdvisor() {
         onClick={() => setOpen(value => !value)}
         data-kip-launcher
         ref={launcherRef}
-        aria-hidden={dock === "hidden"}
-        tabIndex={dock === "hidden" ? -1 : 0}
-        disabled={dock === "hidden"}
-        className={`hero-gradient group flex h-11 items-center gap-2 rounded-full border-2 border-white px-3 text-white shadow-xl transition hover:scale-[1.03] hover:shadow-2xl active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/40 sm:h-12 sm:px-4 ${dock === "hidden" ? "invisible pointer-events-none" : ""}`}
+        className="hero-gradient group flex h-11 items-center gap-2 rounded-full border-2 border-white px-3 text-white shadow-xl transition hover:scale-[1.03] hover:shadow-2xl active:scale-[0.98] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/40 sm:h-12 sm:px-4"
         title={t("Chat with Kip AI Advisor")}
       >
         <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-white/15" aria-hidden="true"><Kip size={40} mood="waving" /></span>
