@@ -9,13 +9,26 @@ export function FloatingAdvisor() {
   const [open, setOpen] = useState(false);
   const [dock, setDock] = useState<"right" | "left" | "hidden">("right");
   const rootRef = useRef<HTMLDivElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const wasOpen = useRef(false);
 
   useEffect(() => {
     if (!open) return;
     const closeOnEscape = (event: KeyboardEvent) => { if (event.key === "Escape") setOpen(false); };
     window.addEventListener("keydown", closeOnEscape);
+    closeButtonRef.current?.focus();
     return () => window.removeEventListener("keydown", closeOnEscape);
   }, [open]);
+
+  useEffect(() => {
+    if (open) {
+      wasOpen.current = true;
+      return;
+    }
+    if (wasOpen.current && dock !== "hidden") launcherRef.current?.focus();
+    wasOpen.current = false;
+  }, [open, dock]);
 
   useEffect(() => {
     let frame = 0;
@@ -57,19 +70,19 @@ export function FloatingAdvisor() {
   }, [open]);
 
   return (
-    <div ref={rootRef} className={`fixed bottom-4 z-40 flex flex-col sm:bottom-6 ${dock === "left" ? "left-4 items-start sm:left-6" : "right-4 items-end sm:right-6"}`}>
-      <section id="kip-advisor-panel" role="dialog" aria-labelledby="kip-advisor-title" aria-modal="false" className={`${open ? "mb-3 flex" : "hidden"} max-h-[min(72dvh,40rem)] w-[min(25rem,calc(100vw-2rem))] flex-col overflow-y-auto rounded-2xl border border-line bg-card shadow-2xl`}>
-        <div className="hero-gradient flex items-center justify-between gap-3 border-b border-line px-4 py-3 text-white">
+    <div ref={rootRef} className={`fixed bottom-[max(0.5rem,env(safe-area-inset-bottom))] z-40 flex flex-col sm:bottom-6 ${dock === "left" ? "left-[max(0.5rem,env(safe-area-inset-left))] items-start sm:left-6" : "right-[max(0.5rem,env(safe-area-inset-right))] items-end sm:right-6"}`}>
+      <section id="kip-advisor-panel" role="dialog" aria-labelledby="kip-advisor-title" aria-describedby="kip-advisor-description" aria-modal="false" className={`${open ? "mb-2 flex sm:mb-3" : "hidden"} h-[min(75dvh,40rem)] max-h-[calc(100dvh_-_env(safe-area-inset-top)_-_env(safe-area-inset-bottom)_-_1rem)] w-[min(25rem,calc(100vw-1rem))] min-h-0 flex-col overflow-hidden rounded-2xl border border-line bg-card shadow-2xl sm:w-[min(25rem,calc(100vw-2rem))]`}>
+        <div className="hero-gradient flex shrink-0 items-center justify-between gap-3 border-b border-line px-4 py-3 text-white">
           <div className="flex min-w-0 items-center gap-2.5">
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-mascot text-sm font-extrabold text-brand-deep">K</span>
             <div className="min-w-0">
               <h2 id="kip-advisor-title" className="truncate text-sm font-bold !text-white">{t("Kip AI Advisor")}</h2>
-              <p className="text-[11px] leading-4 text-white/80">{t("Career and university guidance")}</p>
+              <p id="kip-advisor-description" className="text-[11px] leading-4 text-white/80">{t("Career and university guidance")}</p>
             </div>
           </div>
-          <button type="button" onClick={() => setOpen(false)} className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-lg text-white hover:bg-white/15" aria-label={t("Close chat")}>×</button>
+          <button ref={closeButtonRef} type="button" onClick={() => setOpen(false)} className="grid h-11 w-11 shrink-0 place-items-center rounded-lg text-xl text-white hover:bg-white/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white" aria-label={t("Close chat")} title={t("Close chat")}>×</button>
         </div>
-        <div className="min-h-0 overflow-y-auto p-2 sm:p-3">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-2 sm:p-3">
           <AdvisorChat
             title="AI career coach"
             subtitle="Ask about careers, majors, or university options."
@@ -87,6 +100,7 @@ export function FloatingAdvisor() {
         aria-label={t("Chat with Kip")}
         onClick={() => setOpen(value => !value)}
         data-kip-launcher
+        ref={launcherRef}
         aria-hidden={dock === "hidden"}
         tabIndex={dock === "hidden" ? -1 : 0}
         disabled={dock === "hidden"}
