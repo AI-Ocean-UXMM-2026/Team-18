@@ -13,13 +13,13 @@ export default function Landing() {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const startGuestJourney = () => { startGuest(); go("/student"); };
   const closeIntro = () => {
-    try { window.localStorage.setItem("careernest-home-intro-seen-v1", "true"); } catch { /* intro can still be dismissed when storage is unavailable */ }
+    try { window.localStorage.setItem("careernest-home-intro-seen-v2", "true"); } catch { /* intro can still be dismissed when storage is unavailable */ }
     setShowIntro(false);
   };
 
   useEffect(() => {
     try {
-      if (window.localStorage.getItem("careernest-home-intro-seen-v1") === "true") return;
+      if (window.localStorage.getItem("careernest-home-intro-seen-v2") === "true") return;
     } catch { /* show the introduction if storage is unavailable */ }
     setShowIntro(true);
   }, []);
@@ -72,16 +72,10 @@ export default function Landing() {
         <span>CareerNest · {t("Career guidance for students in Myanmar")}</span>
         <div className="flex flex-wrap justify-center gap-4"><Link href="/guide" className="hover:text-brand">{t("Guide")}</Link><Link href="/mentor/login" className="hover:text-brand">{t("Mentor sign in")}</Link><Link href="/mentor/apply" className="hover:text-brand">{t("Apply to become a mentor")}</Link><Link href="/admin/login" className="hover:text-brand">{t("Admin sign in")}</Link></div>
       </footer>
-      {showIntro && <div className="fixed inset-0 z-[100] grid place-items-center overflow-y-auto bg-black/70 p-3 backdrop-blur-sm sm:p-6" role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) closeIntro(); }}>
-        <section ref={introRef} role="dialog" aria-modal="true" aria-labelledby="home-intro-title" aria-describedby="home-intro-description" className="my-auto w-full max-w-3xl overflow-hidden rounded-2xl border border-line bg-card shadow-2xl">
-          <div className="flex items-start justify-between gap-4 p-4 sm:p-6">
-            <div><p className="eyebrow">CareerNest</p><h2 id="home-intro-title" className="mt-1 text-xl font-bold sm:text-2xl">{t("A quick introduction to CareerNest")}</h2><p id="home-intro-description" className="mt-2 text-sm text-muted">{t("Watch this short welcome video to learn what you can do here.")}</p></div>
-            <button ref={closeButtonRef} type="button" className="btn-ghost btn-sm shrink-0" onClick={closeIntro} aria-label={t("Close introduction")}>×</button>
-          </div>
-          <video className="block max-h-[65dvh] w-full bg-black object-contain" src="/careernest-home-intro.mp4" controls autoPlay muted playsInline preload="metadata" onEnded={closeIntro} aria-label={t("CareerNest introduction video")} />
-          <div className="flex justify-end p-4 sm:p-6"><button type="button" className="btn-primary" onClick={closeIntro}>{t("Continue to CareerNest")}</button></div>
-        </section>
-      </div>}
+      {showIntro && <section ref={introRef} role="dialog" aria-modal="true" aria-label={t("CareerNest introduction video")} className="fixed inset-0 z-[100] h-dvh w-full overflow-hidden bg-black">
+        <video className="absolute inset-0 h-full w-full object-cover" src="/careernest-home-intro.mp4" controls autoPlay muted playsInline preload="auto" onEnded={closeIntro} onError={closeIntro} aria-label={t("CareerNest introduction video")} />
+        <button ref={closeButtonRef} type="button" className="absolute right-4 top-4 z-10 min-h-11 rounded-full border border-white/50 bg-black/60 px-5 py-2 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-black/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-6 sm:top-6" onClick={closeIntro}>{t("Skip intro")} <span aria-hidden="true">→</span></button>
+      </section>}
     </div>
   );
 }
